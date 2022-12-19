@@ -1,0 +1,995 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="database-schema" id="Project-189" database="LogicalDesign" >
+	<comment><![CDATA[Database for dimploma work. Project: Learning Management System]]></comment>
+	<schema name="INSTANCE" catalogname="database-schema" >
+		<table name="Attendance" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="student_id" type="INT" jt="4" mandatory="y" />
+			<column name="type" prior="type_id" type="ENUM" jt="12" mandatory="y" />
+			<column name="date" type="DATE" jt="91" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_attendance" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_attendance" unique="UNIQUE_KEY" >
+				<column name="student_id" />
+				<column name="date" />
+				<column name="type" />
+			</index>
+			<fk name="fk_attendance_student" virtual="y" to_schema="database-schema.INSTANCE" to_table="Student" type="Identifying" >
+				<fk_column name="student_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Award" prior="Awards" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="description" type="TEXT" jt="-1" />
+			<column name="type_id" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_award" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_award" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+			<fk name="fk_award_awarttype" virtual="y" to_schema="database-schema.INSTANCE" to_table="AwardType" type="Identifying" >
+				<fk_column name="type_id" pk="id" />
+			</fk>
+		</table>
+		<table name="AwardType" prior="AwartType" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<index name="pk_awarttype" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_awarttype" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+		</table>
+		<table name="Class" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="teacher_id" type="INT" jt="4" mandatory="y" />
+			<column name="group_id" type="INT" jt="4" mandatory="y" />
+			<column name="subject_id" prior="cycle_id" type="INT" jt="4" mandatory="y" />
+			<column name="folder_id" prior="directory_id" type="INT" jt="4" mandatory="y" />
+			<column name="is_active" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_class" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_class" unique="UNIQUE_KEY" >
+				<column name="subject_id" />
+				<column name="group_id" />
+				<column name="teacher_id" />
+			</index>
+			<fk name="fk_class_group" virtual="y" to_schema="database-schema.INSTANCE" to_table="Group" type="NonIdentifyingOptional" >
+				<fk_column name="group_id" pk="id" />
+			</fk>
+			<fk name="fk_class_teacher" virtual="y" to_schema="database-schema.INSTANCE" to_table="Teacher" type="NonIdentifyingOptional" >
+				<fk_column name="teacher_id" pk="id" />
+			</fk>
+			<fk name="fk_class_folder" virtual="y" to_schema="database-schema.INSTANCE" to_table="Folder" type="OneToOne" >
+				<fk_column name="folder_id" pk="id" />
+			</fk>
+			<fk name="fk_class_subject" virtual="y" to_schema="database-schema.INSTANCE" to_table="Subject" type="Identifying" >
+				<fk_column name="subject_id" pk="id" />
+			</fk>
+		</table>
+		<table name="ClassPost" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="class_id" prior="group_id" type="INT" jt="4" mandatory="y" />
+			<column name="title" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="text" type="TEXT" jt="-1" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_classpost" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_classpost_class" virtual="y" to_schema="database-schema.INSTANCE" to_table="Class" type="Identifying" >
+				<fk_column name="class_id" pk="id" />
+			</fk>
+		</table>
+		<table name="ClassPostComment" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="post_id" type="INT" jt="4" mandatory="y" />
+			<column name="created_by" type="INT" jt="4" mandatory="y" />
+			<column name="text" type="TEXT" jt="-1" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_classpostcomment" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_classpostcomment_classpost" virtual="y" to_schema="database-schema.INSTANCE" to_table="ClassPost" type="Identifying" >
+				<fk_column name="post_id" pk="id" />
+			</fk>
+			<fk name="fk_classpostcomment_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="Identifying" >
+				<fk_column name="created_by" pk="id" />
+			</fk>
+		</table>
+		<table name="Classroom" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="number" type="INT" jt="4" mandatory="y" />
+			<column name="capacity" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_classroom" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_classroom" unique="UNIQUE_KEY" >
+				<column name="number" />
+			</index>
+		</table>
+		<table name="Community" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="created_by" type="INT" jt="4" mandatory="y" />
+			<column name="category_id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="description" type="TEXT" jt="-1" mandatory="y" />
+			<column name="link" type="TEXT" jt="-1" mandatory="y" />
+			<column name="is_moderated" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<column name="is_active" type="BOOLEAN" jt="-7" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_community" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_community" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+			<fk name="fk_community_communitycategory" virtual="y" to_schema="database-schema.INSTANCE" to_table="CommunityCategory" type="NonIdentifyingMandatory" >
+				<fk_column name="category_id" pk="id" />
+			</fk>
+			<fk name="fk_community_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="NonIdentifyingOptional" >
+				<fk_column name="created_by" pk="id" />
+			</fk>
+		</table>
+		<table name="CommunityCategory" prior="Category" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<index name="pk_communitycategory" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_communitycategory" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+		</table>
+		<table name="Cycle" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="quarter_id" type="INT" jt="4" mandatory="y" />
+			<column name="subject_id" type="INT" jt="4" mandatory="y" />
+			<index name="pk_cycle" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_cycle" unique="UNIQUE_KEY" >
+				<column name="subject_id" />
+				<column name="quarter_id" />
+			</index>
+			<fk name="fk_cycle_subject" virtual="y" to_schema="database-schema.INSTANCE" to_table="Subject" type="Identifying" >
+				<fk_column name="subject_id" pk="id" />
+			</fk>
+			<fk name="fk_cycle_quarter" virtual="y" to_schema="database-schema.INSTANCE" to_table="Quarter" type="Identifying" >
+				<fk_column name="quarter_id" pk="id" />
+			</fk>
+		</table>
+		<table name="CycleMark" prior="subjectmark_0" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="mark_id" type="INT" jt="4" />
+			<column name="cycle_id" prior="subject_id" type="INT" jt="4" mandatory="y" />
+			<column name="student_id" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_subjectmark_0" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_cyclemark" unique="UNIQUE_KEY" >
+				<column name="cycle_id" />
+				<column name="student_id" />
+			</index>
+			<fk name="fk_cyclemark_cycle" virtual="y" to_schema="database-schema.INSTANCE" to_table="Cycle" type="Identifying" >
+				<fk_column name="cycle_id" pk="id" />
+			</fk>
+			<fk name="fk_cyclemark_mark" virtual="y" to_schema="database-schema.INSTANCE" to_table="Mark" type="NonIdentifyingOptional" >
+				<fk_column name="mark_id" pk="id" />
+			</fk>
+			<fk name="fk_cyclemark_student" virtual="y" to_schema="database-schema.INSTANCE" to_table="Student" type="Identifying" >
+				<fk_column name="student_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Folder" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="parent_id" type="INT" jt="4" >
+				<defo><![CDATA[NULL]]></defo>
+			</column>
+			<column name="name" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_folder" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Grade" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="number" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_grade" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_grade" unique="UNIQUE_KEY" >
+				<column name="number" />
+			</index>
+		</table>
+		<table name="Group" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="teacher_id" type="INT" jt="4" />
+			<column name="grade_id" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[1]]></defo>
+			</column>
+			<column name="letter_id" prior="letter" type="INT" length="1" jt="4" mandatory="y" />
+			<column name="is_active" type="BOOLEAN" jt="-7" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_group" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_group" unique="UNIQUE_KEY" >
+				<column name="grade_id" />
+				<column name="letter_id" />
+				<column name="is_active" />
+			</index>
+			<fk name="fk_group_teacher" virtual="y" to_schema="database-schema.INSTANCE" to_table="Teacher" type="NonIdentifyingOptional" >
+				<fk_column name="teacher_id" pk="id" />
+			</fk>
+			<fk name="fk_group_grade" virtual="y" to_schema="database-schema.INSTANCE" to_table="Grade" type="Identifying" >
+				<fk_column name="grade_id" pk="id" />
+			</fk>
+			<fk name="fk_group_letter" virtual="y" to_schema="database-schema.INSTANCE" to_table="Letter" type="Identifying" >
+				<fk_column name="letter_id" pk="id" />
+			</fk>
+		</table>
+		<table name="GroupPost" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="group_id" type="INT" jt="4" mandatory="y" />
+			<column name="title" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="text" type="TEXT" length="250" jt="-1" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_grouppost" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_grouppost_group" virtual="y" to_schema="database-schema.INSTANCE" to_table="Group" type="Identifying" >
+				<fk_column name="group_id" pk="id" />
+			</fk>
+		</table>
+		<table name="GroupPostComment" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="post_id" type="INT" jt="4" mandatory="y" />
+			<column name="created_by" type="INT" jt="4" mandatory="y" />
+			<column name="text" type="TEXT" jt="-1" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_grouppostcomment" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_grouppostcomment_grouppost" virtual="y" to_schema="database-schema.INSTANCE" to_table="GroupPost" type="Identifying" >
+				<fk_column name="post_id" pk="id" />
+			</fk>
+			<fk name="fk_grouppostcomment_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="Identifying" >
+				<fk_column name="created_by" pk="id" />
+			</fk>
+		</table>
+		<table name="Letter" prior="grade_0" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="name" prior="char" type="CHAR" length="1" jt="1" mandatory="y" />
+			<index name="pk_grade_0" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_letter" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+		</table>
+		<table name="Manager" prior="teacher_0" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="user_id" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_teacher_0" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_teacher_user_0" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="OneToOne" >
+				<fk_column name="user_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Mark" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="number" type="INT" length="100" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_mark" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_mark" unique="UNIQUE_KEY" >
+				<column name="number" />
+			</index>
+		</table>
+		<table name="Material" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="link" type="TEXT" jt="-1" mandatory="y" />
+			<column name="name" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="folder_id" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_material" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_material_folder" virtual="y" to_schema="database-schema.INSTANCE" to_table="Folder" type="Identifying" >
+				<fk_column name="folder_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Parent" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="user_id" type="INT" jt="4" mandatory="y" />
+			<column name="role_id" prior="type_id" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_parent" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_parent_parentrole" virtual="y" to_schema="database-schema.INSTANCE" to_table="ParentRole" type="Identifying" >
+				<fk_column name="role_id" pk="id" />
+			</fk>
+			<fk name="fk_parent_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="OneToOne" >
+				<fk_column name="user_id" pk="id" />
+			</fk>
+		</table>
+		<table name="ParentRole" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_parentrole" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_parentrole" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+		</table>
+		<table name="PlanPoint" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="cycle_id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="description" type="TEXT" jt="-1" />
+			<column name="hours" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_planpoint" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_planpoint" unique="UNIQUE_KEY" >
+				<column name="cycle_id" />
+				<column name="name" />
+			</index>
+			<fk name="fk_planpoint_cycle" virtual="y" to_schema="database-schema.INSTANCE" to_table="Cycle" type="Identifying" >
+				<fk_column name="cycle_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Quarter" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="year_id" type="INT" jt="4" mandatory="y" />
+			<column name="type_id" type="INT" jt="4" mandatory="y" />
+			<column name="start_date" type="DATE" jt="91" mandatory="y" />
+			<column name="end_date" type="DATE" jt="91" mandatory="y" />
+			<column name="is_finished" prior="is_closed" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_quarter" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_quarter" unique="UNIQUE_KEY" >
+				<column name="type_id" />
+				<column name="year_id" />
+			</index>
+			<fk name="fk_quarter_quartertype" virtual="y" to_schema="database-schema.INSTANCE" to_table="QuarterType" type="Identifying" >
+				<fk_column name="type_id" pk="id" />
+			</fk>
+			<fk name="fk_quarter_year" virtual="y" to_schema="database-schema.INSTANCE" to_table="Year" type="Identifying" >
+				<fk_column name="year_id" pk="id" />
+			</fk>
+		</table>
+		<table name="QuarterType" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="number" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_quartertype" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_quartertype" unique="UNIQUE_KEY" >
+				<column name="number" />
+			</index>
+		</table>
+		<table name="SchoolEvent" prior="Event" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="title" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="description" type="TEXT" jt="-1" />
+			<column name="datetime" type="DATETIME" jt="93" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_event" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="SchoolPost" prior="SchoolNews" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="title" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="text" type="TEXT" length="250" jt="-1" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_schoolpost" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="SchoolPostComment" prior="NewsComment" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="post_id" type="INT" jt="4" mandatory="y" />
+			<column name="created_by" type="INT" jt="4" mandatory="y" />
+			<column name="text" type="TEXT" jt="-1" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_schoolpostcomment" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_schoolpostcomment_schoolpost" virtual="y" to_schema="database-schema.INSTANCE" to_table="SchoolPost" type="Identifying" >
+				<fk_column name="post_id" pk="id" />
+			</fk>
+			<fk name="fk_schoolpostcomment_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="Identifying" >
+				<fk_column name="created_by" pk="id" />
+			</fk>
+		</table>
+		<table name="Shedule" prior="Timetable" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="class_id" type="INT" jt="4" mandatory="y" />
+			<column name="classroom_id" type="INT" jt="4" />
+			<column name="timebound_id" type="INT" jt="4" />
+			<column name="weekday_id" type="INT" jt="4" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_timetable" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_shedule" unique="UNIQUE_KEY" >
+				<column name="classroom_id" />
+				<column name="timebound_id" />
+				<column name="weekday_id" />
+			</index>
+			<fk name="fk_shedule_classroom" virtual="y" to_schema="database-schema.INSTANCE" to_table="Classroom" type="NonIdentifyingOptional" >
+				<fk_column name="classroom_id" pk="id" />
+			</fk>
+			<fk name="fk_shedule_timebound" virtual="y" to_schema="database-schema.INSTANCE" to_table="TimeBound" type="NonIdentifyingOptional" >
+				<fk_column name="timebound_id" pk="id" />
+			</fk>
+			<fk name="fk_shedule_weekday" virtual="y" to_schema="database-schema.INSTANCE" to_table="Weekday" type="NonIdentifyingOptional" >
+				<fk_column name="weekday_id" pk="id" />
+			</fk>
+			<fk name="fk_shedule_class" virtual="y" to_schema="database-schema.INSTANCE" to_table="Class" type="Identifying" >
+				<fk_column name="class_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Student" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="group_id" prior="group" type="INT" jt="4" />
+			<column name="user_id" prior="user" type="INT" jt="4" mandatory="y" />
+			<column name="parent_id" type="INT" jt="4" />
+			<column name="rating" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_student" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_student_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="OneToOne" >
+				<fk_column name="user_id" pk="id" />
+			</fk>
+			<fk name="fk_student_group" virtual="y" to_schema="database-schema.INSTANCE" to_table="Group" type="NonIdentifyingOptional" >
+				<fk_column name="group_id" pk="id" />
+			</fk>
+			<fk name="fk_student_parent" virtual="y" to_schema="database-schema.INSTANCE" to_table="Parent" type="NonIdentifyingOptional" >
+				<fk_column name="parent_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Subject" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="grade_id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="description" type="TEXT" jt="-1" />
+			<column name="is_active" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_subject" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_subject" unique="UNIQUE_KEY" >
+				<column name="name" />
+				<column name="grade_id" />
+			</index>
+			<fk name="fk_subject_grade" virtual="y" to_schema="database-schema.INSTANCE" to_table="Grade" type="Identifying" >
+				<fk_column name="grade_id" pk="id" />
+			</fk>
+		</table>
+		<table name="SubjectMark" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="mark_id" type="INT" jt="4" />
+			<column name="subject_id" type="INT" jt="4" mandatory="y" />
+			<column name="student_id" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_subjectmark" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_subjectmark" unique="UNIQUE_KEY" >
+				<column name="subject_id" />
+				<column name="student_id" />
+			</index>
+			<fk name="fk_subjectmark_subject" virtual="y" to_schema="database-schema.INSTANCE" to_table="Subject" type="Identifying" >
+				<fk_column name="subject_id" pk="id" />
+			</fk>
+			<fk name="fk_subjectmark_student" virtual="y" to_schema="database-schema.INSTANCE" to_table="Student" type="Identifying" >
+				<fk_column name="student_id" pk="id" />
+			</fk>
+			<fk name="fk_subjectmark_mark" virtual="y" to_schema="database-schema.INSTANCE" to_table="Mark" type="NonIdentifyingOptional" >
+				<fk_column name="mark_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Teacher" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="user_id" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_teacher" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_teacher_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="OneToOne" >
+				<fk_column name="user_id" pk="id" />
+			</fk>
+		</table>
+		<table name="TimeBound" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="start_time" type="TIME" jt="1111" mandatory="y" />
+			<column name="end_time" type="TIME" jt="1111" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_timebound" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_timebound" unique="UNIQUE_KEY" >
+				<column name="start_time" />
+				<column name="end_time" />
+			</index>
+		</table>
+		<table name="Todo" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="created_by" type="INT" jt="4" mandatory="y" />
+			<column name="text" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="is_done" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_todo" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_todo_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="Identifying" >
+				<fk_column name="created_by" pk="id" />
+			</fk>
+		</table>
+		<table name="User" prior="Users" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="email" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="password" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="first_name" type="VARCHAR" length="50" jt="12" mandatory="y" />
+			<column name="last_name" type="VARCHAR" length="50" jt="12" mandatory="y" />
+			<column name="birth_date" type="DATE" jt="91" mandatory="y" />
+			<column name="gender" type="ENUM" jt="12" mandatory="y" >
+				<defo><![CDATA['male']]></defo>
+				<enumeration><![CDATA['male', 'female']]></enumeration>
+			</column>
+			<column name="telegram_id" type="VARCHAR" length="50" jt="12" />
+			<column name="phone" type="VARCHAR" length="50" jt="12" mandatory="y" />
+			<column name="avatar" type="IMAGE" jt="1111" />
+			<column name="is_superuser" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<column name="is_staff" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<column name="is_active" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="last_login" type="DATETIME" jt="93" mandatory="y" />
+			<column name="date_joined" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_users" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Weekday" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="number" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="is_weekend" type="BOOLEAN" jt="-7" mandatory="y" />
+			<index name="pk_weekday" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_weekday" unique="UNIQUE_KEY" >
+				<column name="number" />
+			</index>
+			<index name="unq_weekday_0" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+		</table>
+		<table name="Work" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="type_id" type="INT" jt="4" mandatory="y" />
+			<column name="class_id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="250" jt="12" mandatory="y" />
+			<column name="description" type="TEXT" jt="-1" />
+			<column name="date" type="DATE" jt="91" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_work" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_work" unique="UNIQUE_KEY" >
+				<column name="class_id" />
+				<column name="name" />
+			</index>
+			<fk name="fk_work_worktype" virtual="y" to_schema="database-schema.INSTANCE" to_table="WorkType" type="Identifying" >
+				<fk_column name="type_id" pk="id" />
+			</fk>
+			<fk name="fk_work_class" virtual="y" to_schema="database-schema.INSTANCE" to_table="Class" type="Identifying" >
+				<fk_column name="class_id" pk="id" />
+			</fk>
+		</table>
+		<table name="WorkComment" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="created_by" type="INT" jt="4" mandatory="y" />
+			<column name="work_id" prior="post_id" type="INT" jt="4" mandatory="y" />
+			<column name="text" type="TEXT" jt="-1" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_workcomment" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_workcomment_work" virtual="y" to_schema="database-schema.INSTANCE" to_table="Work" type="Identifying" >
+				<fk_column name="work_id" pk="id" />
+			</fk>
+			<fk name="fk_workcomment_user" virtual="y" to_schema="database-schema.INSTANCE" to_table="User" type="Identifying" >
+				<fk_column name="created_by" pk="id" />
+			</fk>
+		</table>
+		<table name="WorkMark" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="mark_id" type="INT" jt="4" >
+				<defo><![CDATA[NULL]]></defo>
+			</column>
+			<column name="award_id" type="INT" jt="4" />
+			<column name="work_id" type="INT" jt="4" mandatory="y" />
+			<column name="student_id" type="INT" jt="4" mandatory="y" />
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<index name="pk_workmark" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_workmark" unique="UNIQUE_KEY" >
+				<column name="work_id" />
+				<column name="student_id" />
+			</index>
+			<fk name="fk_workmark_work" virtual="y" to_schema="database-schema.INSTANCE" to_table="Work" type="Identifying" >
+				<fk_column name="work_id" pk="id" />
+			</fk>
+			<fk name="fk_workmark_student" virtual="y" to_schema="database-schema.INSTANCE" to_table="Student" type="Identifying" >
+				<fk_column name="student_id" pk="id" />
+			</fk>
+			<fk name="fk_workmark_mark" virtual="y" to_schema="database-schema.INSTANCE" to_table="Mark" type="NonIdentifyingOptional" >
+				<fk_column name="mark_id" pk="id" />
+			</fk>
+			<fk name="fk_workmark_award" virtual="y" to_schema="database-schema.INSTANCE" to_table="Award" type="NonIdentifyingOptional" >
+				<fk_column name="award_id" pk="id" />
+			</fk>
+		</table>
+		<table name="WorkType" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<index name="pk_worktype" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_worktype" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+		</table>
+		<table name="Year" prior="entity" >
+			<column name="id" type="INT" jt="4" mandatory="y" />
+			<column name="name" prior="number" type="VARCHAR" length="9" jt="12" mandatory="y" />
+			<column name="is_closed" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<index name="pk_year" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_year" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
+		</table>
+	</schema>
+	<connector name="MyDb" database="MySql" host="localhost" port="3306" user="root" useSystemProxy="false" />
+	<layout name="Main layout" id="Layout-1d12" joined_routing="y" show_column_type="y" show_relation="no_text" >
+		<comment><![CDATA[database-schema]]></comment>
+		<entity schema="database-schema.INSTANCE" name="Attendance" color="4D8080" x="592" y="464" />
+		<entity schema="database-schema.INSTANCE" name="Award" color="4D3399" x="1520" y="80" />
+		<entity schema="database-schema.INSTANCE" name="AwardType" color="4D3399" x="1520" y="240" />
+		<entity schema="database-schema.INSTANCE" name="Class" color="800080" x="896" y="1392" />
+		<entity schema="database-schema.INSTANCE" name="ClassPost" color="FFFF00" x="912" y="1600" />
+		<entity schema="database-schema.INSTANCE" name="ClassPostComment" color="E6804D" x="896" y="1776" />
+		<entity schema="database-schema.INSTANCE" name="Classroom" color="336633" x="384" y="1392" />
+		<entity schema="database-schema.INSTANCE" name="Community" color="FFFF00" x="48" y="992" />
+		<entity schema="database-schema.INSTANCE" name="CommunityCategory" color="FFFF00" x="48" y="864" />
+		<entity schema="database-schema.INSTANCE" name="Cycle" color="00FF00" x="1520" y="592" />
+		<entity schema="database-schema.INSTANCE" name="CycleMark" color="FF0000" x="1216" y="192" />
+		<entity schema="database-schema.INSTANCE" name="Folder" color="008080" x="1184" y="1616" />
+		<entity schema="database-schema.INSTANCE" name="Grade" color="800000" x="1216" y="736" />
+		<entity schema="database-schema.INSTANCE" name="Group" color="E64D4D" x="944" y="704" />
+		<entity schema="database-schema.INSTANCE" name="GroupPost" color="FFFF00" x="944" y="976" />
+		<entity schema="database-schema.INSTANCE" name="GroupPostComment" color="E6804D" x="944" y="1136" />
+		<entity schema="database-schema.INSTANCE" name="Letter" color="E64D4D" x="992" y="880" />
+		<entity schema="database-schema.INSTANCE" name="Manager" color="3986C1" x="320" y="816" />
+		<entity schema="database-schema.INSTANCE" name="Mark" color="FF0000" x="960" y="240" />
+		<entity schema="database-schema.INSTANCE" name="Material" color="008080" x="1184" y="1760" />
+		<entity schema="database-schema.INSTANCE" name="Parent" color="C1D8EE" x="608" y="880" />
+		<entity schema="database-schema.INSTANCE" name="ParentRole" color="C1D8EE" x="608" y="1040" />
+		<entity schema="database-schema.INSTANCE" name="PlanPoint" color="00FF00" x="1520" y="400" />
+		<entity schema="database-schema.INSTANCE" name="Quarter" color="00FF00" x="1520" y="720" />
+		<entity schema="database-schema.INSTANCE" name="QuarterType" color="00FF00" x="1520" y="912" />
+		<entity schema="database-schema.INSTANCE" name="SchoolEvent" color="E6804D" x="48" y="1616" />
+		<entity schema="database-schema.INSTANCE" name="SchoolPost" color="E6804D" x="48" y="1456" />
+		<entity schema="database-schema.INSTANCE" name="SchoolPostComment" color="E6804D" x="48" y="1280" />
+		<entity schema="database-schema.INSTANCE" name="Shedule" color="336633" x="656" y="1392" />
+		<entity schema="database-schema.INSTANCE" name="Student" color="C1D8EE" x="608" y="688" />
+		<entity schema="database-schema.INSTANCE" name="Subject" color="800000" x="1216" y="928" />
+		<entity schema="database-schema.INSTANCE" name="SubjectMark" color="FF0000" x="944" y="448" />
+		<entity schema="database-schema.INSTANCE" name="Teacher" color="C1D8EE" x="608" y="1168" />
+		<entity schema="database-schema.INSTANCE" name="TimeBound" color="336633" x="384" y="1568" />
+		<entity schema="database-schema.INSTANCE" name="Todo" color="4D3399" x="48" y="640" />
+		<entity schema="database-schema.INSTANCE" name="User" color="C1D8EE" x="320" y="976" />
+		<entity schema="database-schema.INSTANCE" name="Weekday" color="336633" x="640" y="1600" />
+		<entity schema="database-schema.INSTANCE" name="Work" color="000080" x="1248" y="1360" />
+		<entity schema="database-schema.INSTANCE" name="WorkComment" color="000080" x="1520" y="1248" />
+		<entity schema="database-schema.INSTANCE" name="WorkMark" color="FF0000" x="1216" y="432" />
+		<entity schema="database-schema.INSTANCE" name="WorkType" color="000080" x="1504" y="1456" />
+		<entity schema="database-schema.INSTANCE" name="Year" color="00FF00" x="1584" y="1056" />
+		<group name="Attendance" color="4D8080" >
+			<entity schema="database-schema.INSTANCE" name="Attendance" />
+		</group>
+		<group name="Todos" color="4D3399" >
+			<entity schema="database-schema.INSTANCE" name="Todo" />
+		</group>
+		<group name="Communities" color="FFFF00" >
+			<entity schema="database-schema.INSTANCE" name="CommunityCategory" />
+			<entity schema="database-schema.INSTANCE" name="Community" />
+		</group>
+		<group name="Class files" color="008080" >
+			<entity schema="database-schema.INSTANCE" name="Folder" />
+			<entity schema="database-schema.INSTANCE" name="Material" />
+		</group>
+		<group name="Awards" color="4D3399" >
+			<entity schema="database-schema.INSTANCE" name="Award" />
+			<entity schema="database-schema.INSTANCE" name="AwardType" />
+		</group>
+		<group name="Classes timetable" color="336633" >
+			<entity schema="database-schema.INSTANCE" name="Classroom" />
+			<entity schema="database-schema.INSTANCE" name="Weekday" />
+			<entity schema="database-schema.INSTANCE" name="TimeBound" />
+			<entity schema="database-schema.INSTANCE" name="Shedule" />
+		</group>
+		<group name="Classes" color="800080" >
+			<entity schema="database-schema.INSTANCE" name="Class" />
+			<entity schema="database-schema.INSTANCE" name="ClassPost" />
+			<entity schema="database-schema.INSTANCE" name="ClassPostComment" />
+		</group>
+		<group name="Groups" color="E64D4D" >
+			<entity schema="database-schema.INSTANCE" name="GroupPost" />
+			<entity schema="database-schema.INSTANCE" name="GroupPostComment" />
+			<entity schema="database-schema.INSTANCE" name="Group" />
+			<entity schema="database-schema.INSTANCE" name="Letter" />
+		</group>
+		<group name="Works" color="000080" >
+			<entity schema="database-schema.INSTANCE" name="Work" />
+			<entity schema="database-schema.INSTANCE" name="WorkType" />
+			<entity schema="database-schema.INSTANCE" name="WorkComment" />
+		</group>
+		<group name="Cycles" color="00FF00" >
+			<entity schema="database-schema.INSTANCE" name="Quarter" />
+			<entity schema="database-schema.INSTANCE" name="QuarterType" />
+			<entity schema="database-schema.INSTANCE" name="PlanPoint" />
+			<entity schema="database-schema.INSTANCE" name="Cycle" />
+			<entity schema="database-schema.INSTANCE" name="Year" />
+		</group>
+		<group name="Users" color="C4E0F9" >
+			<entity schema="database-schema.INSTANCE" name="Student" />
+			<entity schema="database-schema.INSTANCE" name="Teacher" />
+			<entity schema="database-schema.INSTANCE" name="User" />
+			<entity schema="database-schema.INSTANCE" name="ParentRole" />
+			<entity schema="database-schema.INSTANCE" name="Manager" />
+			<entity schema="database-schema.INSTANCE" name="Parent" />
+		</group>
+		<group name="Subjects" color="800000" >
+			<entity schema="database-schema.INSTANCE" name="Grade" />
+			<entity schema="database-schema.INSTANCE" name="Subject" />
+		</group>
+		<group name="Marks" color="FF0000" >
+			<entity schema="database-schema.INSTANCE" name="SubjectMark" />
+			<entity schema="database-schema.INSTANCE" name="CycleMark" />
+			<entity schema="database-schema.INSTANCE" name="Mark" />
+			<entity schema="database-schema.INSTANCE" name="WorkMark" />
+		</group>
+		<group name="News" color="E6804D" >
+			<entity schema="database-schema.INSTANCE" name="SchoolPostComment" />
+			<entity schema="database-schema.INSTANCE" name="SchoolPost" />
+			<entity schema="database-schema.INSTANCE" name="SchoolEvent" />
+		</group>
+	</layout>
+</project>

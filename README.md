@@ -1,4 +1,4 @@
-# KBTU Dimploma work
+# KBTU Diploma work
 
 This repository contains a thesis under the undergraduate program of the Faculty of Information Technology in the specialty "Information Systems" at the University of the Kazakh-British Technical University (KBTU).
 

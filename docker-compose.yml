@@ -16,7 +16,7 @@ services:
 
     django:
         build:
-            context: ./backend/django
+            context: ./backend
             dockerfile: Dockerfile
 
         environment:
@@ -28,7 +28,7 @@ services:
             - '8000:8000'
 
         volumes:
-            - ./backend/django:/app/backend/django
+            - ./backend:/app/backend
 
         depends_on:
             - 'db'

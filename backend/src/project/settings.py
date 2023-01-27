@@ -38,9 +38,15 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
 # Application definition
-PROJECT_APPS = ["apps.api", "apps.authentication", "apps.core"]
+PROJECT_APPS = [
+    "apps.api",
+    "apps.authentication",
+]
 
-THIRD_PARTY_APPS = ["rest_framework", "corsheaders"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "corsheaders",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",

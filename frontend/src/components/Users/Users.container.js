@@ -4,9 +4,12 @@ import Header from "../shared/Header";
 import { Table, Select, Input, Button } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
+import AddingUserModal from "../modals/AddingUserModal";
 
 const UsersContainer = () => {
   const [users, setUsers] = React.useState();
+  const [showAddUser, setShowAddUser] = React.useState(false);
+  const [role, setRole] = React.useState();
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -111,6 +114,7 @@ const UsersContainer = () => {
                 marginLeft: 16,
               }}
               icon={<img src={Plus} style={{ paddingRight: 5 }} />}
+              onClick={() => setShowAddUser(true)}
             >
               Add user
             </Button>
@@ -141,6 +145,10 @@ const UsersContainer = () => {
           // }}
         />
       </div>
+      <AddingUserModal
+        setShowAddUser={setShowAddUser}
+        showAddUser={showAddUser}
+      />
     </div>
   );
 };

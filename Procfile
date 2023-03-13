@@ -1,1 +1,1 @@
-web: gunicorn --log-file=- backend.src.project.wsgi:application
+web: DJANGO_SETTINGS_MODULE=backend.src.project.settings gunicorn project.wsgi:application --log-file=-

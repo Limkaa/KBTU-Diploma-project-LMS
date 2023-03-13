@@ -38,9 +38,32 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
 # Application definition
-PROJECT_APPS = ["apps.api"]
+PROJECT_APPS = [
+    "apps.api",
+    "apps.authentication",
+    # Core modules
+    "apps.core.modules.users",
+    "apps.core.modules.comments",
+    "apps.core.modules.communities",
+    "apps.core.modules.todos",
+    "apps.core.modules.events",
+    "apps.core.modules.posts",
+    "apps.core.modules.awards",
+    "apps.core.modules.courses",
+    "apps.core.modules.files",
+    "apps.core.modules.grades",
+    "apps.core.modules.groups",
+    "apps.core.modules.subjects",
+    "apps.core.modules.syllabus",
+    "apps.core.modules.terms",
+    "apps.core.modules.schools",
+    "apps.core.modules.students",
+]
 
-THIRD_PARTY_APPS = ["rest_framework", "corsheaders"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "corsheaders",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -151,17 +174,26 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = "users.User"
 
 # Django rest framework
 
 REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "apps.api.exception_handlers.drf_default_with_modifications_exception_handler",
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
         "rest_framework.permissions.AllowAny",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 100,
+}
+
+
+SIMPLE_JWT = {
+    "TOKEN_OBTAIN_SERIALIZER": "apps.authentication.serializers.CustomTokenObtainPairSerializer"
 }

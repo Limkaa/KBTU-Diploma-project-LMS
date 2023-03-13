@@ -1,1 +1,1 @@
-web: gunicorn backend.src.project:application --log-file=-
+web: python backend/src/manage.py runserver

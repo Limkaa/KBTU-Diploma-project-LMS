@@ -1,29 +1,47 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from .models import User
 
-
-class UserPublicSerializer(serializers.Serializer):
+class UserSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    email = serializers.EmailField()
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
-    role = serializers.ChoiceField(choices=User.Role.choices)
-
-
-class UserSerializer(UserPublicSerializer):
-    password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
     school_id = serializers.IntegerField(read_only=True)
-    gender = serializers.ChoiceField(choices=User.Gender.choices)
-    date_of_birth = serializers.DateField()
-    phone = serializers.CharField()
-    telegram_id = serializers.CharField(write_only=True)
+    role = serializers.ChoiceField(required=True, choices=User.Role.choices)
+    avatar = serializers.ImageField(required=False, allow_null=True)
+    gender = serializers.ChoiceField(required=True, choices=User.Gender.choices)
+    date_of_birth = serializers.DateField(required=True)
     rating = serializers.IntegerField(read_only=True)
-    avatar = serializers.FileField(required=False, allow_null=True)
-    is_active = serializers.BooleanField()
+    phone = serializers.CharField(required=False, allow_blank=True)
+    telegram_id = serializers.CharField(required=False, allow_blank=True)
+    is_active = serializers.BooleanField(required=False)
     updated_at = serializers.DateTimeField(read_only=True)
     date_joined = serializers.DateTimeField(read_only=True)
 
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+        return instance
+
+
+class UserPublicSerializer(UserSerializer):
+    date_of_birth = None
+    phone = None
+    telegram_id = None
+    is_active = None
+    updated_at = None
+    date_joined = None
+
+
+class UserCreateSerializer(UserSerializer):
+    password = serializers.CharField(required=True, write_only=True)
+    
     def create(self, validated_data):
         password = validated_data.pop("password")
         user = User(**validated_data)

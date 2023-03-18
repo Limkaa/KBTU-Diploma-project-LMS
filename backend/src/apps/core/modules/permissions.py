@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from .models import User
+from .users.models import User
 
 
 class OnlyOwnSchool(permissions.BasePermission):
@@ -15,6 +15,15 @@ class OnlyOwnSchoolObject(permissions.BasePermission):
     
     def has_object_permission(self, request, view, obj):
         return obj.school_id == request.user.school_id
+
+
+class IsManagerOrReadOnly(permissions.BasePermission):
+    message = "Only manager can access this view"
+    
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.role == User.Role.MANAGER
 
 
 class IsManager(permissions.BasePermission):

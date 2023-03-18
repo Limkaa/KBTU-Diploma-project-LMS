@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 
 from . import serializers
-from .permissions import IsManager, OnlyOwnSchool, OnlyOwnSchoolObject
+from ..permissions import IsManager, OnlyOwnSchool, OnlyOwnSchoolObject
 
 from .models import User
 

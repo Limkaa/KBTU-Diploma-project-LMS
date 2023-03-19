@@ -66,7 +66,6 @@ class User(AbstractUser):
         MANAGER = "manager", "Manager"
         TEACHER = "teacher", "Teacher"
         STUDENT = "student", "Student"
-        PARENT = "parent", "Parent"
         UNKNOWN = "unknown", "Unknown"
 
     default_role = Role.UNKNOWN

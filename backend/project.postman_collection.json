@@ -705,14 +705,26 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/users",
+							"raw": "{{BASE_URL}}/schools/1/users",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"2",
+								"1",
 								"users"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -809,6 +821,103 @@
 							"path": [
 								"users",
 								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Grades",
+			"item": [
+				{
+					"name": "View school grades",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/grades",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"grades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create grade",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"1 класс\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/grades",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"grades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View one grade",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/grades/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"grades",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update grade",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"1 класс\",\n    \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/grades/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"grades",
+								"1"
 							]
 						}
 					},

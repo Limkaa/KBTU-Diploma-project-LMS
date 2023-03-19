@@ -30,7 +30,7 @@ class Command(BaseCommand):
         )
 
     def _create_schools(self):
-        json_schools = self._get_data_from_json_file('src/mock_data/schools.json') or []
+        json_schools = self._get_data_from_json_file('mock_data/schools.json') or []
         
         objects = []
         for school in json_schools:
@@ -40,7 +40,7 @@ class Command(BaseCommand):
         return objects
         
     def _create_users(self):
-        json_users = self._get_data_from_json_file('src/mock_data/users.json') or []
+        json_users = self._get_data_from_json_file('mock_data/users.json') or []
         
         objects = []
         for index, user in enumerate(json_users):

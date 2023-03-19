@@ -4,7 +4,7 @@ from django.db import models
 class Grade(models.Model):
     school = models.ForeignKey(
         to="schools.School",
-        related_name="groups",
+        related_name="grades",
         on_delete=models.CASCADE,
         null=False,
         blank=False,

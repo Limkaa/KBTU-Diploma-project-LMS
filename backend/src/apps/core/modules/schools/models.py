@@ -1,11 +1,13 @@
 from django.db import models
 
-from ..posts.models import FeedMixin
 
-
-class School(FeedMixin):
-    name = models.CharField(max_length=250, blank=False)
-    address = models.CharField(max_length=250, blank=False)
+class School(models.Model):
+    NAME_MAX_LENGTH = 250
+    ADDRESS_MAX_LENGTH = 250
+    
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=False, unique=True)
+    address = models.CharField(max_length=ADDRESS_MAX_LENGTH, blank=False)
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

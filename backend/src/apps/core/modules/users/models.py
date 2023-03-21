@@ -37,7 +37,6 @@ class User(AbstractUser):
     email = models.EmailField(
         verbose_name="email address",
         max_length=255,
-        null=False,
         blank=False,
         unique=True,
     )
@@ -58,7 +57,6 @@ class User(AbstractUser):
         max_length=7,
         choices=Gender.choices,
         default=default_gender,
-        null=False,
         blank=False,
     )
 
@@ -68,7 +66,6 @@ class User(AbstractUser):
         MANAGER = "manager", "Manager"
         TEACHER = "teacher", "Teacher"
         STUDENT = "student", "Student"
-        PARENT = "parent", "Parent"
         UNKNOWN = "unknown", "Unknown"
 
     default_role = Role.UNKNOWN
@@ -79,8 +76,8 @@ class User(AbstractUser):
         choices=Role.choices,
     )
 
-    phone = models.CharField(max_length=50, blank=True, unique=True)
-    telegram_id = models.CharField(max_length=50, blank=True, unique=True)
+    phone = models.CharField(max_length=50, blank=True)
+    telegram_id = models.CharField(max_length=50, blank=True)
     avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
     rating = models.IntegerField(default=0, null=False, blank=False)
     updated_at = models.DateTimeField(auto_now=True)

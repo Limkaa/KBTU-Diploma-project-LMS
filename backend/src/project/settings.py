@@ -31,9 +31,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = "django-insecure-&bx1=h##%-7#&9t!ppwiq9)a(v=7=fa#!n3p$g)x0xl2k2fic$"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DJANGO_DEBUG")
+DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "studymate.herokuapp.com"]
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
@@ -42,22 +42,22 @@ PROJECT_APPS = [
     "apps.api",
     "apps.authentication",
     # Core modules
+    "apps.core.modules.schools",
     "apps.core.modules.users",
+    "apps.core.modules.grades",
+    "apps.core.modules.groups",
+    "apps.core.modules.students",
+    "apps.core.modules.subjects",
+    "apps.core.modules.terms",
+    "apps.core.modules.courses",
     "apps.core.modules.comments",
     "apps.core.modules.communities",
     "apps.core.modules.todos",
     "apps.core.modules.events",
     "apps.core.modules.posts",
     "apps.core.modules.awards",
-    "apps.core.modules.courses",
     "apps.core.modules.files",
-    "apps.core.modules.grades",
-    "apps.core.modules.groups",
-    "apps.core.modules.subjects",
     "apps.core.modules.syllabus",
-    "apps.core.modules.terms",
-    "apps.core.modules.schools",
-    "apps.core.modules.students",
 ]
 
 THIRD_PARTY_APPS = [
@@ -118,18 +118,6 @@ DATABASES = {
     }
 }
 
-if not DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("POSTGRES_DB"),
-            "USER": os.environ.get("POSTGRES_USER"),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-            "HOST": "db",
-            "PORT": 5432,
-        }
-    }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -168,6 +156,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+MEDIA_URL = "/images/"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

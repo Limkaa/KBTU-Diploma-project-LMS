@@ -39,6 +39,7 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
 # Application definition
 PROJECT_APPS = [
+    "apps",
     "apps.api",
     "apps.authentication",
     # Core modules

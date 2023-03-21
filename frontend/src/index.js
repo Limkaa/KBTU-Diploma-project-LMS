@@ -16,6 +16,9 @@ import TimelineContainer from "./components/Timeline/Timeline.container";
 import GradesContainer from "./components/Grades/Grades.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
+import {AuthProvider} from "./context/AuthProvider";
+import {BrowserRouter} from "react-router-dom";
+
 
 const AppLayout = () => (
   <div className="body-container">
@@ -76,10 +79,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
+      {/* <BrowserRouter>
+          <AuthProvider>
+              <App />
+          </AuthProvider>
+      </BrowserRouter> */}
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

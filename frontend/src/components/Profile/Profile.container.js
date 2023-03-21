@@ -2,8 +2,13 @@ import React from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header";
 import { Input, Button } from "antd";
+import { useContext } from "react";
+import AuthContext from "../../context/AuthProvider";
 
 const ProfileContainer = () => {
+  const { user } = useContext(AuthContext);
+
+  console.log(user.email);
   return (
     <div
       style={{
@@ -23,7 +28,7 @@ const ProfileContainer = () => {
           <div style={{ flex: 2 }}>
             <div>
               <p style={styles.inputTitle}>Username</p>
-              <Input placeholder="Basic usage" />
+              <Input placeholder="Basic usage" defaultValue={user.email} />
             </div>
             <div>
               <p style={styles.inputTitle}>Email address</p>

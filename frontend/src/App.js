@@ -21,7 +21,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route exact path="/" element={<PrivateRoute />}>
-          <Route exact path="/home" element={<DashboardContainer />} />
+          <Route exact path="/" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />

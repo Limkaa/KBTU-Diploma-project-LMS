@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../../context/AuthProvider";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
+  const returnRole = () => {
+    return user?.role.charAt(0).toUpperCase() + user?.role.slice(1);
+  };
 
   return (
     <div onClick={() => navigate("/profile")} style={styles.container}>
       <div style={styles.left}>
-        <p style={styles.title}>Ayazhan Utemurat</p>
-        <p style={styles.subtitle}>Student</p>
+        <p style={styles.title}>
+          {user?.first_name} {user?.last_name}
+        </p>
+        <p style={styles.subtitle}>{returnRole()}</p>
       </div>
       <img style={styles.img} />
     </div>

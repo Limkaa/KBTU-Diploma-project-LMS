@@ -1,29 +1,29 @@
-import React from "react";
+import React, { useContext } from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header";
 import { Table, Select, Input, Button } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "../modals/AddingUserModal";
+import AuthContext from "../../context/AuthProvider";
+import { requestUsers } from "../../api";
 
 const UsersContainer = () => {
+  const { userInfo, authToken } = useContext(AuthContext);
   const [users, setUsers] = React.useState();
   const [showAddUser, setShowAddUser] = React.useState(false);
-  const [role, setRole] = React.useState();
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
 
   React.useEffect(() => {
-    // fetch data
-    const dataFetch = async () => {
-      fetch("https://dummyjson.com/users")
-        .then((res) => res.json())
-        .then((json) => setUsers(json));
-    };
-
-    dataFetch();
-  }, []);
+    if (userInfo?.school_id && authToken) {
+      requestUsers(userInfo?.school_id, authToken).then((response) => {
+        setUsers(response.results);
+        console.log("response", response);
+      });
+    }
+  }, [userInfo, authToken]);
 
   const columns = [
     {
@@ -31,11 +31,18 @@ const UsersContainer = () => {
         return <>Name</>;
       },
       width: "15%",
-      render: (text, item) => (
+      render: (item) => (
         <div>
-          {item.lastName} {item.firstName}
+          {item.first_name} {item.last_name}
         </div>
       ),
+    },
+    {
+      title: () => {
+        return <>E-mail</>;
+      },
+      dataIndex: "email",
+      width: "15%",
     },
     {
       title: () => {
@@ -46,16 +53,9 @@ const UsersContainer = () => {
     },
     {
       title: () => {
-        return <>Class</>;
-      },
-      dataIndex: "age",
-      width: "15%",
-    },
-    {
-      title: () => {
         return <>Role</>;
       },
-      dataIndex: "age",
+      dataIndex: "role",
       width: "15%",
     },
   ];
@@ -122,7 +122,7 @@ const UsersContainer = () => {
         </div>
 
         <Table
-          dataSource={users?.users}
+          dataSource={users}
           columns={columns}
           rowKey={(item) => item?.id}
           onRow={(record) => {

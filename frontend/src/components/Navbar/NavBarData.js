@@ -11,7 +11,7 @@ import UsersSvg from "../../assets/icons/UsersIcon";
 export const navBarData = [
   {
     title: "Home",
-    path: "/home",
+    path: "/",
     icon: HomeSvg,
   },
   {

@@ -1,0 +1,10 @@
+.input:focus {
+    border: 3px solid red;
+}
+.input:active {
+    border: 3px solid red;
+}
+
+.input:hover {
+    border: none
+}

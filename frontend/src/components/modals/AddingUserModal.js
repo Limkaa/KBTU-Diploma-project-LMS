@@ -13,7 +13,7 @@ const AddingUserModal = ({ showAddUser, setShowAddUser }) => {
           onClick={() => setShowAddUser(false)}
         />
       </div>
-      <div style={styles.content}>
+      {/* <div style={styles.content}>
         <div>
           <p style={styles.contentTitle}>User</p>
           <Input placeholder="First name" style={styles.input} />
@@ -45,10 +45,20 @@ const AddingUserModal = ({ showAddUser, setShowAddUser }) => {
             ]}
           />
         </div>
-      </div>
+      </div> */}
 
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{
+          email: "",
+          password: "",
+          first_name: "",
+          last_name: "",
+          role: "",
+          gender: "",
+          date_of_birth: "DD.MM.YYYY",
+          phone: "",
+          telegram_id: "",
+        }}
         validate={(values) => {
           const errors = {};
           if (!values.email) {
@@ -68,11 +78,57 @@ const AddingUserModal = ({ showAddUser, setShowAddUser }) => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form>
-            <Field type="email" name="email" />
-            <ErrorMessage name="email" component="div" />
-            <Field type="password" name="password" />
-            <ErrorMessage name="password" component="div" />
+          <Form style={styles.form}>
+            <p style={styles.contentTitle}>User</p>
+            <Field
+              name="first_name"
+              render={({ field, form: { touched, errors } }) => (
+                <div>
+                  <div>First name</div>
+                  <Input
+                    {...field}
+                    type="first_name"
+                    placeholder="First name"
+                    style={styles.input}
+                  />
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="error">{errors[field.name]}</div>
+                  )}
+                </div>
+              )}
+            />
+            <Field
+              name="email"
+              render={({ field, form: { touched, errors } }) => (
+                <div>
+                  <Input
+                    {...field}
+                    type="email"
+                    placeholder="Email"
+                    style={styles.input}
+                  />
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="error">{errors[field.name]}</div>
+                  )}
+                </div>
+              )}
+            />
+            <Field
+              name="password"
+              render={({ field, form: { touched, errors } }) => (
+                <div>
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder="Password"
+                    style={styles.input}
+                  />
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="error">{errors[field.name]}</div>
+                  )}
+                </div>
+              )}
+            />
             <button type="submit" disabled={isSubmitting}>
               Submit
             </button>
@@ -118,7 +174,15 @@ const styles = {
     color: "#4A4D58",
     fontSize: 15,
   },
+  form: {
+    flexDirection: "column",
+    display: "flex",
+    padding: "0 16px 16px 16px",
+  },
   input: {
+    border: "1px solid #DFDFDF",
+    borderRadius: 8,
+    padding: "8px 10px",
     marginBottom: 10,
   },
 };

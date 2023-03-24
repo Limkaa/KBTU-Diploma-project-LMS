@@ -45,8 +45,12 @@ class Group(models.Model):
         if self.grade.school != self.school:
             raise ValidationError(validation_error.format(object='grade'))
         
-        if self.teacher is not None and self.teacher.school != self.school:
-            raise ValidationError(validation_error.format(object='teacher'))
+        if self.teacher is not None:
+            if self.teacher.role != User.Role.TEACHER:
+                raise ValidationError(f"User with role '{self.teacher.role}' cannot be teacher of group")
+            
+            if self.teacher.school != self.school:
+                raise ValidationError(validation_error.format(object='teacher'))
     
     def save(self, *args, **kwargs):
         self.full_clean()

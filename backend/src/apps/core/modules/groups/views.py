@@ -55,7 +55,7 @@ class GroupRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         return super().perform_update(serializer)
 
 
-class SchoolGroupsListCreateAPI(generics.ListAPIView):
+class SchoolGroupsListAPI(generics.ListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager

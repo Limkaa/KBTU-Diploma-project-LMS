@@ -33,7 +33,7 @@ SECRET_KEY = "django-insecure-&bx1=h##%-7#&9t!ppwiq9)a(v=7=fa#!n3p$g)x0xl2k2fic$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "studymate.herokuapp.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
@@ -188,3 +188,10 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "apps.authentication.serializers.CustomTokenObtainPairSerializer"
 }
+
+
+# Debug toolbar setup
+if DEBUG:
+    INTERNAL_IPS = ["127.0.0.1"]
+    INSTALLED_APPS.append("debug_toolbar")
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")

@@ -36,9 +36,8 @@ class Command(BaseCommand):
         
         objects = []
         for school in json_schools:
-            objects.append(School(**school))
+            objects.append(School.objects.create(**school))
         
-        objects = School.objects.bulk_create(objects)
         self.stdout.write(self.style.SUCCESS('Schools created'))
         return objects
         
@@ -50,7 +49,7 @@ class Command(BaseCommand):
             objects.append(User.objects.create_user(
                 email = f'user{index+1}@gmail.com',
                 password = '123',
-                school_id = random.choice(self.schools).pk,
+                school_id = random.choice(self.schools).id,
                 role = random.choice(['manager', 'student', 'student', 'student', 'teacher']),
                 **user,
             ))
@@ -63,13 +62,12 @@ class Command(BaseCommand):
         for school in self.schools:
             number_of_grades = random.randint(5,11)
             for i in range(1, number_of_grades+1):
-                objects.append(Grade(
-                    school_id = school.pk,
+                objects.append(Grade.objects.create(
+                    school_id = school.id,
                     name = f"{i} grade",
                     is_active = True
                 ))
         
-        objects = Grade.objects.bulk_create(objects)
         self.stdout.write(self.style.SUCCESS('Grades created'))
         return objects
     
@@ -78,25 +76,24 @@ class Command(BaseCommand):
         
         objects = []
         for school in self.schools:
-            grades = list(filter(lambda x: x.school == school, self.grades))
-            teachers = list(filter(lambda x: x.school == school and x.role == User.Role.TEACHER, self.users))
+            grades = list(filter(lambda x: x.school_id == school.id, self.grades))
+            teachers = list(filter(lambda x: x.school_id == school.id and x.role == User.Role.TEACHER, self.users))
             
             for group_code in random.sample(json_group_codes, 10):
-                objects.append(Group(
-                    school_id = school.pk,
+                objects.append(Group.objects.create(
+                    school_id = school.id,
                     teacher_id = random.choice(teachers).id,
                     grade_id = random.choice(grades).id,
                     is_active = random.choice([True, False]),
                     code=group_code
                 ))
             
-        objects = Group.objects.bulk_create(objects)
         self.stdout.write(self.style.SUCCESS('Groups created'))
         return objects
         
     def _assign_students_to_groups(self):
         for school in self.schools:
-            students = Student.objects.filter(user__school = school)
+            students = Student.objects.filter(user__school_id = school.id)
             groups = Group.objects.filter(school=school)
             
             for student in students:

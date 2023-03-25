@@ -26,7 +26,7 @@ class GroupCreateAPI(generics.CreateAPIView):
     
 
 class GroupRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().select_related('grade', 'teacher')
     
     def get_serializer_class(self):
         if self.request.method == "PUT":
@@ -65,7 +65,7 @@ class SchoolGroupsListCreateAPI(generics.ListAPIView):
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])
         self.check_object_permissions(self.request, school)
-        return Group.objects.filter(school = school)
+        return Group.objects.filter(school = school).select_related('grade', 'teacher')
     
     
 class TeacherGroupsListAPI(generics.ListAPIView):
@@ -80,7 +80,7 @@ class TeacherGroupsListAPI(generics.ListAPIView):
         teacher = get_object_or_404(
             User, pk=self.kwargs['teacher_id'], role=User.Role.TEACHER)
         self.check_object_permissions(self.request, teacher)
-        return self.queryset.filter(teacher=teacher)
+        return self.queryset.filter(teacher=teacher).select_related('grade', 'teacher')
 
 
 class GradeGroupsListAPI(generics.ListAPIView):
@@ -94,4 +94,4 @@ class GradeGroupsListAPI(generics.ListAPIView):
     def get_queryset(self):
         grade = get_object_or_404(Grade, pk=self.kwargs['grade_id'])
         self.check_object_permissions(self.request, grade)
-        return self.queryset.filter(grade=grade)
+        return self.queryset.filter(grade=grade).select_related('grade', 'teacher')

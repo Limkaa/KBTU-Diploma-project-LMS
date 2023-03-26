@@ -7,11 +7,16 @@ import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "../modals/AddingUserModal";
 import AuthContext from "../../context/AuthProvider";
 import { requestUsers } from "../../api";
+import UpdateUserModal from "../modals/UpdateUserModal";
 
 const UsersContainer = () => {
   const { userInfo, authToken } = useContext(AuthContext);
   const [users, setUsers] = React.useState();
+  const [user, setUser] = React.useState();
+
   const [showAddUser, setShowAddUser] = React.useState(false);
+  const [showUpdateUser, setShowUpdateUser] = React.useState(false);
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -128,8 +133,8 @@ const UsersContainer = () => {
           onRow={(record) => {
             return {
               onClick: () => {
-                // setShowBusket(true);
-                // setSale(record);
+                setUser(record);
+                setShowUpdateUser(true);
               },
             };
           }}
@@ -148,6 +153,12 @@ const UsersContainer = () => {
       <AddingUserModal
         setShowAddUser={setShowAddUser}
         showAddUser={showAddUser}
+      />
+      <UpdateUserModal
+        showUpdateUser={showUpdateUser}
+        setShowUpdateUser={setShowUpdateUser}
+        user={user}
+        setUser={setUser}
       />
     </div>
   );

@@ -8,3 +8,33 @@ export const requestUsers = async (school_id, authToken) => {
     }),
   }).then((response) => response.json());
 };
+
+export const createUser = async (
+  school_id,
+  authToken,
+  values,
+  phoneFormat,
+  role,
+  gender,
+  date,
+  avatar
+) => {
+  let response = await fetch(`${baseURL}api/schools/${school_id}/users`, {
+    method: "POST",
+    headers: new Headers({
+      Authorization: `Bearer ${authToken}`,
+      "Content-type": "application/json",
+    }),
+    body: JSON.stringify({
+      email: values.email,
+      password: values.password,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      role: role,
+      gender: gender,
+      date_of_birth: date,
+      phone: phoneFormat,
+      telegram_id: values.telegram_id,
+    }),
+  });
+};

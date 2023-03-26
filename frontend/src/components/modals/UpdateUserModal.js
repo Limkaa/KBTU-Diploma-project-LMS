@@ -9,17 +9,22 @@ import moment from "moment-timezone";
 
 import { createUser } from "../../api";
 
-const AddingUserModal = ({ showAddUser, setShowAddUser, user, setUser }) => {
+const UpdateUserModal = ({
+  showUpdateUser,
+  setShowUpdateUser,
+  user,
+  setUser,
+}) => {
   console.log(user);
-  const [role, setRole] = React.useState(user ? user.role : "");
-  const [gender, setGender] = React.useState(user ? user.gender : "");
+  const [role, setRole] = React.useState(user?.role);
+  const [gender, setGender] = React.useState(user?.gender);
   const [date, setDate] = React.useState(user ? user.date_of_birth : "");
   const { userInfo, authToken } = useContext(AuthContext);
   const [avatar, setAvatar] = React.useState(null);
   const [error, setError] = React.useState(false);
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
   return (
-    <div style={{ ...styles.wrapper, right: showAddUser ? "0" : "-30%" }}>
+    <div style={{ ...styles.wrapper, right: showUpdateUser ? "0" : "-30%" }}>
       <div style={styles.header}>
         <div style={styles.headerTitle}>
           {user ? "Update User" : "New User"}
@@ -28,8 +33,8 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user, setUser }) => {
           src={Cancel}
           style={styles.close}
           onClick={() => {
-            setShowAddUser(false);
-            // setUser();
+            setShowUpdateUser(false);
+            setUser();
           }}
         />
       </div>
@@ -339,4 +344,4 @@ const styles = {
   },
 };
 
-export default AddingUserModal;
+export default UpdateUserModal;

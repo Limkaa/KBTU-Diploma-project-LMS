@@ -1,10 +1,22 @@
-.input:focus {
-    border: 3px solid red;
-}
-.input:active {
-    border: 3px solid red;
+select option {
+  padding: 10px;
 }
 
-.input:hover {
-    border: none
+.phone_input:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: #bdbdbd;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem #f7f7f7;
+}
+
+#upload-photo {
+  margin-top: 10px;
+}
+
+.error {
+  color: #FFB082;
+  font-weight: 500;
+  font-size: 13px;
+  margin-left: 4px;
 }

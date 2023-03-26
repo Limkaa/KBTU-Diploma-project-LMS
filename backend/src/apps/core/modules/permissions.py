@@ -10,3 +10,8 @@ from .users.permissions import (
 from .groups.permissions import (
     IsGroupTeacher
 )
+
+from .students.permissions import (
+    OnlyOwnSchoolGroup,
+    IsStudentItself
+)

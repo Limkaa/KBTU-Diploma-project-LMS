@@ -1,3 +1,37 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Student
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "group",
+    )
+
+    search_fields = ("user",)
+
+    list_filter = ("group",)
+
+    fieldsets = (
+        (
+            "Group information",
+            {
+                "fields": (
+                    "user",
+                    "group",
+                )
+            },
+        ),
+        (
+            "Timestamps",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at"
+                )
+            },
+        ),
+    )
+    
+    readonly_fields = ["created_at", "updated_at"]

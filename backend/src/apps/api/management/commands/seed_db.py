@@ -7,7 +7,7 @@ from apps.core.modules.users.models import User
 from apps.core.modules.schools.models import School
 from apps.core.modules.grades.models import Grade
 from apps.core.modules.groups.models import Group
-
+from apps.core.modules.students.models import Student
 
 class Command(BaseCommand):
     help = 'Fills database with mock data'
@@ -88,16 +88,28 @@ class Command(BaseCommand):
                     code=group_code
                 ))
             
-        
         self.stdout.write(self.style.SUCCESS('Groups created'))
         return objects
         
-             
+    def _assign_students_to_groups(self):
+        for school in self.schools:
+            students = Student.objects.filter(user__school_id = school.id)
+            groups = Group.objects.filter(school=school)
+            
+            for student in students:
+                student.group = random.choice(groups)
+                student.save()
+        
+        self.stdout.write(self.style.SUCCESS('Students assigned to groups'))
+               
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
         self.users = self._create_users()
         self.groups = self._create_groups()
+        
+        self._assign_students_to_groups()
         
         self._create_superuser()
         

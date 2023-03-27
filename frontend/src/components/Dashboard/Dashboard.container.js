@@ -8,12 +8,14 @@ import Profile from "./Profile";
 import Schedule from "./Schedule";
 import SchoolCommunities from "./SchoolCommunities";
 import TodoList from "./TodoList";
+import {useSelector} from "react-redux";
 
 const DashboardContainer = () => {
+  const {user} = useSelector(state => state.auth);
   return (
     <div className="container">
       <div className="left-container">
-        <Header text={"Hello, Student!"} visible={true} />
+        <Header text={`Hello, ${user.first_name}!`} visible={true} />
         <div className="announcements">
           <p className="ann-title">Announcements</p>
           <div className="ann-item">

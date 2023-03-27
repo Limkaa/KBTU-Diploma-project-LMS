@@ -4,7 +4,7 @@ import './LoginPage.css'
 
 const LoginPage = () => {
     return (
-        <div>
+        <div className='login'>
             <section id='main'>
                 <div className="inner-con">
                     <Login/>

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header";
-import { Table, Select, Input, Button } from "antd";
+import { Table, Select, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "../modals/AddingUserModal";
@@ -62,6 +62,29 @@ const UsersContainer = () => {
       },
       dataIndex: "role",
       width: "15%",
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "15%",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            style={{ color: "#45B764", fontWeight: 500 }}
+            type={"link"}
+            onClick={() => {
+              console.log(record);
+              setUser(record);
+              setShowUpdateUser(true);
+            }}
+          >
+            Change
+          </Button>
+          <Button style={{ color: "#F18D58", fontWeight: 500 }} type={"link"}>
+            Delete
+          </Button>
+        </Space>
+      ),
     },
   ];
 
@@ -130,14 +153,14 @@ const UsersContainer = () => {
           dataSource={users}
           columns={columns}
           rowKey={(item) => item?.id}
-          onRow={(record) => {
-            return {
-              onClick: () => {
-                setUser(record);
-                setShowUpdateUser(true);
-              },
-            };
-          }}
+          // onRow={(record) => {
+          //   return {
+          //     onClick: () => {
+          //       setUser(record);
+          //       setShowUpdateUser(true);
+          //     },
+          //   };
+          // }}
           pagination={false}
           // pagination={{
           //   defaultPageSize: 14,

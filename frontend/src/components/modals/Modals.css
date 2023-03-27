@@ -15,8 +15,14 @@ select option {
 }
 
 .error {
-  color: #FFB082;
+  color: #ffb082;
   font-weight: 500;
   font-size: 13px;
   margin-left: 4px;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 0.2rem #f7f7f7;
+  border-color: #bdbdbd;
+  outline: 0;
 }

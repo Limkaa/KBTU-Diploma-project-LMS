@@ -7,7 +7,7 @@ import AuthContext from "../../context/AuthProvider";
 import "./Modals.css";
 import moment from "moment-timezone";
 
-import { createUser } from "../../api";
+import { updateUser } from "../../api";
 
 const UpdateUserModal = ({
   showUpdateUser,
@@ -16,6 +16,13 @@ const UpdateUserModal = ({
   setUser,
 }) => {
   console.log(user);
+  const [email, setEmail] = React.useState();
+  const [firstName, setFirstName] = React.useState();
+  const [lastName, setLastName] = React.useState();
+  const [phoneNumber, setPhoneNumber] = React.useState();
+  const [telegramId, setTelegramId] = React.useState();
+  const [dateOfBirth, setDateOfBirth] = React.useState();
+
   const [role, setRole] = React.useState(user?.role);
   const [gender, setGender] = React.useState(user?.gender);
   const [date, setDate] = React.useState(user ? user.date_of_birth : "");
@@ -26,9 +33,7 @@ const UpdateUserModal = ({
   return (
     <div style={{ ...styles.wrapper, right: showUpdateUser ? "0" : "-30%" }}>
       <div style={styles.header}>
-        <div style={styles.headerTitle}>
-          {user ? "Update User" : "New User"}
-        </div>
+        <div style={styles.headerTitle}>{"Update User"}</div>
         <img
           src={Cancel}
           style={styles.close}
@@ -38,9 +43,64 @@ const UpdateUserModal = ({
           }}
         />
       </div>
-      <Formik
+      <div style={styles.form}>
+        <p style={styles.contentTitle}>User</p>
+        <input
+          type="text"
+          placeholder="First name"
+          style={styles.input}
+          className="input"
+          defaultValue={user?.first_name}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Last name"
+          style={styles.input}
+          className="input"
+          defaultValue={user?.last_name}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          style={styles.input}
+          className="input"
+          defaultValue={user?.email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="tel"
+          placeholder="Phone number"
+          style={styles.input}
+          className="input"
+          defaultValue={user?.phone}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          maxLength={11}
+        />
+      </div>
+
+      <button
+        type="submit"
+        style={styles.btn}
+        onClick={() => {
+          updateUser(
+            userInfo?.id,
+            authToken,
+            email,
+            // phoneFormat,
+            role,
+            gender
+            // moment(date).format("YYYY-MM-DD"),
+            // avatar
+          );
+        }}
+      >
+        Update user
+      </button>
+      {/* <Formik
         initialValues={{
-          email: user ? user?.email : "",
+          email: user?.email,
           password: user ? user?.password : "",
           first_name: user ? user?.first_name : "",
           last_name: user ? user?.last_name : "",
@@ -74,15 +134,15 @@ const UpdateUserModal = ({
           const phoneFormat = `8${removeSpecSymbols(values.phone)}`;
           setSubmitting(false);
           if (gender && role && date) {
-            createUser(
-              userInfo?.school_id,
+            updateUser(
+              userInfo?.id,
               authToken,
-              values,
-              phoneFormat,
-              role,
-              gender,
-              moment(date).format("YYYY-MM-DD"),
-              avatar
+              values.first_name
+              // phoneFormat,
+              // role,
+              // gender,
+              // moment(date).format("YYYY-MM-DD"),
+              // avatar
             );
           } else {
             setError(true);
@@ -98,9 +158,10 @@ const UpdateUserModal = ({
                 <div>
                   <Input
                     {...field}
-                    placeholder="First name"
-                    defaultValue={field.value}
+                    // placeholder="First name"
+                    // value={field.value}
                     style={styles.input}
+                    defaultValue={user?.first_name}
                   />
                   {touched[field.name] && errors[field.name] && (
                     <div className="error">{errors[field.name]}</div>
@@ -128,11 +189,12 @@ const UpdateUserModal = ({
               name="email"
               render={({ field, form: { touched, errors } }) => (
                 <div>
-                  <Input
+                  <input
                     {...field}
                     type="email"
                     placeholder="Email"
                     style={styles.input}
+                    value={field.value}
                   />
                   {touched[field.name] && errors[field.name] && (
                     <div className="error">{errors[field.name]}</div>
@@ -178,7 +240,7 @@ const UpdateUserModal = ({
               name="telegram_id"
               render={({ field, form: { touched, errors } }) => (
                 <div>
-                  <Input
+                  <input
                     {...field}
                     type="text"
                     placeholder="Telegram ID"
@@ -265,7 +327,7 @@ const UpdateUserModal = ({
             </button>
           </Form>
         )}
-      </Formik>
+      </Formik> */}
     </div>
   );
 };

@@ -22,7 +22,6 @@ const UpdateUserModal = ({
   const [phoneNumber, setPhoneNumber] = React.useState();
   const [telegramId, setTelegramId] = React.useState();
   const [dateOfBirth, setDateOfBirth] = React.useState();
-
   const [role, setRole] = React.useState(user?.role);
   const [gender, setGender] = React.useState(user?.gender);
   const [date, setDate] = React.useState(user ? user.date_of_birth : "");

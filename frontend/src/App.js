@@ -15,8 +15,11 @@ import TimelineContainer from "./components/Timeline/Timeline.container";
 import GradesContainer from "./components/Grades/Grades.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
-
+import { toast } from "react-toastify";
 function App() {
+  React.useEffect(() => {
+    toast.configure({ autoClose: 3000 });
+  });
   return (
     <div className="App">
       <Routes>

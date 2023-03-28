@@ -1,46 +1,72 @@
 import React, { useContext } from "react";
 import Cancel from "../../assets/icons/close.svg";
-import { Input, Select, DatePicker } from "antd";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import InputMask from "react-input-mask";
 import AuthContext from "../../context/AuthProvider";
 import "./Modals.css";
-import moment from "moment-timezone";
-
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { toast } from "react-toastify";
 import { createUser } from "../../api";
 
-const AddingUserModal = ({ showAddUser, setShowAddUser, user, setUser }) => {
-  console.log(user);
-  const [role, setRole] = React.useState(user ? user.role : "");
-  const [gender, setGender] = React.useState(user ? user.gender : "");
-  const [date, setDate] = React.useState(user ? user.date_of_birth : "");
+const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
+  props,
+  ref
+) {
+  return (
+    <InputMask
+      {...props}
+      placeholder="8 (___) - __ - __ - __"
+      mask="9 (999)-999-99-99"
+      maskChar={null}
+    />
+  );
+});
+
+const DateMask = React.forwardRef(function NumericFormatCustom(props, ref) {
+  return (
+    <InputMask
+      {...props}
+      placeholder="YYYY-MM-DD"
+      mask="9999-99-99"
+      maskChar={null}
+    />
+  );
+});
+
+const AddingUserModal = ({ showAddUser, setShowAddUser }) => {
+  const [role, setRole] = React.useState("");
+  const [gender, setGender] = React.useState("");
+  const [date, setDate] = React.useState("");
   const { userInfo, authToken } = useContext(AuthContext);
   const [avatar, setAvatar] = React.useState(null);
   const [error, setError] = React.useState(false);
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
+
   return (
     <div style={{ ...styles.wrapper, right: showAddUser ? "0" : "-30%" }}>
       <div style={styles.header}>
-        <div style={styles.headerTitle}>
-          {user ? "Update User" : "New User"}
-        </div>
+        <div style={styles.headerTitle}>{"New User"}</div>
         <img
           src={Cancel}
           style={styles.close}
           onClick={() => {
             setShowAddUser(false);
-            // setUser();
           }}
         />
       </div>
       <Formik
         initialValues={{
-          email: user ? user?.email : "",
-          password: user ? user?.password : "",
-          first_name: user ? user?.first_name : "",
-          last_name: user ? user?.last_name : "",
-          phone: user ? user?.phone : "",
-          telegram_id: user ? user?.telegram_id : "",
+          email: "",
+          password: "",
+          first_name: "",
+          last_name: "",
+          phone: "",
+          telegram_id: "",
+          date_of_birth: "",
         }}
         validate={(values) => {
           const errors = {};
@@ -63,12 +89,16 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user, setUser }) => {
           if (!values.phone) {
             errors.phone = "Required";
           }
+          if (!values.date_of_birth) {
+            errors.date_of_birth = "Required";
+          }
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
           const phoneFormat = `8${removeSpecSymbols(values.phone)}`;
           setSubmitting(false);
-          if (gender && role && date) {
+          if (gender && role) {
+            setShowAddUser(false);
             createUser(
               userInfo?.school_id,
               authToken,
@@ -76,9 +106,31 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user, setUser }) => {
               phoneFormat,
               role,
               gender,
-              moment(date).format("YYYY-MM-DD"),
               avatar
-            );
+            ).then((response) => {
+              console.log(response);
+              if (response.ok) {
+                toast.success("User Added", {
+                  position: "top-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: false,
+                  pauseOnHover: true,
+                  draggable: false,
+                  theme: "colored",
+                });
+              } else {
+                toast.error("Error", {
+                  position: "top-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: false,
+                  pauseOnHover: true,
+                  draggable: false,
+                  theme: "colored",
+                });
+              }
+            });
           } else {
             setError(true);
           }
@@ -90,159 +142,171 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user, setUser }) => {
             <Field
               name="first_name"
               render={({ field, form: { touched, errors } }) => (
-                <div>
-                  <Input
+                <>
+                  <TextField
                     {...field}
-                    placeholder="First name"
-                    defaultValue={field.value}
-                    style={styles.input}
+                    label="First Name"
+                    variant="outlined"
+                    type="text"
+                    className="input"
+                    size="small"
                   />
                   {touched[field.name] && errors[field.name] && (
                     <div className="error">{errors[field.name]}</div>
                   )}
-                </div>
+                </>
               )}
             />
+            <div style={{ margin: 6 }} />
             <Field
               name="last_name"
               render={({ field, form: { touched, errors } }) => (
-                <div>
-                  <Input
+                <>
+                  <TextField
                     {...field}
-                    placeholder="Last name"
-                    defaultValue={field.value}
-                    style={styles.input}
+                    label="Last Name"
+                    variant="outlined"
+                    type="text"
+                    className="input"
+                    size="small"
                   />
                   {touched[field.name] && errors[field.name] && (
                     <div className="error">{errors[field.name]}</div>
                   )}
-                </div>
+                </>
               )}
             />
+            <div style={{ margin: 6 }} />
             <Field
               name="email"
               render={({ field, form: { touched, errors } }) => (
-                <div>
-                  <Input
+                <>
+                  <TextField
                     {...field}
                     type="email"
-                    placeholder="Email"
-                    style={styles.input}
+                    label="Email"
+                    variant="outlined"
+                    className="input"
+                    size="small"
                   />
                   {touched[field.name] && errors[field.name] && (
                     <div className="error">{errors[field.name]}</div>
                   )}
-                </div>
+                </>
               )}
             />
+            <div style={{ margin: 6 }} />
             <Field
               name="password"
               render={({ field, form: { touched, errors } }) => (
-                <div>
-                  <Input
+                <>
+                  <TextField
                     {...field}
-                    type="text"
-                    placeholder="Password"
-                    style={styles.input}
+                    label="Password"
+                    variant="outlined"
+                    className="input"
+                    size="small"
                   />
                   {touched[field.name] && errors[field.name] && (
                     <div className="error">{errors[field.name]}</div>
                   )}
-                </div>
+                </>
               )}
             />
+            <div style={{ margin: 6 }} />
             <Field
               name="phone"
               render={({ field, form: { touched, errors } }) => (
-                <div>
-                  <InputMask
+                <>
+                  <TextField
                     {...field}
-                    style={styles.input}
-                    className="phone_input"
-                    placeholder="+7"
-                    mask="+7 (999)-999-99-99"
-                    maskChar={null}
+                    label="Phone"
+                    variant="outlined"
+                    type="text"
+                    className="input"
+                    size="small"
+                    InputProps={{
+                      inputComponent: NumericFormatCustom,
+                    }}
                   />
                   {touched[field.name] && errors[field.name] && (
                     <div className="error">{errors[field.name]}</div>
                   )}
-                </div>
+                </>
               )}
             />
+            <div style={{ margin: 6 }} />
             <Field
               name="telegram_id"
               render={({ field, form: { touched, errors } }) => (
-                <div>
-                  <Input
+                <>
+                  <TextField
                     {...field}
+                    label="Telegram ID"
+                    variant="outlined"
                     type="text"
-                    placeholder="Telegram ID"
-                    style={styles.input}
+                    size="small"
                   />
                   {touched[field.name] && errors[field.name] && (
                     <div className="error">{errors[field.name]}</div>
                   )}
-                </div>
+                </>
               )}
             />
-            <div>
-              <DatePicker
-                style={{ width: "100%" }}
-                onChange={(value) => setDate(value)}
-                placeholder="Date of birth"
-              />
-              {error && <div className="error">{"Required"}</div>}
-            </div>
-            <div>
-              <p style={styles.contentTitle}>Role</p>
+            <div style={{ margin: 6 }} />
+            <Field
+              name="date_of_birth"
+              render={({ field, form: { touched, errors } }) => (
+                <>
+                  <TextField
+                    {...field}
+                    label="Date of birth"
+                    variant="outlined"
+                    type="text"
+                    size="small"
+                    InputProps={{
+                      inputComponent: DateMask,
+                    }}
+                  />
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="error">{errors[field.name]}</div>
+                  )}
+                </>
+              )}
+            />
+            <div style={{ margin: 6 }} />
+            <FormControl sx={{ width: "100%" }} size="small">
+              <InputLabel id="role">Role</InputLabel>
               <Select
-                onChange={(value) => setRole(value)}
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={role}
-                size={"middle"}
-                options={[
-                  {
-                    value: "student",
-                    label: "Student",
-                  },
-                  {
-                    value: "manager",
-                    label: "Manager",
-                  },
-                  {
-                    value: "teacher",
-                    label: "Teacher",
-                  },
-                ]}
-              />
+                labelId="role"
+                id="role"
+                value={role}
+                label="Role"
+                onChange={(event) => setRole(event.target.value)}
+              >
+                <MenuItem value={"student"}>Student</MenuItem>
+                <MenuItem value={"manager"}>Manager</MenuItem>
+                <MenuItem value={"teacher"}>Teacher</MenuItem>
+              </Select>
               {error && <div className="error">{"Required"}</div>}
-            </div>
-            <div>
-              <p style={styles.contentTitle}>Gender</p>
+            </FormControl>
+            <div style={{ margin: 6 }} />
+            <FormControl sx={{ width: "100%" }} size="small">
+              <InputLabel id="gender">Gender</InputLabel>
               <Select
-                onChange={(value) => setGender(value)}
-                style={{
-                  width: "100%",
-                }}
-                size={"middle"}
-                defaultValue={gender}
-                options={[
-                  {
-                    value: "female",
-                    label: "Female",
-                  },
-                  {
-                    value: "male",
-                    label: "Male",
-                  },
-                ]}
-              />
+                labelId="gender"
+                id="gender"
+                value={gender}
+                label="Gender"
+                onChange={(event) => setGender(event.target.value)}
+              >
+                <MenuItem value={"female"}>Female</MenuItem>
+                <MenuItem value={"male"}>Male</MenuItem>
+              </Select>
               {error && <div className="error">{"Required"}</div>}
-            </div>
+            </FormControl>
             <label
-              for="upload-photo"
+              htmlFor="upload-photo"
               style={{ ...styles.contentTitle, marginTop: 15 }}
             >
               Upload avatar
@@ -329,8 +393,8 @@ const styles = {
   },
   btn: {
     border: "1px solid #163A61",
-    borderRadius: 8,
-    padding: "8px 10px",
+    borderRadius: 3,
+    padding: "10px",
     marginTop: 15,
     fontWeight: 600,
     color: "white",

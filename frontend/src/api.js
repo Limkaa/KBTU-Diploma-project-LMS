@@ -1,12 +1,16 @@
 const baseURL = "http://127.0.0.1:8000/";
 
-export const requestUsers = async (school_id, authToken) => {
-  return fetch(`${baseURL}api/schools/${school_id}/users`, {
-    method: "GET",
-    headers: new Headers({
-      Authorization: `Bearer ${authToken}`,
-    }),
-  }).then((response) => response.json());
+export const requestUsers = async (school_id, authToken, offset) => {
+  return fetch(
+    // `${baseURL}api/schools/${school_id}/users?limit=10&offset=${offset}`,
+    `${baseURL}api/schools/${school_id}/users`,
+    {
+      method: "GET",
+      headers: new Headers({
+        Authorization: `Bearer ${authToken}`,
+      }),
+    }
+  ).then((response) => response.json());
 };
 
 export const createUser = async (
@@ -16,14 +20,13 @@ export const createUser = async (
   phoneFormat,
   role,
   gender,
-  date,
   avatar
 ) => {
   let response = await fetch(`${baseURL}api/schools/${school_id}/users`, {
     method: "POST",
     headers: new Headers({
       Authorization: `Bearer ${authToken}`,
-      "Content-type": "multipart/form-data",
+      "Content-type": "application/json",
     }),
     body: JSON.stringify({
       email: values.email,
@@ -32,7 +35,7 @@ export const createUser = async (
       last_name: values.last_name,
       role: role,
       gender: gender,
-      date_of_birth: date,
+      date_of_birth: values.date_of_birth,
       phone: phoneFormat,
       telegram_id: values.telegram_id,
       avatar: avatar,
@@ -40,36 +43,29 @@ export const createUser = async (
   }).catch((err) => {
     console.log(err);
   });
+  return response;
 };
 
-export const updateUser = async (
-  user_id,
-  authToken,
-  email,
-  phoneFormat,
-  role,
-  gender,
-  date,
-  avatar
-) => {
-  console.log(email, user_id);
-  let response = await fetch(`http://127.0.0.1:8000/api/users/2`, {
+export const updateUser = async (user_id, authToken, values, phoneFormat) => {
+  let response = await fetch(`${baseURL}api/users/${user_id}`, {
     method: "PUT",
     headers: new Headers({
       Authorization: `Bearer ${authToken}`,
       "Content-type": "application/json",
     }),
     body: JSON.stringify({
-      email: email,
-      first_name: "hola",
-      last_name: "pola",
-      role: "manager",
-      gender: "female",
-      date_of_birth: "2021-12-03",
-      phone: "87088239036",
-      telegram_id: "111",
+      email: values.email,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      role: values.role,
+      gender: values.gender,
+      date_of_birth: values.date_of_birth,
+      phone: phoneFormat,
+      telegram_id: values.telegram_id,
+      is_active: values.is_active,
     }),
   }).catch((err) => {
     console.log(err);
   });
+  return response;
 };

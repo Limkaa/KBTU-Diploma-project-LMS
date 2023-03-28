@@ -1,34 +1,67 @@
 import React, { useContext } from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header";
-import { Table, Select, Input, Button, Space } from "antd";
+import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "../modals/AddingUserModal";
 import AuthContext from "../../context/AuthProvider";
 import { requestUsers } from "../../api";
 import UpdateUserModal from "../modals/UpdateUserModal";
-
+import { updateUser, updateUserStatus } from "../../api";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const UsersContainer = () => {
   const { userInfo, authToken } = useContext(AuthContext);
   const [users, setUsers] = React.useState();
   const [user, setUser] = React.useState();
-
   const [showAddUser, setShowAddUser] = React.useState(false);
   const [showUpdateUser, setShowUpdateUser] = React.useState(false);
-
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
+  const [offset, setOffset] = React.useState(0);
+  const [page, setPage] = React.useState(0);
+  const [total, setTotal] = React.useState();
+  const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
 
   React.useEffect(() => {
     if (userInfo?.school_id && authToken) {
       requestUsers(userInfo?.school_id, authToken).then((response) => {
+        // if (offset === 0) {
+        //   setUsers(response.results);
+        //   setTotal(response.count);
+        // } else {
         setUsers(response.results);
-        console.log("response", response);
+        // }
       });
     }
   }, [userInfo, authToken]);
+
+  const handleUpdateUser = (values) => {
+    setShowUpdateUser(false);
+    const phoneFormat = `${removeSpecSymbols(values.phone)}`;
+    updateUser(user.id, authToken, values, phoneFormat).then((response) => {
+      if (response.ok) {
+        toast.success("User Updated", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: false,
+          theme: "colored",
+        });
+      } else {
+        toast.error("Error", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: false,
+          theme: "colored",
+        });
+      }
+    });
+  };
 
   const columns = [
     {
@@ -73,15 +106,11 @@ const UsersContainer = () => {
             style={{ color: "#45B764", fontWeight: 500 }}
             type={"link"}
             onClick={() => {
-              console.log(record);
               setUser(record);
               setShowUpdateUser(true);
             }}
           >
             Change
-          </Button>
-          <Button style={{ color: "#F18D58", fontWeight: 500 }} type={"link"}>
-            Delete
           </Button>
         </Space>
       ),
@@ -96,28 +125,6 @@ const UsersContainer = () => {
       </div>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          <Select
-            defaultValue="lucy"
-            style={{
-              width: 180,
-            }}
-            size={"large"}
-            onChange={handleChange}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "Yiminghe",
-                label: "yiminghe",
-              },
-            ]}
-          />
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
               size="default size"
@@ -153,22 +160,15 @@ const UsersContainer = () => {
           dataSource={users}
           columns={columns}
           rowKey={(item) => item?.id}
-          // onRow={(record) => {
-          //   return {
-          //     onClick: () => {
-          //       setUser(record);
-          //       setShowUpdateUser(true);
-          //     },
-          //   };
-          // }}
           pagination={false}
           // pagination={{
-          //   defaultPageSize: 14,
-          //   total: users.total,
-          //   current: 1,
-          //   // onChange: (page, pageSize) => {
-          //   //   setPage(page);
-          //   // },
+          //   defaultPageSize: 10,
+          //   total: total,
+          //   current: page,
+          //   onChange: (page) => {
+          //     setOffset(offset + 10);
+          //     setPage(page);
+          //   },
           //   showSizeChanger: false,
           // }}
         />
@@ -182,6 +182,7 @@ const UsersContainer = () => {
         setShowUpdateUser={setShowUpdateUser}
         user={user}
         setUser={setUser}
+        handleUpdateUser={handleUpdateUser}
       />
     </div>
   );
@@ -205,7 +206,7 @@ const styles = {
   },
   filter: {
     padding: 8,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     display: "flex",
   },
 };

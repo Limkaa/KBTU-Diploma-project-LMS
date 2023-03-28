@@ -16,18 +16,41 @@ const UpdateUserModal = ({
   setUser,
 }) => {
   console.log(user);
-  const [email, setEmail] = React.useState();
-  const [firstName, setFirstName] = React.useState();
-  const [lastName, setLastName] = React.useState();
-  const [phoneNumber, setPhoneNumber] = React.useState();
-  const [telegramId, setTelegramId] = React.useState();
-  const [dateOfBirth, setDateOfBirth] = React.useState();
-  const [role, setRole] = React.useState(user?.role);
-  const [gender, setGender] = React.useState(user?.gender);
-  const [date, setDate] = React.useState(user ? user.date_of_birth : "");
-  const { userInfo, authToken } = useContext(AuthContext);
-  const [avatar, setAvatar] = React.useState(null);
-  const [error, setError] = React.useState(false);
+  const [values, setValues] = React.useState({
+    email: "",
+    first_name: "",
+    last_name: "",
+    phone: "",
+    telegram_id: "",
+    date_of_birth: "",
+    role: "",
+    gender: "",
+    avatar: "",
+  });
+
+  const {
+    email,
+    first_name,
+    last_name,
+    phone,
+    telegram_id,
+    date_of_birth,
+    role,
+    gender,
+    avatar,
+  } = values;
+  // const [email, setEmail] = React.useState();
+  // const [firstName, setFirstName] = React.useState();
+  // const [lastName, setLastName] = React.useState();
+  // const [phoneNumber, setPhoneNumber] = React.useState();
+  // const [telegramId, setTelegramId] = React.useState();
+  // const [dateOfBirth, setDateOfBirth] = React.useState();
+  // const [role, setRole] = React.useState(user?.role);
+  // const [gender, setGender] = React.useState(user?.gender);
+  // const [date, setDate] = React.useState(user ? user.date_of_birth : "");
+  // const { userInfo, authToken } = useContext(AuthContext);
+  // const [avatar, setAvatar] = React.useState(null);
+  // const [error, setError] = React.useState(false);
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
   return (
     <div style={{ ...styles.wrapper, right: showUpdateUser ? "0" : "-30%" }}>
@@ -49,8 +72,9 @@ const UpdateUserModal = ({
           placeholder="First name"
           style={styles.input}
           className="input"
-          defaultValue={user?.first_name}
-          onChange={(e) => setFirstName(e.target.value)}
+          value={first_name}
+          // defaultValue={user?.first_name}
+          // onChange={(e) => setFirstName(e.target.value)}
         />
         <input
           type="text"

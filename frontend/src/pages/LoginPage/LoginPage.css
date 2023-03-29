@@ -4,7 +4,6 @@
     min-height: 100vh;
     display: flex;
     align-items: center;
-    padding-bottom: 50px;
 }
 
 .login .inner-con {
@@ -54,6 +53,7 @@
     letter-spacing: 0em;
     text-align: left;
     margin: 10px 0;
+    box-sizing: border-box;
 }
 
 .login input::placeholder {

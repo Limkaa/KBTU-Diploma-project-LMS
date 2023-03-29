@@ -91,7 +91,7 @@ const UpdateUserModal = ({
           }}
         />
       </div>
-      <dev style={styles.form} onSubmit={handleUpdateUser}>
+      <div style={styles.form} onSubmit={handleUpdateUser}>
         <p style={styles.contentTitle}>User</p>
         <br />
         <TextField
@@ -201,7 +201,7 @@ const UpdateUserModal = ({
         >
           Update user
         </button>
-      </dev>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import json
 import random
+import string
 
 from django.core.management.base import BaseCommand
 
@@ -8,6 +9,7 @@ from apps.core.modules.schools.models import School
 from apps.core.modules.grades.models import Grade
 from apps.core.modules.groups.models import Group
 from apps.core.modules.students.models import Student
+from apps.core.modules.subjects.models import Subject
 
 class Command(BaseCommand):
     help = 'Fills database with mock data'
@@ -16,6 +18,8 @@ class Command(BaseCommand):
     grades = []
     groups = []
 
+    def _get_random_string_code(self, length=5):
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
     
     def _get_data_from_json_file(self, path):
         with open(path) as file:
@@ -101,6 +105,29 @@ class Command(BaseCommand):
                 student.save()
         
         self.stdout.write(self.style.SUCCESS('Students assigned to groups'))
+    
+    def _create_subjects(self):
+        json_subjects = self._get_data_from_json_file('mock_data/subjects.json') or []
+        
+        objects = []
+        for school in self.schools:
+            grades = Grade.objects.filter(school = school)
+            
+            for grade in grades:
+                random_number_of_subjects_for_grade = random.randint(2, len(json_subjects))
+                random_subjects_for_grade = random.sample(json_subjects, random_number_of_subjects_for_grade)
+                
+                for subject in random_subjects_for_grade:
+                    objects.append(Subject.objects.create(
+                        school_id = school.id,
+                        grade = grade,
+                        name = subject,
+                        is_active = random.choice([True, False]),
+                        code=self._get_random_string_code(5)
+                    ))
+            
+        self.stdout.write(self.style.SUCCESS('Subjects created'))
+        return objects
                
     
     def handle(self, *args, **options):
@@ -108,6 +135,7 @@ class Command(BaseCommand):
         self.grades = self._create_grades()
         self.users = self._create_users()
         self.groups = self._create_groups()
+        self.subjects = self._create_subjects()
         
         self._assign_students_to_groups()
         

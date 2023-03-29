@@ -6,13 +6,15 @@ from django.core.management.base import BaseCommand
 from apps.core.modules.users.models import User
 from apps.core.modules.schools.models import School
 from apps.core.modules.grades.models import Grade
-
+from apps.core.modules.groups.models import Group
+from apps.core.modules.students.models import Student
 
 class Command(BaseCommand):
     help = 'Fills database with mock data'
     schools = []
     users = []
     grades = []
+    groups = []
 
     
     def _get_data_from_json_file(self, path):
@@ -68,12 +70,46 @@ class Command(BaseCommand):
         
         self.stdout.write(self.style.SUCCESS('Grades created'))
         return objects
+    
+    def _create_groups(self):
+        json_group_codes = self._get_data_from_json_file('mock_data/groups.json') or []
         
-             
+        objects = []
+        for school in self.schools:
+            grades = list(filter(lambda x: x.school_id == school.id, self.grades))
+            teachers = list(filter(lambda x: x.school_id == school.id and x.role == User.Role.TEACHER, self.users))
+            
+            for group_code in random.sample(json_group_codes, 10):
+                objects.append(Group.objects.create(
+                    school_id = school.id,
+                    teacher_id = random.choice(teachers).id,
+                    grade_id = random.choice(grades).id,
+                    is_active = random.choice([True, False]),
+                    code=group_code
+                ))
+            
+        self.stdout.write(self.style.SUCCESS('Groups created'))
+        return objects
+        
+    def _assign_students_to_groups(self):
+        for school in self.schools:
+            students = Student.objects.filter(user__school_id = school.id)
+            groups = Group.objects.filter(school=school)
+            
+            for student in students:
+                student.group = random.choice(groups)
+                student.save()
+        
+        self.stdout.write(self.style.SUCCESS('Students assigned to groups'))
+               
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
         self.users = self._create_users()
+        self.groups = self._create_groups()
+        
+        self._assign_students_to_groups()
         
         self._create_superuser()
         

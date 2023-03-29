@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.9.10
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -8,4 +8,4 @@ COPY . /app/backend
 
 RUN pip install -r requirements.txt
 
-CMD [ "python", "src/manage.py", "runserver", "0.0.0.0:8080" ]
+CMD [ "python", "src/manage.py", "runserver", "0.0.0.0:8000" ]

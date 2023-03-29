@@ -5,4 +5,6 @@ urlpatterns = [
     path("", include(("apps.core.modules.users.urls", "users"))),
     path("", include(("apps.core.modules.grades.urls", "grades"))),
     path("", include(("apps.core.modules.schools.urls", "schools"))),
+    path("", include(("apps.core.modules.groups.urls", "groups"))),
+    path("", include(("apps.core.modules.students.urls", "students"))),
 ]

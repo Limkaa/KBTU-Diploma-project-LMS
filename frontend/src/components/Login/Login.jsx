@@ -1,37 +1,53 @@
-import React, {useEffect} from 'react';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {userLogin} from "../../redux/auth/authActions";
+import React, {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
+import {useTokenObtainMutation} from "../../redux/api/authApiSlice";
+import {setCredentials} from "../../redux/auth/authSlice";
 
 function Login() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const { loading, error, user } = useSelector((state) => state.auth);
+    const [err, setErr] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [obtainTokens, {isLoading}] = useTokenObtainMutation();
+
     useEffect(() => {
-        if (user) {
-            navigate('/home');
-        }
-    }, [navigate, user]);
+        setErr('');
+    }, [email, password])
 
     // useEffect(() => {
     //     if (user) {
-    //         ;
+    //         navigate('/home');
     //     }
-    // }, [loading]);
+    // }, [navigate, user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(userLogin({email, password}));
-        navigate('/home');
+        try {
+            const userTokens = await obtainTokens({email, password}).unwrap();
+            // console.log(userTokens);
+            dispatch(setCredentials({userAccessToken: userTokens.access, userRefreshToken: userTokens.refresh}));
+            setEmail("");
+            setPassword("");
+            navigate('/home');
+        } catch(err) {
+            console.log(err);
+            // if (err?.response) {
+            //     setErr("No server response");
+            // } else if (err.response?.status === 401) {
+            //     setErr("No active account with given credentials");
+            // } else {
+            //     setErr("Login failed");
+            // }
+        }
     }
 
-    const content = loading ? <h1>Loading...</h1> : (
+    return isLoading ? <h1>Loading...</h1> : (
         <form onSubmit={handleSubmit}>
             <h1>StudyMate</h1>
+            {err ? <p>{err}</p> : <p></p>}
             <div className="form-group">
                 <input
                     placeholder='Username'
@@ -41,7 +57,7 @@ function Login() {
                     required
                     autoFocus
                     onChange={(e) => setEmail(e.target.value)}
-                    value = {email}
+                    value={email}
                 />
                 <input
                     placeholder='Password'
@@ -50,15 +66,12 @@ function Login() {
                     name='password'
                     required
                     onChange={(e) => setPassword(e.target.value)}
-                    value = {password}
+                    value={password}
                 />
             </div>
-            {error && <p>{error}</p>}
             <button type='submit'>Login</button>
         </form>
     );
-
-    return content;
 }
 
 export default Login;

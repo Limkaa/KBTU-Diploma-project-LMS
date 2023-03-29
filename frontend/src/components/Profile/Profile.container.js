@@ -4,10 +4,13 @@ import Header from "../shared/Header";
 import { Input, Button } from "antd";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthProvider";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "../../redux/auth/authSlice";
 
 const ProfileContainer = () => {
-  const { user } = useContext(AuthContext);
-
+  // const { user } = useContext(AuthContext);
+  const {user} = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   console.log(user.email);
   return (
     <div
@@ -80,6 +83,7 @@ const ProfileContainer = () => {
           <Input placeholder="Basic usage" />
         </div>
       </div>
+      <button onClick={() => dispatch(logout())}>Logout</button>
     </div>
   );
 };

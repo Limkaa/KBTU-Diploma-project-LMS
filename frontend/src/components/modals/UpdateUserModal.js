@@ -1,12 +1,9 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import Cancel from "../../assets/icons/close.svg";
 import InputMask from "react-input-mask";
 import "./Modals.css";
 import TextField from "@mui/material/TextField";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
+import { Checkbox } from "antd";
 
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
   props,
@@ -40,7 +37,6 @@ const UpdateUserModal = ({
   setUser,
   handleUpdateUser,
 }) => {
-  console.log(user);
   const [values, setValues] = React.useState({
     email: "",
     first_name: "",
@@ -51,7 +47,7 @@ const UpdateUserModal = ({
     role: "",
     gender: "",
     avatar: "",
-    is_active: true,
+    is_active: "",
   });
 
   const {
@@ -67,19 +63,19 @@ const UpdateUserModal = ({
     is_active,
   } = values;
 
-  console.log(is_active);
-
   React.useEffect(() => {
     if (user) {
       setValues({ ...user });
     }
   }, [user]);
 
-  const [error, setError] = React.useState(true);
-
   const handleInputChange = (e) => {
-    let { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    let { name, value, checked } = e.target;
+    if (name === "is_active") {
+      setValues({ ...values, [name]: checked });
+    } else {
+      setValues({ ...values, [name]: value });
+    }
   };
 
   return (
@@ -189,18 +185,14 @@ const UpdateUserModal = ({
         />
         <br />
         <div>
-          <FormControlLabel
-            control={
-              <Checkbox
-                // defaultChecked
-                onChange={handleInputChange}
-                name="is_active"
-                value={is_active}
-                defaultValue={is_active}
-              />
-            }
-            label="is Active"
-          />
+          <Checkbox
+            checked={is_active}
+            onChange={handleInputChange}
+            name="is_active"
+            style={{ fontWeight: 400, fontSize: 16 }}
+          >
+            Active
+          </Checkbox>
         </div>
         <button
           type="submit"

@@ -42,13 +42,29 @@ const ProfileContainer = () => {
                 style={styles.input}
               />
             </div>
+            <div>
+              <p style={styles.inputTitle}>Gender</p>
+              <input
+                defaultValue={userInfo?.gender}
+                disabled
+                style={styles.input}
+              />
+            </div>
+            <div>
+              <p style={styles.inputTitle}>Date of birth</p>
+              <input
+                defaultValue={userInfo?.date_of_birth}
+                disabled
+                style={styles.input}
+              />
+            </div>
           </div>
           <div style={styles.imgCont}>
             <img style={styles.img} />
-            <Button style={{ width: 130, marginTop: 12 }}>Change Image</Button>
+            {/* <Button style={{ width: 130, marginTop: 12 }}>Change Image</Button> */}
           </div>
         </div>
-        {user.role === "manager" && (
+        {user.role === "student" && (
           <div style={{ flex: 1, display: "flex", gap: 20 }}>
             <div style={{ flex: 1 }}>
               <p style={styles.inputTitle}>Class</p>
@@ -71,7 +87,11 @@ const ProfileContainer = () => {
         </div>
         <div style={{ flex: 1 }}>
           <p style={styles.inputTitle}>Telegram ID</p>
-          <input placeholder="Basic usage" style={styles.input} disabled />
+          <input
+            style={styles.input}
+            disabled
+            defaultValue={userSchool?.telegram_id}
+          />
         </div>
       </div>
       <button onClick={logoutUser} style={styles.logout}>

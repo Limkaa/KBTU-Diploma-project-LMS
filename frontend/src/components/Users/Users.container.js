@@ -21,6 +21,7 @@ const UsersContainer = () => {
   const [page, setPage] = React.useState(0);
   const [total, setTotal] = React.useState();
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
+  const [search, setSearch] = React.useState("");
 
   React.useEffect(() => {
     if (userInfo?.school_id && authToken) {
@@ -61,6 +62,24 @@ const UsersContainer = () => {
         });
       }
     });
+  };
+
+  const filteredUsers = () => {
+    if (search) {
+      return users.filter((itm) => {
+        let full_name = itm?.first_name + " " + itm?.last_name;
+        return (
+          search !== "" &&
+          (full_name.toLowerCase().indexOf(search) > -1 ||
+            itm?.first_name.toLowerCase().indexOf(search) > -1 ||
+            itm?.last_name.toLowerCase().indexOf(search) > -1 ||
+            itm?.email.toLowerCase().indexOf(search) > -1 ||
+            itm?.phone.toLowerCase().indexOf(search) > -1)
+        );
+      });
+    } else {
+      return users;
+    }
   };
 
   const columns = [
@@ -136,6 +155,7 @@ const UsersContainer = () => {
                 border: "none",
                 borderRadius: 8,
               }}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
             />
             <Button
               type="primary"
@@ -157,7 +177,7 @@ const UsersContainer = () => {
         </div>
 
         <Table
-          dataSource={users}
+          dataSource={filteredUsers()}
           columns={columns}
           rowKey={(item) => item?.id}
           pagination={false}

@@ -13,14 +13,10 @@ import {
   useGetUsersQuery,
 } from "../../redux/users/usersApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const UsersContainer = () => {
   const [users, setUsers] = React.useState();
-  // const user = useSelector(selectCurrentUser);
   const [showAddUser, setShowAddUser] = React.useState(false);
-  const [role, setRole] = React.useState();
   const [selectedUser, setSelectedUser] = React.useState();
   const [showUpdateUser, setShowUpdateUser] = React.useState(false);
   const [page, setPage] = React.useState(1);
@@ -64,9 +60,9 @@ const UsersContainer = () => {
         is_active: values.is_active,
       })
         .unwrap()
-        .then(
-          (payload) => refetch(),
-          refetchUser(),
+        .then((payload) => {
+          refetch();
+          refetchUser();
           toast.success("User Updated", {
             position: "top-right",
             autoClose: 2000,
@@ -75,8 +71,8 @@ const UsersContainer = () => {
             pauseOnHover: true,
             draggable: false,
             theme: "colored",
-          })
-        );
+          });
+        });
     } catch (err) {
       toast.error("Error", {
         position: "top-right",

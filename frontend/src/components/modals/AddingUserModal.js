@@ -70,9 +70,9 @@ const AddingUserModal = ({
         avatar,
       })
         .unwrap()
-        .then(
-          (payload) => refetch(),
-          refetchUser(),
+        .then((payload) => {
+          refetch();
+          refetchUser();
           toast.success("User Added", {
             position: "top-right",
             autoClose: 2000,
@@ -81,8 +81,8 @@ const AddingUserModal = ({
             pauseOnHover: true,
             draggable: false,
             theme: "colored",
-          })
-        );
+          });
+        });
     } catch (err) {
       toast.error("Error", {
         position: "top-right",

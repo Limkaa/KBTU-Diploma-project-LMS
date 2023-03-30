@@ -8,19 +8,18 @@ import Profile from "./Profile";
 import Schedule from "./Schedule";
 import SchoolCommunities from "./SchoolCommunities";
 import TodoList from "./TodoList";
-import {useSelector} from "react-redux";
-import {selectCurrentUser} from "../../redux/auth/authSlice";
+import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 
 const DashboardContainer = () => {
-  const user = useSelector(selectCurrentUser);
+  const { data: user } = useGetAuthUserQuery();
   return (
     <div className="dashboard container">
       <div className="left-container">
-        <Header text={`Hello, ${user.first_name}!`} visible={true} />
+        <Header text={`Hello, ${user?.first_name}!`} visible={true} />
         <div className="announcements">
           <p className="ann-title">Announcements</p>
           <div className="ann-item">
-            <img className="ann-img"/>
+            <img className="ann-img" />
             <div style={{ flex: 1, marginLeft: 16 }}>
               <p className="ann-text">Amina Farabi</p>
               <p className="ann-text" style={{ color: "#5C5C5C" }}>

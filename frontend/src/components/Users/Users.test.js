@@ -5,8 +5,6 @@ import {useGetUsersQuery} from "../../redux/users/usersApiSlice";
 
 const UsersTest = () => {
     const user = useSelector(selectCurrentUser);
-    // const [showAddUser, setShowAddUser] = React.useState(false);
-    // const [role, setRole] = React.useState();
 
     const {
         data: users,

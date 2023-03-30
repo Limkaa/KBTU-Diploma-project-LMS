@@ -5,34 +5,48 @@ import { Table, Select, Input, Button } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "../modals/AddingUserModal";
-import {useGetUsersQuery} from "../../redux/api/apiService";
+import {useGetUsersQuery} from "../../redux/users/usersApiSlice";
+import {useSelector} from "react-redux";
+import {selectCurrentUser} from "../../redux/auth/authSlice";
 
 const UsersContainer = () => {
-  const [users, setUsers] = React.useState();
+  // const [users, setUsers] = React.useState();
+  const user = useSelector(selectCurrentUser);
   const [showAddUser, setShowAddUser] = React.useState(false);
   const [role, setRole] = React.useState();
+
+  const {
+    data: users,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetUsersQuery()
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
 
-  const { data, isFetching } = useGetUsersQuery('users', {
-    // perform a refetch every 15mins
-    pollingInterval: 900000,
-  });
 
-  console.log(data?.results);
 
-  React.useEffect(() => {
-    // fetch data
-    // const dataFetch = async () => {
-    //   fetch("https://dummyjson.com/users")
-    //     .then((res) => res.json())
-    //     .then((json) => setUsers(json));
-    // };
+  // console.log(data?.results);
 
-    // dataFetch();
-    setUsers(data?.results);
-  }, []);
+  // React.useEffect(() => {
+  //   // fetch data
+  //   // const dataFetch = async () => {
+  //   //   fetch("https://dummyjson.com/users")
+  //   //     .then((res) => res.json())
+  //   //     .then((json) => setUsers(json));
+  //   // };
+  //
+  //   // dataFetch();
+  //   setUsers(data?.results);
+  // }, []);
 
   const columns = [
     {
@@ -69,102 +83,97 @@ const UsersContainer = () => {
     },
   ];
 
-  // return (
-  //   <div style={styles.container}>
-  //     <div style={styles.header}>
-  //       <Header text={"Users"} />
-  //       <Profile />
-  //     </div>
-  //     <div style={styles.tableCont}>
-  //       <div style={styles.filter}>
-  //         <Select
-  //           defaultValue="lucy"
-  //           style={{
-  //             width: 180,
-  //           }}
-  //           size={"large"}
-  //           onChange={handleChange}
-  //           options={[
-  //             {
-  //               value: "jack",
-  //               label: "Jack",
-  //             },
-  //             {
-  //               value: "lucy",
-  //               label: "Lucy",
-  //             },
-  //             {
-  //               value: "Yiminghe",
-  //               label: "yiminghe",
-  //             },
-  //           ]}
-  //         />
-  //         <div style={{ alignItems: "center", display: "flex" }}>
-  //           <Input
-  //             size="default size"
-  //             placeholder="Search..."
-  //             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
-  //             style={{
-  //               height: 40,
-  //               width: 280,
-  //               border: "none",
-  //               borderRadius: 8,
-  //             }}
-  //           />
-  //           <Button
-  //             type="primary"
-  //             style={{
-  //               backgroundColor: "#163A61",
-  //               height: 40,
-  //               borderRadius: 8,
-  //               alignItems: "center",
-  //               display: "flex",
-  //               fontWeight: 500,
-  //               marginLeft: 16,
-  //             }}
-  //             icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-  //             onClick={() => setShowAddUser(true)}
-  //           >
-  //             Add user
-  //           </Button>
-  //         </div>
-  //       </div>
-  //
-  //       <Table
-  //         dataSource={users?.users}
-  //         columns={columns}
-  //         rowKey={(item) => item?.id}
-  //         onRow={(record) => {
-  //           return {
-  //             onClick: () => {
-  //               // setShowBusket(true);
-  //               // setSale(record);
-  //             },
-  //           };
-  //         }}
-  //         pagination={false}
-  //         // pagination={{
-  //         //   defaultPageSize: 14,
-  //         //   total: users.total,
-  //         //   current: 1,
-  //         //   // onChange: (page, pageSize) => {
-  //         //   //   setPage(page);
-  //         //   // },
-  //         //   showSizeChanger: false,
-  //         // }}
-  //       />
-  //     </div>
-  //     <AddingUserModal
-  //       setShowAddUser={setShowAddUser}
-  //       showAddUser={showAddUser}
-  //     />
-  //   </div>
-  // );
   return (
-      <ul>
-        {users?.map(user => <li>{user.first_name} {user.last_name}</li>)}
-      </ul>
-  )
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <Header text={"Users"} />
+        <Profile />
+      </div>
+      <div style={styles.tableCont}>
+        <div style={styles.filter}>
+          <Select
+            defaultValue="lucy"
+            style={{
+              width: 180,
+            }}
+            size={"large"}
+            onChange={handleChange}
+            options={[
+              {
+                value: "jack",
+                label: "Jack",
+              },
+              {
+                value: "lucy",
+                label: "Lucy",
+              },
+              {
+                value: "Yiminghe",
+                label: "yiminghe",
+              },
+            ]}
+          />
+          <div style={{ alignItems: "center", display: "flex" }}>
+            <Input
+              size="default size"
+              placeholder="Search..."
+              prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
+              style={{
+                height: 40,
+                width: 280,
+                border: "none",
+                borderRadius: 8,
+              }}
+            />
+            <Button
+              type="primary"
+              style={{
+                backgroundColor: "#163A61",
+                height: 40,
+                borderRadius: 8,
+                alignItems: "center",
+                display: "flex",
+                fontWeight: 500,
+                marginLeft: 16,
+              }}
+              icon={<img src={Plus} style={{ paddingRight: 5 }} />}
+              onClick={() => setShowAddUser(true)}
+            >
+              Add user
+            </Button>
+          </div>
+        </div>
+
+        <Table
+          dataSource={users}
+          columns={columns}
+          rowKey={(item) => item?.id}
+          onRow={(record) => {
+            return {
+              onClick: () => {
+                // setShowBusket(true);
+                // setSale(record);
+              },
+            };
+          }}
+          pagination={false}
+          // pagination={{
+          //   defaultPageSize: 14,
+          //   total: users.total,
+          //   current: 1,
+          //   // onChange: (page, pageSize) => {
+          //   //   setPage(page);
+          //   // },
+          //   showSizeChanger: false,
+          // }}
+        />
+      </div>
+      <AddingUserModal
+        setShowAddUser={setShowAddUser}
+        showAddUser={showAddUser}
+      />
+    </div>
+  );
 };
 
 const styles = {

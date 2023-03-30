@@ -6,6 +6,7 @@ import {selectCurrentUser} from "../redux/auth/authSlice";
 const PrivateRoute = () => {
   const user = useSelector(selectCurrentUser);
   const location = useLocation();
+  // const user = true;
   return (user !== null) ? (
     <div className="body-container">
       <NavBar />

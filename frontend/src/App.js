@@ -1,7 +1,5 @@
 import Login from "./components/Login/Login";
 import React from "react";
-// import {BrowserRouter as Routes, Route} from "react-router-dom";
-import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import PrivateRoute from "./utils/PrivateRoute";
 import { Routes, Route } from "react-router-dom";
@@ -14,7 +12,8 @@ import ClassroomContainer from "./components/Classroom/Classroom.container";
 import TimelineContainer from "./components/Timeline/Timeline.container";
 import GradesContainer from "./components/Grades/Grades.container";
 import ProfileContainer from "./components/Profile/Profile.container";
-import UsersContainer from "./components/Users/Users.container";
+// import UsersContainer from "./components/Users/Users.container";
+import UsersTest from "./components/Users/Users.test";
 
 function App() {
   return (
@@ -30,7 +29,7 @@ function App() {
           <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
-          <Route exact path="/users" element={<UsersContainer />} />
+          <Route exact path="/users" element={<UsersTest />} />
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>

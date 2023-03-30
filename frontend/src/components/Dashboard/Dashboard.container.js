@@ -9,11 +9,12 @@ import Schedule from "./Schedule";
 import SchoolCommunities from "./SchoolCommunities";
 import TodoList from "./TodoList";
 import {useSelector} from "react-redux";
+import {selectCurrentUser} from "../../redux/auth/authSlice";
 
 const DashboardContainer = () => {
-  const {user} = useSelector(state => state.auth);
+  const user = useSelector(selectCurrentUser);
   return (
-    <div className="container">
+    <div className="dashboard container">
       <div className="left-container">
         <Header text={`Hello, ${user.first_name}!`} visible={true} />
         <div className="announcements">

@@ -1,9 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import {logout, setRefreshToken} from "../auth/authSlice";
+import {logout, setAccessToken} from "../auth/authSlice";
+import header from "../../components/shared/Header";
 
 const baseQuery = fetchBaseQuery({
     // base url of backend API
     baseUrl: 'http://127.0.0.1:8000/',
+    // isJsonContentType: true,
     // prepareHeaders is used to configure the header of every request and gives access to getState which we use to include the token from the store
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.userAccessToken;
@@ -11,32 +13,44 @@ const baseQuery = fetchBaseQuery({
             // include token in req header
             headers.set('Authorization', `Bearer ${token}`);
         }
+
+        // headers.set('Accept', 'application/json');
+        // headers.set('Content-type', 'application/json');
         return headers;
     },
 });
 
 const baseQueryWithRefresh = async (args, api, extraOptions) => {
+    console.log('base query');
     let result = await baseQuery(args, api, extraOptions);
-    if (result?.error?.originalStatus === 403) {
-    // if (result?.status === 403) {
+    // console.log(result?.error?.status);
+    if (result?.error?.status === 401) {
             // send refresh
-            const refreshResult = await baseQuery('/api/auth/token/refresh', api, extraOptions);
+            const refreshToken = api.getState().auth.userRefreshToken;
+            // console.log("tokennn" + refreshToken);
+            const refreshResult = await baseQuery({
+                url: '/api/auth/token/refresh',
+                method: 'POST',
+                headers: {'Content-type': 'Application/json'},
+                body: JSON.stringify({"refresh" : refreshToken}),
+                },
+                api, extraOptions);
             console.log(`baseQueryWithRefresh ${refreshResult}`);
             if (refreshResult?.data) {
-                const user = api.getState().auth.user;
-                api.dispatch(setRefreshToken({...refreshResult.data}));
+                // const user = api.getState().auth.user;
+                api.dispatch(setAccessToken({userAccessToken: refreshResult.data.access}));
                 // retry the original query
                 result = await baseQuery(args, api, extraOptions);
-            } else {
-                api.dispatch(logout());
             }
+            // else {
+            //     api.dispatch(logout());
+            // }
         }
+    return result;
 };
 
 export const authApi = createApi({
-    reducerPath: 'api',
+    reducerPath: 'authApi',
     baseQuery: baseQueryWithRefresh,
     endpoints: builder => ({}),
 });
-
-export const { useGetUsersQuery } = authApi;

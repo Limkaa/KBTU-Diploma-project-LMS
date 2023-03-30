@@ -8,13 +8,24 @@ export const usersApiSlice = authApi.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     addUser: builder.mutation({
-      query: ({ school_id, ...values }) => ({
+      query: ({ school_id, ...data }) => ({
         url: `/api/schools/${school_id}/users`,
         method: "POST",
-        body: values,
+        // headers: {
+        //   "content-type": "multipart/form-data",
+        // },
+        body: data,
+      }),
+    }),
+    updateUser: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/api/users/${id}`,
+        method: "PUT",
+        body: data,
       }),
     }),
   }),
 });
 
-export const { useGetUsersQuery, useAddUserMutation } = usersApiSlice;
+export const { useGetUsersQuery, useAddUserMutation, useUpdateUserMutation } =
+  usersApiSlice;

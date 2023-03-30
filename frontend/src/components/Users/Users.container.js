@@ -5,30 +5,15 @@ import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "../modals/AddingUserModal";
-import AuthContext from "../../context/AuthProvider";
-import { requestUsers } from "../../api";
 import UpdateUserModal from "../modals/UpdateUserModal";
-import { updateUser, updateUserStatus } from "../../api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-  useAddUserMutation,
+  useUpdateUserMutation,
   useGetUsersQuery,
 } from "../../redux/users/usersApiSlice";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { async } from "regenerator-runtime";
-
-// const UsersContainer = () => {
-//   const { userInfo, authToken } = useContext(AuthContext);
-//   const [users, setUsers] = React.useState();
-//   const [user, setUser] = React.useState();
-//   const [showAddUser, setShowAddUser] = React.useState(false);
-//   const [showUpdateUser, setShowUpdateUser] = React.useState(false);
-//   const [page, setPage] = React.useState(1);
-//   const [total, setTotal] = React.useState();
-//   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
-//   const [search, setSearch] = React.useState("");
 
 const UsersContainer = () => {
   const [users, setUsers] = React.useState();
@@ -42,10 +27,11 @@ const UsersContainer = () => {
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
   const [search, setSearch] = React.useState("");
 
-  const { data, isLoading, isSuccess, isError, error } = useGetUsersQuery({
-    school_id: user.school_id,
-    page,
-  });
+  const { data, isLoading, isSuccess, isError, error, refetch } =
+    useGetUsersQuery({
+      school_id: user.school_id,
+      page,
+    });
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -56,33 +42,74 @@ const UsersContainer = () => {
     }
   }, [data, isLoading]);
 
-  // const handleUpdateUser = (values) => {
-  //   setShowUpdateUser(false);
-  //   const phoneFormat = `${removeSpecSymbols(values.phone)}`;
-  //   updateUser(user.id, authToken, values, phoneFormat).then((response) => {
-  //     if (response.ok) {
-  //       toast.success("User Updated", {
-  //         position: "top-right",
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //         closeOnClick: false,
-  //         pauseOnHover: true,
-  //         draggable: false,
-  //         theme: "colored",
-  //       });
-  //     } else {
-  //       toast.error("Error", {
-  //         position: "top-right",
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //         closeOnClick: false,
-  //         pauseOnHover: true,
-  //         draggable: false,
-  //         theme: "colored",
-  //       });
-  //     }
-  //   });
-  // };
+  const [updateUser] = useUpdateUserMutation();
+
+  const handleUpdateUser = async (values) => {
+    setShowUpdateUser(false);
+    const phoneFormat = `${removeSpecSymbols(values.phone)}`;
+    console.log(user);
+    try {
+      const updateUsers = await updateUser({
+        id: selectedUser.id,
+        email: values.email,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        role: values.role,
+        gender: values.gender,
+        date_of_birth: values.date_of_birth,
+        phone: phoneFormat,
+        telegram_id: values.telegram_id,
+        is_active: values.is_active,
+      })
+        .unwrap()
+        .then(
+          (payload) => refetch(),
+          console.log(user),
+          toast.success("User Updated", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: false,
+            theme: "colored",
+          })
+        );
+    } catch (err) {
+      toast.error("Error", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        theme: "colored",
+      });
+    }
+    // updateUser(user.id, authToken, values, phoneFormat).then((response) => {
+    //   if (response.ok) {
+    //     toast.success("User Updated", {
+    //       position: "top-right",
+    //       autoClose: 2000,
+    //       hideProgressBar: false,
+    //       closeOnClick: false,
+    //       pauseOnHover: true,
+    //       draggable: false,
+    //       theme: "colored",
+    //     });
+    //   } else {
+    //     toast.error("Error", {
+    //       position: "top-right",
+    //       autoClose: 2000,
+    //       hideProgressBar: false,
+    //       closeOnClick: false,
+    //       pauseOnHover: true,
+    //       draggable: false,
+    //       theme: "colored",
+    //     });
+    //   }
+    // });
+  };
 
   // const filteredUsers = () => {
   //   if (search) {
@@ -245,6 +272,13 @@ const UsersContainer = () => {
         setShowAddUser={setShowAddUser}
         showAddUser={showAddUser}
         user={user}
+      />
+      <UpdateUserModal
+        showUpdateUser={showUpdateUser}
+        setShowUpdateUser={setShowUpdateUser}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
+        handleUpdateUser={handleUpdateUser}
       />
     </div>
   );

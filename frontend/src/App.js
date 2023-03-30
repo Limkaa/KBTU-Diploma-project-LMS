@@ -25,6 +25,8 @@ function App() {
     <div className="App">
       <Routes>
         <Route
+          exact
+          path="/"
           element={
             <PrivateRoute allowedRoles={["manager", "student", "teacher"]} />
           }

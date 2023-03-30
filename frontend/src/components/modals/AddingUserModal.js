@@ -50,7 +50,7 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user }) => {
 
   const handleSubmit = async (values, phone) => {
     try {
-      const addUsers =  await addUser({
+      const addUsers = await addUser({
         school_id: user?.school_id,
         email: values.email,
         password: values.password,
@@ -329,7 +329,7 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user }) => {
               </Select>
               {error && <div className="error">{"Required"}</div>}
             </FormControl>
-            <label
+            {/* <label
               htmlFor="upload-photo"
               style={{ ...styles.contentTitle, marginTop: 15 }}
             >
@@ -342,7 +342,7 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user }) => {
               onChange={(event) => {
                 setAvatar(event.target.files[0]);
               }}
-            />
+            /> */}
             <button type="submit" disabled={isSubmitting} style={styles.btn}>
               Create user
             </button>

@@ -33,8 +33,8 @@ const DateMask = React.forwardRef(function NumericFormatCustom(props, ref) {
 const UpdateUserModal = ({
   showUpdateUser,
   setShowUpdateUser,
-  user,
-  setUser,
+  selectedUser,
+  setSelectedUser,
   handleUpdateUser,
 }) => {
   const [values, setValues] = React.useState({
@@ -64,10 +64,10 @@ const UpdateUserModal = ({
   } = values;
 
   React.useEffect(() => {
-    if (user) {
-      setValues({ ...user });
+    if (selectedUser) {
+      setValues({ ...selectedUser });
     }
-  }, [user]);
+  }, [selectedUser]);
 
   const handleInputChange = (e) => {
     let { name, value, checked } = e.target;
@@ -87,7 +87,7 @@ const UpdateUserModal = ({
           style={styles.close}
           onClick={() => {
             setShowUpdateUser(false);
-            setUser();
+            setSelectedUser();
           }}
         />
       </div>

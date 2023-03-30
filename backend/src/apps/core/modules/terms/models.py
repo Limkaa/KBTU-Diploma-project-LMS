@@ -29,7 +29,7 @@ class Term(models.Model):
         to=Year,
         related_name="terms",
         on_delete=models.PROTECT,
-        null=True,
+        null=False,
     )
     name = models.CharField(max_length=255, blank=False)
     from_date = models.DateField(null=False, blank=False)
@@ -42,5 +42,13 @@ class Term(models.Model):
         unique_together = ['year', 'name']
 
     def __str__(self) -> str:
-        return "%s ({} - {})".format(self.name, self.from_date, self.to_date)
+        return "{} ({} - {})".format(self.name, self.from_date, self.to_date)
+    
+    def clean(self) -> None:
+        if self.to_date < self.from_date:
+            raise ValidationError('Term to_date must be greater than from_date')
+    
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
     

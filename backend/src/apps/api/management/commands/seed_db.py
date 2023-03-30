@@ -10,7 +10,7 @@ from apps.core.modules.grades.models import Grade
 from apps.core.modules.groups.models import Group
 from apps.core.modules.students.models import Student
 from apps.core.modules.subjects.models import Subject
-from apps.core.modules.terms.models import Year
+from apps.core.modules.terms.models import Year, Term
 
 class Command(BaseCommand):
     help = 'Fills database with mock data'
@@ -132,19 +132,24 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Subjects created'))
         return objects
     
-    def _create_academic_years(self):
+    def _create_academic_years_and_terms(self):
         json_years = self._get_data_from_json_file('mock_data/years.json') or []
         
-        objects = []
         for school in self.schools:
             for year in json_years:
-                objects.append(Year.objects.create(
+                year = dict(year)
+                year_object = Year.objects.create(
                     school_id = school.id,
-                    name = year
-                ))
-            
-        self.stdout.write(self.style.SUCCESS('Academic years created'))
-        return objects
+                    name = year.get('name')
+                )
+                
+                for term in year.get('terms') or []:
+                    Term.objects.create(
+                        year = year_object,
+                        **term
+                    )
+                    
+        self.stdout.write(self.style.SUCCESS('Academic years and terms created'))
     
     def handle(self, *args, **options):
         self.schools = self._create_schools()
@@ -152,7 +157,8 @@ class Command(BaseCommand):
         self.users = self._create_users()
         self.groups = self._create_groups()
         self.subjects = self._create_subjects()
-        self.years = self._create_academic_years()
+        
+        self._create_academic_years_and_terms()
         
         self._assign_students_to_groups()
         

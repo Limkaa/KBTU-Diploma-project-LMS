@@ -27,7 +27,7 @@ const ProfileContainer = () => {
               <p style={styles.inputTitle}>Email address</p>
               <input
                 type="text"
-                defaultValue={userInfo?.email}
+                // defaultValue={userInfo?.email}
                 disabled
                 style={styles.input}
               />
@@ -35,7 +35,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>First name</p>
               <input
-                defaultValue={userInfo?.first_name}
+                // defaultValue={userInfo?.first_name}
                 disabled
                 style={styles.input}
               />
@@ -43,7 +43,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Last name</p>
               <input
-                defaultValue={userInfo?.last_name}
+                // defaultValue={userInfo?.last_name}
                 disabled
                 style={styles.input}
               />
@@ -51,7 +51,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Gender</p>
               <input
-                defaultValue={userInfo?.gender}
+                // defaultValue={userInfo?.gender}
                 disabled
                 style={styles.input}
               />
@@ -59,7 +59,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Date of birth</p>
               <input
-                defaultValue={userInfo?.date_of_birth}
+                // defaultValue={userInfo?.date_of_birth}
                 disabled
                 style={styles.input}
               />
@@ -86,7 +86,7 @@ const ProfileContainer = () => {
         <div style={{ flex: 1 }}>
           <p style={styles.inputTitle}>School</p>
           <input
-            defaultValue={userSchool?.name}
+            // defaultValue={userSchool?.name}
             disabled
             style={styles.input}
           />
@@ -96,7 +96,7 @@ const ProfileContainer = () => {
           <input
             style={styles.input}
             disabled
-            defaultValue={userSchool?.telegram_id}
+            // defaultValue={userSchool?.telegram_id}
           />
         </div>
       </div>

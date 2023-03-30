@@ -4,7 +4,6 @@ import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../redux/auth/authSlice";
 
 const PrivateRoute = ({ allowedRoles }) => {
-  console.log(allowedRoles, role);
 
   const user = useSelector(selectCurrentUser);
   const location = useLocation();

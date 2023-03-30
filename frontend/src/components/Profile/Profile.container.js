@@ -5,15 +5,11 @@ import { Button } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/auth/authSlice";
+import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 
 const ProfileContainer = () => {
-  // const { userInfo, user, logoutUser, userSchool } = useContext(AuthContext);
-
-  // const { user } = useContext(AuthContext);
-
-  const { user } = useSelector((state) => state.auth);
+  const { data: user } = useGetAuthUserQuery();
   const dispatch = useDispatch();
-  console.log(user);
   return (
     <div style={styles.container}>
       <div style={{ display: "flex" }}>
@@ -28,7 +24,7 @@ const ProfileContainer = () => {
               <p style={styles.inputTitle}>Email address</p>
               <input
                 type="text"
-                // defaultValue={userInfo?.email}
+                defaultValue={user?.email}
                 disabled
                 style={styles.input}
               />
@@ -36,7 +32,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>First name</p>
               <input
-                // defaultValue={userInfo?.first_name}
+                defaultValue={user?.first_name}
                 disabled
                 style={styles.input}
               />
@@ -44,7 +40,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Last name</p>
               <input
-                // defaultValue={userInfo?.last_name}
+                defaultValue={user?.last_name}
                 disabled
                 style={styles.input}
               />
@@ -52,7 +48,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Gender</p>
               <input
-                // defaultValue={userInfo?.gender}
+                defaultValue={user?.gender}
                 disabled
                 style={styles.input}
               />
@@ -60,7 +56,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Date of birth</p>
               <input
-                // defaultValue={userInfo?.date_of_birth}
+                defaultValue={user?.date_of_birth}
                 disabled
                 style={styles.input}
               />
@@ -71,7 +67,7 @@ const ProfileContainer = () => {
             {/* <Button style={{ width: 130, marginTop: 12 }}>Change Image</Button> */}
           </div>
         </div>
-        {user.role === "student" && (
+        {user?.role === "student" && (
           <div style={{ flex: 1, display: "flex", gap: 20 }}>
             <div style={{ flex: 1 }}>
               <p style={styles.inputTitle}>Class</p>
@@ -85,23 +81,21 @@ const ProfileContainer = () => {
         )}
         <div style={styles.divider} />
         <div style={{ flex: 1 }}>
-          <p style={styles.inputTitle}>School</p>
-          <input
-            // defaultValue={userSchool?.name}
-            disabled
-            style={styles.input}
-          />
+          <p style={styles.inputTitle}>Phone Number</p>
+          <input defaultValue={user?.phone} disabled style={styles.input} />
         </div>
         <div style={{ flex: 1 }}>
           <p style={styles.inputTitle}>Telegram ID</p>
           <input
             style={styles.input}
             disabled
-            // defaultValue={userSchool?.telegram_id}
+            defaultValue={user?.telegram_id}
           />
         </div>
       </div>
-      <button onClick={() => dispatch(logout())}>Logout</button>
+      <button onClick={() => dispatch(logout())} style={styles.logout}>
+        Logout
+      </button>
     </div>
   );
 };

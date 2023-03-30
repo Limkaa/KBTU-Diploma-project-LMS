@@ -12,12 +12,13 @@ import {
   useUpdateUserMutation,
   useGetUsersQuery,
 } from "../../redux/users/usersApiSlice";
+import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const UsersContainer = () => {
   const [users, setUsers] = React.useState();
-  const user = useSelector(selectCurrentUser);
+  // const user = useSelector(selectCurrentUser);
   const [showAddUser, setShowAddUser] = React.useState(false);
   const [role, setRole] = React.useState();
   const [selectedUser, setSelectedUser] = React.useState();
@@ -26,6 +27,7 @@ const UsersContainer = () => {
   const [total, setTotal] = React.useState();
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
   const [search, setSearch] = React.useState("");
+  const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
 
   const { data, isLoading, isSuccess, isError, error, refetch } =
     useGetUsersQuery({
@@ -64,7 +66,7 @@ const UsersContainer = () => {
         .unwrap()
         .then(
           (payload) => refetch(),
-          console.log(user),
+          refetchUser(),
           toast.success("User Updated", {
             position: "top-right",
             autoClose: 2000,
@@ -86,48 +88,25 @@ const UsersContainer = () => {
         theme: "colored",
       });
     }
-    // updateUser(user.id, authToken, values, phoneFormat).then((response) => {
-    //   if (response.ok) {
-    //     toast.success("User Updated", {
-    //       position: "top-right",
-    //       autoClose: 2000,
-    //       hideProgressBar: false,
-    //       closeOnClick: false,
-    //       pauseOnHover: true,
-    //       draggable: false,
-    //       theme: "colored",
-    //     });
-    //   } else {
-    //     toast.error("Error", {
-    //       position: "top-right",
-    //       autoClose: 2000,
-    //       hideProgressBar: false,
-    //       closeOnClick: false,
-    //       pauseOnHover: true,
-    //       draggable: false,
-    //       theme: "colored",
-    //     });
-    //   }
-    // });
   };
 
-  // const filteredUsers = () => {
-  //   if (search) {
-  //     return users.filter((itm) => {
-  //       let full_name = itm?.first_name + " " + itm?.last_name;
-  //       return (
-  //         search !== "" &&
-  //         (full_name.toLowerCase().indexOf(search) > -1 ||
-  //           itm?.first_name.toLowerCase().indexOf(search) > -1 ||
-  //           itm?.last_name.toLowerCase().indexOf(search) > -1 ||
-  //           itm?.email.toLowerCase().indexOf(search) > -1 ||
-  //           itm?.phone.toLowerCase().indexOf(search) > -1)
-  //       );
-  //     });
-  //   } else {
-  //     return users;
-  //   }
-  // };
+  const filteredUsers = () => {
+    if (search) {
+      return users.filter((itm) => {
+        let full_name = itm?.first_name + " " + itm?.last_name;
+        return (
+          search !== "" &&
+          (full_name.toLowerCase().indexOf(search) > -1 ||
+            itm?.first_name.toLowerCase().indexOf(search) > -1 ||
+            itm?.last_name.toLowerCase().indexOf(search) > -1 ||
+            itm?.email.toLowerCase().indexOf(search) > -1 ||
+            itm?.phone.toLowerCase().indexOf(search) > -1)
+        );
+      });
+    } else {
+      return users;
+    }
+  };
 
   const columns = [
     {
@@ -227,6 +206,7 @@ const UsersContainer = () => {
                 border: "none",
                 borderRadius: 8,
               }}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
             />
             <Button
               type="primary"
@@ -247,7 +227,7 @@ const UsersContainer = () => {
           </div>
         </div>
         <Table
-          dataSource={users}
+          dataSource={filteredUsers()}
           columns={columns}
           rowKey={(item) => item?.id}
           onRow={(record) => {
@@ -272,6 +252,8 @@ const UsersContainer = () => {
         setShowAddUser={setShowAddUser}
         showAddUser={showAddUser}
         user={user}
+        refetch={refetch}
+        refetchUser={refetchUser}
       />
       <UpdateUserModal
         showUpdateUser={showUpdateUser}

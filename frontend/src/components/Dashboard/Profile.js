@@ -2,10 +2,11 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const user = useSelector(selectCurrentUser);
+  const { data: user } = useGetAuthUserQuery();
 
   const returnRole = () => {
     return user?.role.charAt(0).toUpperCase() + user?.role.slice(1);

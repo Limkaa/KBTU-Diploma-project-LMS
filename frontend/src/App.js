@@ -14,8 +14,6 @@ import GradesContainer from "./components/Grades/Grades.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
 import { toast } from "react-toastify";
-// import UsersContainer from "./components/Users/Users.container";
-import UsersTest from "./components/Users/Users.test";
 
 function App() {
   React.useEffect(() => {
@@ -43,7 +41,6 @@ function App() {
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
           <Route exact path="/users" element={<UsersContainer />} />
-          {/* <Route exact path="/users" element={<UsersTest />} /> */}
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>

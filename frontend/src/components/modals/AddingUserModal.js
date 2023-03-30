@@ -38,7 +38,13 @@ const DateMask = React.forwardRef(function NumericFormatCustom(props, ref) {
   );
 });
 
-const AddingUserModal = ({ showAddUser, setShowAddUser, user }) => {
+const AddingUserModal = ({
+  showAddUser,
+  setShowAddUser,
+  user,
+  refetch,
+  refetchUser,
+}) => {
   const [role, setRole] = React.useState("");
   const [gender, setGender] = React.useState("");
   const [date, setDate] = React.useState("");
@@ -62,9 +68,31 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user }) => {
         role,
         gender,
         avatar,
-      }).unwrap();
+      })
+        .unwrap()
+        .then(
+          (payload) => refetch(),
+          refetchUser(),
+          toast.success("User Added", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: false,
+            theme: "colored",
+          })
+        );
     } catch (err) {
-      console.log(err);
+      toast.error("Error", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        theme: "colored",
+      });
     }
   };
 
@@ -122,39 +150,6 @@ const AddingUserModal = ({ showAddUser, setShowAddUser, user }) => {
           if (gender && role) {
             setShowAddUser(false);
             handleSubmit(values, phoneFormat);
-            // createUser(
-            //   userInfo?.school_id,
-            //   authToken,
-            //   values,
-            //   phoneFormat,
-            //   role,
-            //   gender,
-            //   avatar
-            // );
-            // .then((response) => {
-            //   console.log(response);
-            //   if (response.ok) {
-            //     toast.success("User Added", {
-            //       position: "top-right",
-            //       autoClose: 2000,
-            //       hideProgressBar: false,
-            //       closeOnClick: false,
-            //       pauseOnHover: true,
-            //       draggable: false,
-            //       theme: "colored",
-            //     });
-            //   } else {
-            //     toast.error("Error", {
-            //       position: "top-right",
-            //       autoClose: 2000,
-            //       hideProgressBar: false,
-            //       closeOnClick: false,
-            //       pauseOnHover: true,
-            //       draggable: false,
-            //       theme: "colored",
-            //     });
-            //   }
-            // });
           } else {
             setError(true);
           }

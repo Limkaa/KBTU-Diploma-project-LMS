@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {logout, setAccessToken} from "../auth/authSlice";
-import header from "../../components/shared/Header";
 
 const baseQuery = fetchBaseQuery({
     // base url of backend API
@@ -13,9 +12,6 @@ const baseQuery = fetchBaseQuery({
             // include token in req header
             headers.set('Authorization', `Bearer ${token}`);
         }
-
-        // headers.set('Accept', 'application/json');
-        // headers.set('Content-type', 'application/json');
         return headers;
     },
 });

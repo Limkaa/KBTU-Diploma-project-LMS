@@ -47,51 +47,9 @@ const authSlice = createSlice({
             cookies.set('authToken', state.userAccessToken, { path: '/' });
         },
     },
-    // extraReducers: (builder) => {
-    //     builder
-    //         .addCase(userLogin.pending, (state) => {
-    //             state.loading = true;
-    //             state.error = null;
-    //         })
-    //         .addCase(userLogin.fulfilled, (state, {payload}) => {
-    //             state.loading = false;
-    //             state.user = jwtDecode(payload.access);
-    //             state.userRefreshToken = payload.refresh;
-    //             state.userAccessToken = payload.access;
-    //         })
-    //         .addCase(userLogin.rejected, (state, {payload}) => {
-    //             state.loading = false;
-    //             state.error = payload;
-    //         })
-    // },
 });
-
-// export const authMiddleware = (store) => (next) => (action) => {
-//     const result = next(action);
-//     if ( action.type?.startsWith('auth/')) {
-//         const authState = store.getState().auth;
-//         cookies.set('authToken', authState.userAccessToken, { path: '/' });
-//         cookies.set('refToken', authState.userRefreshToken, { path: '/' });
-//     }
-//     return result;
-// };
-//
-// export const localStorageMiddleware = ({ getState }) => {
-//     return next => action => {
-//         const result = next(action);
-//         localStorage.setItem('applicationState', JSON.stringify(getState()));
-//         return result;
-//     };
-// };
-
-// const preloadCookieStore = () => {
-//     if (cookies.get('authToken') !== null || cookies.get('authToken')) {
-//         return JSON.parse(localStorage.getItem('applicationState')); // re-hydrate the store
-//     }
-// };
 
 export default authSlice.reducer;
 export const { logout, setCredentials, setRefreshToken, setAccessToken} = authSlice.actions;
 
 export const selectCurrentUser = (state) => state.auth.user;
-// export const selectCurrent = (state) => state.auth.user;

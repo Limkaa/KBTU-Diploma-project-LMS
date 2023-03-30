@@ -42,9 +42,9 @@ const baseQueryWithRefresh = async (args, api, extraOptions) => {
                 // retry the original query
                 result = await baseQuery(args, api, extraOptions);
             }
-            // else {
-            //     api.dispatch(logout());
-            // }
+            else {
+                api.dispatch(logout());
+            }
         }
     return result;
 };

@@ -40,7 +40,12 @@ const authSlice = createSlice({
             const {userRefreshToken} = action.payload;
             state.userRefreshToken = userRefreshToken;
             cookies.set('refToken', state.userRefreshToken, { path: '/' });
-        }
+        },
+        setAccessToken: (state, action) => {
+            const {userAccessToken} = action.payload;
+            state.userAccessToken = userAccessToken;
+            cookies.set('authToken', state.userAccessToken, { path: '/' });
+        },
     },
     // extraReducers: (builder) => {
     //     builder
@@ -86,7 +91,7 @@ const authSlice = createSlice({
 // };
 
 export default authSlice.reducer;
-export const { logout, setCredentials, setRefreshToken} = authSlice.actions;
+export const { logout, setCredentials, setRefreshToken, setAccessToken} = authSlice.actions;
 
 export const selectCurrentUser = (state) => state.auth.user;
 // export const selectCurrent = (state) => state.auth.user;

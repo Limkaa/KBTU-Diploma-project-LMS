@@ -11,7 +11,13 @@ import UpdateUserModal from "../modals/UpdateUserModal";
 import { updateUser, updateUserStatus } from "../../api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {useGetUsersQuery} from "../../redux/api/apiService";
+import {
+  useAddUserMutation,
+  useGetUsersQuery,
+} from "../../redux/users/usersApiSlice";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { async } from "regenerator-runtime";
 
 // const UsersContainer = () => {
 //   const { userInfo, authToken } = useContext(AuthContext);
@@ -23,47 +29,32 @@ import {useGetUsersQuery} from "../../redux/api/apiService";
 //   const [total, setTotal] = React.useState();
 //   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
 //   const [search, setSearch] = React.useState("");
-import {useGetUsersQuery} from "../../redux/users/usersApiSlice";
-import {useSelector} from "react-redux";
-import {selectCurrentUser} from "../../redux/auth/authSlice";
 
 const UsersContainer = () => {
-  // const [users, setUsers] = React.useState();
+  const [users, setUsers] = React.useState();
   const user = useSelector(selectCurrentUser);
   const [showAddUser, setShowAddUser] = React.useState(false);
   const [role, setRole] = React.useState();
+  const [selectedUser, setSelectedUser] = React.useState();
+  const [showUpdateUser, setShowUpdateUser] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [total, setTotal] = React.useState();
+  const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
+  const [search, setSearch] = React.useState("");
 
-  const {
-    data: users,
-    isLoading,
-    isSuccess,
-    isError,
-    error
-  } = useGetUsersQuery()
+  const { data, isLoading, isSuccess, isError, error } = useGetUsersQuery({
+    school_id: user.school_id,
+    page,
+  });
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-
-
-
-  // React.useEffect(() => {
-  //   if (userInfo?.school_id && authToken) {
-  //     requestUsers(userInfo?.school_id, authToken, page).then((response) => {
-  //       if (page === 1) {
-  //         setUsers(response.results);
-  //         setTotal(response.count);
-  //       } else {
-  //         setUsers(response.results);
-  //       }
-  //     });
-  //   }
-  // }, [userInfo, authToken, page]);
+  React.useEffect(() => {
+    if (data && !isLoading) {
+      if (page === 1) {
+        setTotal(data?.count);
+      }
+      setUsers(data?.results);
+    }
+  }, [data, isLoading]);
 
   // const handleUpdateUser = (values) => {
   //   setShowUpdateUser(false);
@@ -110,25 +101,6 @@ const UsersContainer = () => {
   //     return users;
   //   }
   // };
-  // React.useEffect(() => {
-    // fetch data
-    // const dataFetch = async () => {
-    //   fetch("https://dummyjson.com/users")
-    //     .then((res) => res.json())
-    //     .then((json) => setUsers(json));
-    // };
-
-  // React.useEffect(() => {
-  //   // fetch data
-  //   // const dataFetch = async () => {
-  //   //   fetch("https://dummyjson.com/users")
-  //   //     .then((res) => res.json())
-  //   //     .then((json) => setUsers(json));
-  //   // };
-  //
-  //   // dataFetch();
-  //   setUsers(data?.results);
-  // }, []);
 
   const columns = [
     {
@@ -173,7 +145,7 @@ const UsersContainer = () => {
             style={{ color: "#45B764", fontWeight: 500 }}
             type={"link"}
             onClick={() => {
-              setUser(record);
+              setSelectedUser(record);
               setShowUpdateUser(true);
             }}
           >
@@ -184,6 +156,9 @@ const UsersContainer = () => {
     },
   ];
 
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -192,7 +167,7 @@ const UsersContainer = () => {
       </div>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          <Select
+          {/* <Select
             defaultValue="lucy"
             style={{
               width: 180,
@@ -213,7 +188,7 @@ const UsersContainer = () => {
                 label: "yiminghe",
               },
             ]}
-          />
+          /> */}
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
               size="default size"
@@ -244,7 +219,6 @@ const UsersContainer = () => {
             </Button>
           </div>
         </div>
-
         <Table
           dataSource={users}
           columns={columns}
@@ -257,21 +231,20 @@ const UsersContainer = () => {
               },
             };
           }}
-          pagination={false}
-          // pagination={{
-          //   defaultPageSize: 14,
-          //   total: users.total,
-          //   current: 1,
-          //   // onChange: (page, pageSize) => {
-          //   //   setPage(page);
-          //   // },
-          //   showSizeChanger: false,
-          // }}
+          pagination={{
+            total: total,
+            current: page,
+            onChange: (page) => {
+              setPage(page);
+            },
+            showSizeChanger: false,
+          }}
         />
       </div>
       <AddingUserModal
         setShowAddUser={setShowAddUser}
         showAddUser={showAddUser}
+        user={user}
       />
     </div>
   );

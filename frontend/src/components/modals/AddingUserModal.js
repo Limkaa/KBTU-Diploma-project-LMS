@@ -11,6 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { toast } from "react-toastify";
 import { createUser } from "../../api";
+import { useAddUserMutation } from "../../redux/users/usersApiSlice";
 
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
   props,
@@ -37,14 +38,35 @@ const DateMask = React.forwardRef(function NumericFormatCustom(props, ref) {
   );
 });
 
-const AddingUserModal = ({ showAddUser, setShowAddUser }) => {
+const AddingUserModal = ({ showAddUser, setShowAddUser, user }) => {
   const [role, setRole] = React.useState("");
   const [gender, setGender] = React.useState("");
   const [date, setDate] = React.useState("");
-  const { userInfo, authToken } = useContext(AuthContext);
   const [avatar, setAvatar] = React.useState(null);
   const [error, setError] = React.useState(false);
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
+
+  const [addUser] = useAddUserMutation();
+
+  const handleSubmit = async (values, phone) => {
+    try {
+      const addUsers =  await addUser({
+        school_id: user?.school_id,
+        email: values.email,
+        password: values.password,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        date_of_birth: values.date_of_birth,
+        telegram_id: values.telegram_id,
+        phone,
+        role,
+        gender,
+        avatar,
+      }).unwrap();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div style={{ ...styles.wrapper, right: showAddUser ? "0" : "-30%" }}>
@@ -99,38 +121,40 @@ const AddingUserModal = ({ showAddUser, setShowAddUser }) => {
           setSubmitting(false);
           if (gender && role) {
             setShowAddUser(false);
-            createUser(
-              userInfo?.school_id,
-              authToken,
-              values,
-              phoneFormat,
-              role,
-              gender,
-              avatar
-            ).then((response) => {
-              console.log(response);
-              if (response.ok) {
-                toast.success("User Added", {
-                  position: "top-right",
-                  autoClose: 2000,
-                  hideProgressBar: false,
-                  closeOnClick: false,
-                  pauseOnHover: true,
-                  draggable: false,
-                  theme: "colored",
-                });
-              } else {
-                toast.error("Error", {
-                  position: "top-right",
-                  autoClose: 2000,
-                  hideProgressBar: false,
-                  closeOnClick: false,
-                  pauseOnHover: true,
-                  draggable: false,
-                  theme: "colored",
-                });
-              }
-            });
+            handleSubmit(values, phoneFormat);
+            // createUser(
+            //   userInfo?.school_id,
+            //   authToken,
+            //   values,
+            //   phoneFormat,
+            //   role,
+            //   gender,
+            //   avatar
+            // );
+            // .then((response) => {
+            //   console.log(response);
+            //   if (response.ok) {
+            //     toast.success("User Added", {
+            //       position: "top-right",
+            //       autoClose: 2000,
+            //       hideProgressBar: false,
+            //       closeOnClick: false,
+            //       pauseOnHover: true,
+            //       draggable: false,
+            //       theme: "colored",
+            //     });
+            //   } else {
+            //     toast.error("Error", {
+            //       position: "top-right",
+            //       autoClose: 2000,
+            //       hideProgressBar: false,
+            //       closeOnClick: false,
+            //       pauseOnHover: true,
+            //       draggable: false,
+            //       theme: "colored",
+            //     });
+            //   }
+            // });
           } else {
             setError(true);
           }

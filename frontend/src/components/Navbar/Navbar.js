@@ -4,11 +4,12 @@ import { managerMenu, teacherMenu, studentMenu } from "./NavBarData";
 import { Menu } from "antd";
 import { useLocation } from "react-router-dom";
 import "../../App.css";
-import AuthContext from "../../context/AuthProvider";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 function Navbar() {
   const location = useLocation();
-  const { user } = React.useContext(AuthContext);
+  const user = useSelector(selectCurrentUser);
 
   const userToMenu = {
     manager: managerMenu,

@@ -29,7 +29,7 @@ function App() {
             <PrivateRoute allowedRoles={["manager", "student", "teacher"]} />
           }
         >
-          <Route exact path="/" element={<DashboardContainer />} />
+          <Route exact path="/home" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />
@@ -40,8 +40,8 @@ function App() {
           <Route exact path="/profile" element={<ProfileContainer />} />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
-          {/* <Route exact path="/users" element={<UsersContainer />} /> */}
-          <Route exact path="/users" element={<UsersTest />} />
+          <Route exact path="/users" element={<UsersContainer />} />
+          {/* <Route exact path="/users" element={<UsersTest />} /> */}
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>

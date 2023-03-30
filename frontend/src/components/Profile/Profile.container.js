@@ -2,17 +2,18 @@ import React, { useContext } from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header";
 import { Button } from "antd";
-import AuthContext from "../../context/AuthProvider";
-import {useDispatch, useSelector} from "react-redux";
-import {logout} from "../../redux/auth/authSlice";
+
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/auth/authSlice";
 
 const ProfileContainer = () => {
   // const { userInfo, user, logoutUser, userSchool } = useContext(AuthContext);
 
   // const { user } = useContext(AuthContext);
-  const {user} = useSelector(state => state.auth);
+
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  console.log(user.email);
+  console.log(user);
   return (
     <div style={styles.container}>
       <div style={{ display: "flex" }}>

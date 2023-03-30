@@ -18,12 +18,6 @@ function Login() {
         setErr('');
     }, [email, password])
 
-    // useEffect(() => {
-    //     if (user) {
-    //         navigate('/home');
-    //     }
-    // }, [navigate, user]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {

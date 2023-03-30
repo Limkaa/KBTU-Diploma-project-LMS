@@ -11,6 +11,8 @@ import UpdateUserModal from "../modals/UpdateUserModal";
 import { updateUser, updateUserStatus } from "../../api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {useGetUsersQuery} from "../../redux/api/apiService";
+
 const UsersContainer = () => {
   const { userInfo, authToken } = useContext(AuthContext);
   const [users, setUsers] = React.useState();
@@ -22,64 +24,82 @@ const UsersContainer = () => {
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
   const [search, setSearch] = React.useState("");
 
+  const { data, isFetching } = useGetUsersQuery('users', {
+    // perform a refetch every 15mins
+    pollingInterval: 900000,
+  });
+
+  console.log(data?.results);
+
+  // React.useEffect(() => {
+  //   if (userInfo?.school_id && authToken) {
+  //     requestUsers(userInfo?.school_id, authToken, page).then((response) => {
+  //       if (page === 1) {
+  //         setUsers(response.results);
+  //         setTotal(response.count);
+  //       } else {
+  //         setUsers(response.results);
+  //       }
+  //     });
+  //   }
+  // }, [userInfo, authToken, page]);
+
+  // const handleUpdateUser = (values) => {
+  //   setShowUpdateUser(false);
+  //   const phoneFormat = `${removeSpecSymbols(values.phone)}`;
+  //   updateUser(user.id, authToken, values, phoneFormat).then((response) => {
+  //     if (response.ok) {
+  //       toast.success("User Updated", {
+  //         position: "top-right",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: false,
+  //         pauseOnHover: true,
+  //         draggable: false,
+  //         theme: "colored",
+  //       });
+  //     } else {
+  //       toast.error("Error", {
+  //         position: "top-right",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: false,
+  //         pauseOnHover: true,
+  //         draggable: false,
+  //         theme: "colored",
+  //       });
+  //     }
+  //   });
+  // };
+
+  // const filteredUsers = () => {
+  //   if (search) {
+  //     return users.filter((itm) => {
+  //       let full_name = itm?.first_name + " " + itm?.last_name;
+  //       return (
+  //         search !== "" &&
+  //         (full_name.toLowerCase().indexOf(search) > -1 ||
+  //           itm?.first_name.toLowerCase().indexOf(search) > -1 ||
+  //           itm?.last_name.toLowerCase().indexOf(search) > -1 ||
+  //           itm?.email.toLowerCase().indexOf(search) > -1 ||
+  //           itm?.phone.toLowerCase().indexOf(search) > -1)
+  //       );
+  //     });
+  //   } else {
+  //     return users;
+  //   }
+  // };
   React.useEffect(() => {
-    if (userInfo?.school_id && authToken) {
-      requestUsers(userInfo?.school_id, authToken, page).then((response) => {
-        if (page === 1) {
-          setUsers(response.results);
-          setTotal(response.count);
-        } else {
-          setUsers(response.results);
-        }
-      });
-    }
-  }, [userInfo, authToken, page]);
+    // fetch data
+    // const dataFetch = async () => {
+    //   fetch("https://dummyjson.com/users")
+    //     .then((res) => res.json())
+    //     .then((json) => setUsers(json));
+    // };
 
-  const handleUpdateUser = (values) => {
-    setShowUpdateUser(false);
-    const phoneFormat = `${removeSpecSymbols(values.phone)}`;
-    updateUser(user.id, authToken, values, phoneFormat).then((response) => {
-      if (response.ok) {
-        toast.success("User Updated", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: false,
-          theme: "colored",
-        });
-      } else {
-        toast.error("Error", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: false,
-          theme: "colored",
-        });
-      }
-    });
-  };
-
-  const filteredUsers = () => {
-    if (search) {
-      return users.filter((itm) => {
-        let full_name = itm?.first_name + " " + itm?.last_name;
-        return (
-          search !== "" &&
-          (full_name.toLowerCase().indexOf(search) > -1 ||
-            itm?.first_name.toLowerCase().indexOf(search) > -1 ||
-            itm?.last_name.toLowerCase().indexOf(search) > -1 ||
-            itm?.email.toLowerCase().indexOf(search) > -1 ||
-            itm?.phone.toLowerCase().indexOf(search) > -1)
-        );
-      });
-    } else {
-      return users;
-    }
-  };
+    // dataFetch();
+    setUsers(data?.results);
+  }, []);
 
   const columns = [
     {
@@ -135,74 +155,169 @@ const UsersContainer = () => {
     },
   ];
 
+  // return (
+  //   <div style={styles.container}>
+  //     <div style={styles.header}>
+  //       <Header text={"Users"} />
+  //       <Profile />
+  //     </div>
+  //     <div style={styles.tableCont}>
+  //       <div style={styles.filter}>
+  //         <Select
+  //           defaultValue="lucy"
+  //           style={{
+  //             width: 180,
+  //           }}
+  //           size={"large"}
+  //           onChange={handleChange}
+  //           options={[
+  //             {
+  //               value: "jack",
+  //               label: "Jack",
+  //             },
+  //             {
+  //               value: "lucy",
+  //               label: "Lucy",
+  //             },
+  //             {
+  //               value: "Yiminghe",
+  //               label: "yiminghe",
+  //             },
+  //           ]}
+  //         />
+  //         <div style={{ alignItems: "center", display: "flex" }}>
+  //           <Input
+  //             size="default size"
+  //             placeholder="Search..."
+  //             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
+  //             style={{
+  //               height: 40,
+  //               width: 280,
+  //               border: "none",
+  //               borderRadius: 8,
+  //             }}
+  //           />
+  //           <Button
+  //             type="primary"
+  //             style={{
+  //               backgroundColor: "#163A61",
+  //               height: 40,
+  //               borderRadius: 8,
+  //               alignItems: "center",
+  //               display: "flex",
+  //               fontWeight: 500,
+  //               marginLeft: 16,
+  //             }}
+  //             icon={<img src={Plus} style={{ paddingRight: 5 }} />}
+  //             onClick={() => setShowAddUser(true)}
+  //           >
+  //             Add user
+  //           </Button>
+  //         </div>
+  //       </div>
+  //
+  //       <Table
+  //         dataSource={users?.users}
+  //         columns={columns}
+  //         rowKey={(item) => item?.id}
+  //         onRow={(record) => {
+  //           return {
+  //             onClick: () => {
+  //               // setShowBusket(true);
+  //               // setSale(record);
+  //             },
+  //           };
+  //         }}
+  //         pagination={false}
+  //         // pagination={{
+  //         //   defaultPageSize: 14,
+  //         //   total: users.total,
+  //         //   current: 1,
+  //         //   // onChange: (page, pageSize) => {
+  //         //   //   setPage(page);
+  //         //   // },
+  //         //   showSizeChanger: false,
+  //         // }}
+  //       />
+  //     </div>
+  //     <AddingUserModal
+  //       setShowAddUser={setShowAddUser}
+  //       showAddUser={showAddUser}
+  //     />
+  //   </div>
+  // );
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <Header text={"Users"} />
-        <Profile />
-      </div>
-      <div style={styles.tableCont}>
-        <div style={styles.filter}>
-          <div style={{ alignItems: "center", display: "flex" }}>
-            <Input
-              size="default size"
-              placeholder="Search..."
-              prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
-              style={{
-                height: 40,
-                width: 280,
-                border: "none",
-                borderRadius: 8,
-              }}
-              onChange={(e) => setSearch(e.target.value.toLowerCase())}
-            />
-            <Button
-              type="primary"
-              style={{
-                backgroundColor: "#163A61",
-                height: 40,
-                borderRadius: 8,
-                alignItems: "center",
-                display: "flex",
-                fontWeight: 500,
-                marginLeft: 16,
-              }}
-              icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-              onClick={() => setShowAddUser(true)}
-            >
-              Add user
-            </Button>
-          </div>
-        </div>
+  //   <div style={styles.container}>
+  //     <div style={styles.header}>
+  //       <Header text={"Users"} />
+  //       <Profile />
+  //     </div>
+  //     <div style={styles.tableCont}>
+  //       <div style={styles.filter}>
+  //         <div style={{ alignItems: "center", display: "flex" }}>
+  //           <Input
+  //             size="default size"
+  //             placeholder="Search..."
+  //             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
+  //             style={{
+  //               height: 40,
+  //               width: 280,
+  //               border: "none",
+  //               borderRadius: 8,
+  //             }}
+  //             onChange={(e) => setSearch(e.target.value.toLowerCase())}
+  //           />
+  //           <Button
+  //             type="primary"
+  //             style={{
+  //               backgroundColor: "#163A61",
+  //               height: 40,
+  //               borderRadius: 8,
+  //               alignItems: "center",
+  //               display: "flex",
+  //               fontWeight: 500,
+  //               marginLeft: 16,
+  //             }}
+  //             icon={<img src={Plus} style={{ paddingRight: 5 }} />}
+  //             onClick={() => setShowAddUser(true)}
+  //           >
+  //             Add user
+  //           </Button>
+  //         </div>
+  //       </div>
 
-        <Table
-          dataSource={filteredUsers()}
-          columns={columns}
-          rowKey={(item) => item?.id}
-          pagination={{
-            defaultPageSize: 10,
-            total: total,
-            current: page,
-            onChange: (page) => {
-              setPage(page);
-            },
-            showSizeChanger: false,
-          }}
-        />
-      </div>
-      <AddingUserModal
-        setShowAddUser={setShowAddUser}
-        showAddUser={showAddUser}
-      />
-      <UpdateUserModal
-        showUpdateUser={showUpdateUser}
-        setShowUpdateUser={setShowUpdateUser}
-        user={user}
-        setUser={setUser}
-        handleUpdateUser={handleUpdateUser}
-      />
-    </div>
-  );
+  //       <Table
+  //         dataSource={filteredUsers()}
+  //         columns={columns}
+  //         rowKey={(item) => item?.id}
+  //         pagination={{
+  //           defaultPageSize: 10,
+  //           total: total,
+  //           current: page,
+  //           onChange: (page) => {
+  //             setPage(page);
+  //           },
+  //           showSizeChanger: false,
+  //         }}
+  //       />
+  //     </div>
+  //     <AddingUserModal
+  //       setShowAddUser={setShowAddUser}
+  //       showAddUser={showAddUser}
+  //     />
+  //     <UpdateUserModal
+  //       showUpdateUser={showUpdateUser}
+  //       setShowUpdateUser={setShowUpdateUser}
+  //       user={user}
+  //       setUser={setUser}
+  //       handleUpdateUser={handleUpdateUser}
+  //     />
+  //   </div>
+  // );
+      <ul>
+        {users?.map(user => <li>{user.first_name} {user.last_name}</li>)}
+      </ul>
+  )
 };
 
 const styles = {

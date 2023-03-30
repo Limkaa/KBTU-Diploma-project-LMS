@@ -1,18 +1,20 @@
-import { Outlet, Navigate } from "react-router-dom";
-import { useContext } from "react";
-import AuthContext from "../context/AuthProvider";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import NavBar from "../components/Navbar/Navbar";
+import {useSelector} from "react-redux";
+import {selectCurrentUser} from "../redux/auth/authSlice";
 
 const PrivateRoute = ({ allowedRoles }) => {
-  const { user, role } = useContext(AuthContext);
   console.log(allowedRoles, role);
-  return user && allowedRoles?.includes(user?.role) ? (
+
+  const user = useSelector(selectCurrentUser);
+  const location = useLocation();
+  return user !== null && allowedRoles?.includes(user?.role) ? (
     <div className="body-container">
       <NavBar />
       <Outlet />
     </div>
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/login" state={{from: location}} replace />
   );
 };
 

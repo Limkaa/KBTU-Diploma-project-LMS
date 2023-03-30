@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import Cancel from "../../assets/icons/close.svg";
 import { Formik, Form, Field } from "formik";
 import InputMask from "react-input-mask";
-import AuthContext from "../../context/AuthProvider";
 import "./Modals.css";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";

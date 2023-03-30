@@ -68,11 +68,11 @@ const ProfileContainer = () => {
           <div style={{ flex: 1, display: "flex", gap: 20 }}>
             <div style={{ flex: 1 }}>
               <p style={styles.inputTitle}>Class</p>
-              <input placeholder="Basic usage" style={styles.input} disabled />
+              <input style={styles.input} disabled />
             </div>
             <div style={{ flex: 1 }}>
               <p style={styles.inputTitle}>Parallel</p>
-              <input placeholder="Basic usage" style={styles.input} disabled />
+              <input style={styles.input} disabled />
             </div>
           </div>
         )}

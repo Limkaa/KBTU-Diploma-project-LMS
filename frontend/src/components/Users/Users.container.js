@@ -17,24 +17,23 @@ const UsersContainer = () => {
   const [user, setUser] = React.useState();
   const [showAddUser, setShowAddUser] = React.useState(false);
   const [showUpdateUser, setShowUpdateUser] = React.useState(false);
-  const [offset, setOffset] = React.useState(0);
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
   const [search, setSearch] = React.useState("");
 
   React.useEffect(() => {
     if (userInfo?.school_id && authToken) {
-      requestUsers(userInfo?.school_id, authToken).then((response) => {
-        // if (offset === 0) {
-        //   setUsers(response.results);
-        //   setTotal(response.count);
-        // } else {
-        setUsers(response.results);
-        // }
+      requestUsers(userInfo?.school_id, authToken, page).then((response) => {
+        if (page === 1) {
+          setUsers(response.results);
+          setTotal(response.count);
+        } else {
+          setUsers(response.results);
+        }
       });
     }
-  }, [userInfo, authToken]);
+  }, [userInfo, authToken, page]);
 
   const handleUpdateUser = (values) => {
     setShowUpdateUser(false);
@@ -180,17 +179,15 @@ const UsersContainer = () => {
           dataSource={filteredUsers()}
           columns={columns}
           rowKey={(item) => item?.id}
-          pagination={false}
-          // pagination={{
-          //   defaultPageSize: 10,
-          //   total: total,
-          //   current: page,
-          //   onChange: (page) => {
-          //     setOffset(offset + 10);
-          //     setPage(page);
-          //   },
-          //   showSizeChanger: false,
-          // }}
+          pagination={{
+            defaultPageSize: 10,
+            total: total,
+            current: page,
+            onChange: (page) => {
+              setPage(page);
+            },
+            showSizeChanger: false,
+          }}
         />
       </div>
       <AddingUserModal

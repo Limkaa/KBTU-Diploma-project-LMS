@@ -8,7 +8,55 @@ import ClassroomSvg from "../../assets/icons/ClassroomIcon";
 import GradesSvg from "../../assets/icons/GradesIcon";
 import UsersSvg from "../../assets/icons/UsersIcon";
 
-export const navBarData = [
+export const managerMenu = [
+  {
+    title: "Home",
+    path: "/",
+    icon: HomeSvg,
+  },
+  // {
+  //   title: "My courses",
+  //   path: "/courses",
+  //   icon: CoursesSvg,
+  // },
+  // {
+  //   title: "Assignments",
+  //   path: "/assignments",
+  //   icon: AssignmentsSvg,
+  // },
+  // {
+  //   title: "Schedule",
+  //   path: "/schedule",
+  //   icon: ScheduleSvg,
+  // },
+  // {
+  //   title: "Materials",
+  //   path: "/materials",
+  //   icon: MaterialsSvg,
+  // },
+  // {
+  //   title: "Timeline",
+  //   path: "/timeline",
+  //   icon: TimelineSvg,
+  // },
+  // {
+  //   title: "Classroom",
+  //   path: "/classroom",
+  //   icon: ClassroomSvg,
+  // },
+  // {
+  //   title: "Grades",
+  //   path: "/grades",
+  //   icon: GradesSvg,
+  // },
+  {
+    title: "Users",
+    path: "/users",
+    icon: UsersSvg,
+  },
+];
+
+export const studentMenu = [
   {
     title: "Home",
     path: "/",
@@ -49,9 +97,47 @@ export const navBarData = [
     path: "/grades",
     icon: GradesSvg,
   },
+];
+
+export const teacherMenu = [
   {
-    title: "Users",
-    path: "/users",
-    icon: UsersSvg,
+    title: "Home",
+    path: "/",
+    icon: HomeSvg,
+  },
+  {
+    title: "My courses",
+    path: "/courses",
+    icon: CoursesSvg,
+  },
+  {
+    title: "Assignments",
+    path: "/assignments",
+    icon: AssignmentsSvg,
+  },
+  {
+    title: "Schedule",
+    path: "/schedule",
+    icon: ScheduleSvg,
+  },
+  {
+    title: "Materials",
+    path: "/materials",
+    icon: MaterialsSvg,
+  },
+  {
+    title: "Timeline",
+    path: "/timeline",
+    icon: TimelineSvg,
+  },
+  {
+    title: "Classroom",
+    path: "/classroom",
+    icon: ClassroomSvg,
+  },
+  {
+    title: "Grades",
+    path: "/grades",
+    icon: GradesSvg,
   },
 ];

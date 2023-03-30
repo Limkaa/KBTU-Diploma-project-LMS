@@ -3,9 +3,10 @@ import { useContext } from "react";
 import AuthContext from "../context/AuthProvider";
 import NavBar from "../components/Navbar/Navbar";
 
-const PrivateRoute = () => {
-  const { user } = useContext(AuthContext);
-  return user ? (
+const PrivateRoute = ({ allowedRoles }) => {
+  const { user, role } = useContext(AuthContext);
+  console.log(allowedRoles, role);
+  return user && allowedRoles?.includes(user?.role) ? (
     <div className="body-container">
       <NavBar />
       <Outlet />

@@ -18,9 +18,6 @@ export const AuthProvider = ({ children }) => {
   const [refToken, setRefToken] = useState(() =>
     cookies.get("refToken") ? cookies.get("refToken") : null
   );
-  const [role, setRole] = useState(() =>
-    cookies.get("authToken") ? jwtDecode(cookies.get("authToken")).role : null
-  );
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = React.useState();
   const [userSchool, setUserSchool] = React.useState();
@@ -44,7 +41,6 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(data.access);
       setRefToken(data.refresh);
       setUser(jwtDecode(data.access));
-      //   console.log(jwtDecode(data.access));
       cookies.set("authToken", data.access, { path: "/" });
       cookies.set("refToken", data.refresh, { path: "/" });
 
@@ -144,7 +140,6 @@ export const AuthProvider = ({ children }) => {
     userInfo: userInfo,
     userSchool: userSchool,
     authToken: authToken,
-    role,
   };
 
   return (

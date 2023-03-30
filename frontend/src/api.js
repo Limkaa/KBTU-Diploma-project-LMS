@@ -1,9 +1,9 @@
 const baseURL = "http://127.0.0.1:8000/";
 
-export const requestUsers = async (school_id, authToken, offset) => {
+export const requestUsers = async (school_id, authToken, page) => {
   return fetch(
-    // `${baseURL}api/schools/${school_id}/users?limit=10&offset=${offset}`,
-    `${baseURL}api/schools/${school_id}/users`,
+    `${baseURL}api/schools/${school_id}/users?limit=10&page=${page}`,
+    // `${baseURL}api/schools/${school_id}/users`,
     {
       method: "GET",
       headers: new Headers({

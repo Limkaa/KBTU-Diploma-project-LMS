@@ -16,7 +16,6 @@ import GradesContainer from "./components/Grades/Grades.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
 import { toast } from "react-toastify";
-import { RolesAuthRoute } from "./utils/PrivateRouteRoles";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -24,17 +23,11 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        {/* <Route
-          path="/users"
+        <Route
           element={
-            <React.Suspense fallback={<PrivateRoute />}>
-              <RolesAuthRoute roles={["manager"]}>
-                <UsersContainer />
-              </RolesAuthRoute>
-            </React.Suspense>
+            <PrivateRoute allowedRoles={["manager", "student", "teacher"]} />
           }
-        /> */}
-        <Route exact path="/" element={<PrivateRoute />}>
+        >
           <Route exact path="/" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
@@ -44,6 +37,8 @@ function App() {
           <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
+        </Route>
+        <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
           <Route exact path="/users" element={<UsersContainer />} />
         </Route>
         <Route exact path="/login" element={<LoginPage />} />

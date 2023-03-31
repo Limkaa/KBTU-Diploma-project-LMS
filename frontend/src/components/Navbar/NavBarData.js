@@ -14,41 +14,6 @@ export const managerMenu = [
     path: "/home",
     icon: HomeSvg,
   },
-  // {
-  //   title: "My courses",
-  //   path: "/courses",
-  //   icon: CoursesSvg,
-  // },
-  // {
-  //   title: "Assignments",
-  //   path: "/assignments",
-  //   icon: AssignmentsSvg,
-  // },
-  // {
-  //   title: "Schedule",
-  //   path: "/schedule",
-  //   icon: ScheduleSvg,
-  // },
-  // {
-  //   title: "Materials",
-  //   path: "/materials",
-  //   icon: MaterialsSvg,
-  // },
-  // {
-  //   title: "Timeline",
-  //   path: "/timeline",
-  //   icon: TimelineSvg,
-  // },
-  // {
-  //   title: "Classroom",
-  //   path: "/classroom",
-  //   icon: ClassroomSvg,
-  // },
-  // {
-  //   title: "Grades",
-  //   path: "/grades",
-  //   icon: GradesSvg,
-  // },
   {
     title: "Users",
     path: "/users",
@@ -59,7 +24,7 @@ export const managerMenu = [
 export const studentMenu = [
   {
     title: "Home",
-    path: "/",
+    path: "/home",
     icon: HomeSvg,
   },
   {
@@ -102,7 +67,7 @@ export const studentMenu = [
 export const teacherMenu = [
   {
     title: "Home",
-    path: "/",
+    path: "/home",
     icon: HomeSvg,
   },
   {

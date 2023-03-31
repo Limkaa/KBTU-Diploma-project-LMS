@@ -4,6 +4,9 @@ import InputMask from "react-input-mask";
 import "./Modals.css";
 import TextField from "@mui/material/TextField";
 import { Checkbox } from "antd";
+import { alpha, styled } from "@mui/material/styles";
+import { borderRadius } from "@mui/system";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
   props,
@@ -29,6 +32,19 @@ const DateMask = React.forwardRef(function NumericFormatCustom(props, ref) {
     />
   );
 });
+
+
+const InputStyled = styled(TextField)(({ theme }) => ({
+  "& fieldset": {
+    borderRadius: "10px",
+    fontFamily: "Open Sans",
+  },
+  "& input": {
+    fontFamily: "Open Sans",
+    fontSize: 14,
+    fontWeight: 400,
+  },
+}));
 
 const UpdateUserModal = ({
   showUpdateUser,
@@ -91,10 +107,11 @@ const UpdateUserModal = ({
           }}
         />
       </div>
+      {/* <ThemeProvider theme={theme}> */}
       <div style={styles.form} onSubmit={handleUpdateUser}>
         <p style={styles.contentTitle}>User</p>
         <br />
-        <TextField
+        <InputStyled
           InputLabelProps={{
             shrink: true,
           }}
@@ -202,6 +219,7 @@ const UpdateUserModal = ({
           Update user
         </button>
       </div>
+      {/* </ThemeProvider> */}
     </div>
   );
 };

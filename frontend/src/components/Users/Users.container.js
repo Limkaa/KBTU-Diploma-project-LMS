@@ -27,7 +27,7 @@ const UsersContainer = () => {
 
   const { data, isLoading, isSuccess, isError, error, refetch } =
     useGetUsersQuery({
-      school_id: user.school_id,
+      school_id: user?.school_id,
       page,
     });
 
@@ -144,7 +144,7 @@ const UsersContainer = () => {
       render: (_, record) => (
         <Space size="middle">
           <Button
-            style={{ color: "#45B764", fontWeight: 500 }}
+            style={{ color: "#00899E", fontWeight: 500 }}
             type={"link"}
             onClick={() => {
               setSelectedUser(record);

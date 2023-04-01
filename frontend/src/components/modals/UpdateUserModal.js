@@ -4,9 +4,7 @@ import InputMask from "react-input-mask";
 import "./Modals.css";
 import TextField from "@mui/material/TextField";
 import { Checkbox } from "antd";
-import { alpha, styled } from "@mui/material/styles";
-import { borderRadius } from "@mui/system";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
   props,
@@ -33,16 +31,22 @@ const DateMask = React.forwardRef(function NumericFormatCustom(props, ref) {
   );
 });
 
-
 const InputStyled = styled(TextField)(({ theme }) => ({
   "& fieldset": {
     borderRadius: "10px",
-    fontFamily: "Open Sans",
   },
   "& input": {
     fontFamily: "Open Sans",
     fontSize: 14,
-    fontWeight: 400,
+    fontWeight: 500,
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "rgba(0, 0, 0, 0.23)",
+    },
+    "&.Mui-focused fieldset": {
+      border: "2px solid #163A61",
+    },
   },
 }));
 
@@ -107,7 +111,6 @@ const UpdateUserModal = ({
           }}
         />
       </div>
-      {/* <ThemeProvider theme={theme}> */}
       <div style={styles.form} onSubmit={handleUpdateUser}>
         <p style={styles.contentTitle}>User</p>
         <br />
@@ -125,7 +128,7 @@ const UpdateUserModal = ({
           size="small"
         />
         <br />
-        <TextField
+        <InputStyled
           InputLabelProps={{
             shrink: true,
           }}
@@ -139,7 +142,7 @@ const UpdateUserModal = ({
           size="small"
         />
         <br />
-        <TextField
+        <InputStyled
           InputLabelProps={{
             shrink: true,
           }}
@@ -153,7 +156,7 @@ const UpdateUserModal = ({
           size="small"
         />
         <br />
-        <TextField
+        <InputStyled
           InputLabelProps={{
             shrink: true,
           }}
@@ -170,7 +173,7 @@ const UpdateUserModal = ({
           }}
         />
         <br />
-        <TextField
+        <InputStyled
           InputLabelProps={{
             shrink: true,
           }}
@@ -184,7 +187,7 @@ const UpdateUserModal = ({
           size="small"
         />
         <br />
-        <TextField
+        <InputStyled
           InputLabelProps={{
             shrink: true,
           }}
@@ -219,7 +222,6 @@ const UpdateUserModal = ({
           Update user
         </button>
       </div>
-      {/* </ThemeProvider> */}
     </div>
   );
 };
@@ -288,7 +290,7 @@ const styles = {
   },
   btn: {
     border: "1px solid #163A61",
-    borderRadius: 3,
+    borderRadius: 10,
     padding: "10px",
     marginTop: 15,
     fontWeight: 600,

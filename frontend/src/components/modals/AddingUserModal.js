@@ -9,8 +9,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { toast } from "react-toastify";
-import { createUser } from "../../api";
 import { useAddUserMutation } from "../../redux/users/usersApiSlice";
+import { styled } from "@mui/material/styles";
 
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
   props,
@@ -37,6 +37,26 @@ const DateMask = React.forwardRef(function NumericFormatCustom(props, ref) {
   );
 });
 
+const InputStyled = styled(TextField)(({ theme }) => ({
+  "& fieldset": {
+    borderRadius: "10px",
+  },
+  "& input": {
+    fontFamily: "Open Sans",
+    fontSize: 14,
+    fontWeight: 500,
+  },
+
+  // "& .MuiOutlinedInput-root": {
+  //   "& fieldset": {
+  //     borderColor: "rgba(0, 0, 0, 0.23)",
+  //   },
+  //   "&.Mui-focused fieldset": {
+  //     border: "2px solid #163A61",
+  //   },
+  // },
+}));
+
 const AddingUserModal = ({
   showAddUser,
   setShowAddUser,
@@ -46,7 +66,6 @@ const AddingUserModal = ({
 }) => {
   const [role, setRole] = React.useState("");
   const [gender, setGender] = React.useState("");
-  const [date, setDate] = React.useState("");
   const [avatar, setAvatar] = React.useState(null);
   const [error, setError] = React.useState(false);
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
@@ -157,11 +176,10 @@ const AddingUserModal = ({
         {({ isSubmitting }) => (
           <Form style={styles.form}>
             <p style={styles.contentTitle}>User</p>
-            <Field
-              name="first_name"
-              render={({ field, form: { touched, errors } }) => (
+            <Field name="first_name">
+              {({ field, form: { touched, errors } }) => (
                 <>
-                  <TextField
+                  <InputStyled
                     {...field}
                     label="First Name"
                     variant="outlined"
@@ -174,13 +192,12 @@ const AddingUserModal = ({
                   )}
                 </>
               )}
-            />
+            </Field>
             <div style={{ margin: 6 }} />
-            <Field
-              name="last_name"
-              render={({ field, form: { touched, errors } }) => (
+            <Field name="last_name">
+              {({ field, form: { touched, errors } }) => (
                 <>
-                  <TextField
+                  <InputStyled
                     {...field}
                     label="Last Name"
                     variant="outlined"
@@ -193,13 +210,12 @@ const AddingUserModal = ({
                   )}
                 </>
               )}
-            />
+            </Field>
             <div style={{ margin: 6 }} />
-            <Field
-              name="email"
-              render={({ field, form: { touched, errors } }) => (
+            <Field name="email">
+              {({ field, form: { touched, errors } }) => (
                 <>
-                  <TextField
+                  <InputStyled
                     {...field}
                     type="email"
                     label="Email"
@@ -212,13 +228,12 @@ const AddingUserModal = ({
                   )}
                 </>
               )}
-            />
+            </Field>
             <div style={{ margin: 6 }} />
-            <Field
-              name="password"
-              render={({ field, form: { touched, errors } }) => (
+            <Field name="password">
+              {({ field, form: { touched, errors } }) => (
                 <>
-                  <TextField
+                  <InputStyled
                     {...field}
                     label="Password"
                     variant="outlined"
@@ -230,13 +245,12 @@ const AddingUserModal = ({
                   )}
                 </>
               )}
-            />
+            </Field>
             <div style={{ margin: 6 }} />
-            <Field
-              name="phone"
-              render={({ field, form: { touched, errors } }) => (
+            <Field name="phone">
+              {({ field, form: { touched, errors } }) => (
                 <>
-                  <TextField
+                  <InputStyled
                     {...field}
                     label="Phone"
                     variant="outlined"
@@ -252,13 +266,12 @@ const AddingUserModal = ({
                   )}
                 </>
               )}
-            />
+            </Field>
             <div style={{ margin: 6 }} />
-            <Field
-              name="telegram_id"
-              render={({ field, form: { touched, errors } }) => (
+            <Field name="telegram_id">
+              {({ field, form: { touched, errors } }) => (
                 <>
-                  <TextField
+                  <InputStyled
                     {...field}
                     label="Telegram ID"
                     variant="outlined"
@@ -270,13 +283,12 @@ const AddingUserModal = ({
                   )}
                 </>
               )}
-            />
+            </Field>
             <div style={{ margin: 6 }} />
-            <Field
-              name="date_of_birth"
-              render={({ field, form: { touched, errors } }) => (
+            <Field name="date_of_birth">
+              {({ field, form: { touched, errors } }) => (
                 <>
-                  <TextField
+                  <InputStyled
                     {...field}
                     label="Date of birth"
                     variant="outlined"
@@ -291,9 +303,13 @@ const AddingUserModal = ({
                   )}
                 </>
               )}
-            />
+            </Field>
+
             <div style={{ margin: 6 }} />
-            <FormControl sx={{ width: "100%" }} size="small">
+            <FormControl
+              sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+              size="small"
+            >
               <InputLabel id="role">Role</InputLabel>
               <Select
                 labelId="role"
@@ -309,7 +325,10 @@ const AddingUserModal = ({
               {error && <div className="error">{"Required"}</div>}
             </FormControl>
             <div style={{ margin: 6 }} />
-            <FormControl sx={{ width: "100%" }} size="small">
+            <FormControl
+              sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+              size="small"
+            >
               <InputLabel id="gender">Gender</InputLabel>
               <Select
                 labelId="gender"
@@ -411,7 +430,7 @@ const styles = {
   },
   btn: {
     border: "1px solid #163A61",
-    borderRadius: 3,
+    borderRadius: 10,
     padding: "10px",
     marginTop: 15,
     fontWeight: 600,

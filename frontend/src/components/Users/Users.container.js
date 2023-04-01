@@ -45,7 +45,6 @@ const UsersContainer = () => {
   const handleUpdateUser = async (values) => {
     setShowUpdateUser(false);
     const phoneFormat = `${removeSpecSymbols(values.phone)}`;
-    console.log(user);
     try {
       const updateUsers = await updateUser({
         id: selectedUser.id,

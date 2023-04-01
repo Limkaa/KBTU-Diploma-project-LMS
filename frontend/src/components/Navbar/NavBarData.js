@@ -7,6 +7,7 @@ import TimelineSvg from "../../assets/icons/TimelineIcon";
 import ClassroomSvg from "../../assets/icons/ClassroomIcon";
 import GradesSvg from "../../assets/icons/GradesIcon";
 import UsersSvg from "../../assets/icons/UsersIcon";
+import SchoolGradesSvg from "../../assets/icons/SchoolGradesIcon";
 
 export const managerMenu = [
   {
@@ -18,6 +19,11 @@ export const managerMenu = [
     title: "Users",
     path: "/users",
     icon: UsersSvg,
+  },
+  {
+    title: "Grades",
+    path: `/school/grades`,
+    icon: SchoolGradesSvg,
   },
 ];
 

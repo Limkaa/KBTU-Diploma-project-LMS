@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { managerMenu, teacherMenu, studentMenu } from "./NavBarData";
 import { Menu } from "antd";
@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import "../../App.css";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import Logo from "../../assets/icons/logo.svg";
+import LogoIcon from "../shared/LogoIcon";
 
 function Navbar() {
   const location = useLocation();
@@ -36,17 +36,7 @@ function Navbar() {
         selectedKeys={[location.pathname]}
         defaultOpenKeys={["/"]}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: 50,
-            marginTop: 10,
-          }}
-        >
-          <img src={Logo} />
-        </div>
-
+        <LogoIcon />
         {currentMenu.map((item) => (
           <Menu.Item
             key={item.path}

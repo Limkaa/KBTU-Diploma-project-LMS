@@ -12,12 +12,11 @@ class Course(FeedMixin):
         null=False,
         blank=False,
     )
-    cycle = models.ForeignKey(
-        to="terms.Cycle",
+    year = models.ForeignKey(
+        to="terms.Year",
         related_name="courses",
         on_delete=models.PROTECT,
-        null=False,
-        blank=False,
+        null=True,
     )
     teacher = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,

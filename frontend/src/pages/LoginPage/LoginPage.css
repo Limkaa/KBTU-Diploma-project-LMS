@@ -1,0 +1,98 @@
+.login #main {
+    width: 100%;
+    background-color: #F3F3F3;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.login .inner-con {
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20%;
+}
+
+.login form {
+    width: 540px;
+    border-radius: 15px;
+    background-color: white;
+    padding: 20px 20px;
+}
+
+.login form > * {
+    display: block;
+    margin: 20px 0;
+}
+
+
+
+.login h1 {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 46px;
+    color: #163A61;
+    text-align: center;
+    margin: 0;
+}
+
+.login input {
+    display: block;
+    height: 45px;
+    width: 100%;
+    border-radius: 10px;
+    padding: 12px;
+    outline: none;
+    border: 1px solid #DFDFDF;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: left;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+.login input::placeholder {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #9DA6BA;
+}
+
+.login button {
+    margin: 0 auto;
+    min-width: 120px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #163A61;
+    border: none;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.login .graphics {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 500px;
+    height: 500px;
+}
+
+.login svg {
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+

@@ -14,8 +14,8 @@ export const schoolGradesApiSlice = authApi.injectEndpoints({
       }),
     }),
     updateSchoolGrade: builder.mutation({
-      query: ({ school_id, ...data }) => ({
-        url: `/api/grades/${school_id}`,
+      query: ({ grade_id, ...data }) => ({
+        url: `/api/grades/${grade_id}`,
         method: "PUT",
         body: data,
       }),

@@ -8,6 +8,7 @@ import ClassroomSvg from "../../assets/icons/ClassroomIcon";
 import GradesSvg from "../../assets/icons/GradesIcon";
 import UsersSvg from "../../assets/icons/UsersIcon";
 import SchoolGradesSvg from "../../assets/icons/SchoolGradesIcon";
+import SubjectsSvg from "../../assets/icons/SubjectsIcon";
 
 export const managerMenu = [
   {
@@ -24,6 +25,11 @@ export const managerMenu = [
     title: "Grades",
     path: `/school/grades`,
     icon: SchoolGradesSvg,
+  },
+  {
+    title: "Subjects",
+    path: `/school/subjects`,
+    icon: SubjectsSvg,
   },
 ];
 

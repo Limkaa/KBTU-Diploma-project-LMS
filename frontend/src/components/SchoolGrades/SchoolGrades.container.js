@@ -4,14 +4,19 @@ import Header from "../shared/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
+import active from "../../assets/icons/active.svg";
+import inactive from "../../assets/icons/inactive.svg";
+
 import {
   useAddSchoolGradeMutation,
   useGetSchoolGradesQuery,
+  useUpdateSchoolGradeMutation,
 } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import AddSchoolGrade from "./AddSchoolGrade";
 import { toast } from "react-toastify";
+import UpdateSchoolGrade from "./UpdateSchoolGrade";
 
 const SchoolGradesContainer = () => {
   const user = useSelector(selectCurrentUser);
@@ -19,12 +24,15 @@ const SchoolGradesContainer = () => {
   const [search, setSearch] = React.useState("");
   const [selectedGrade, setSelectedGrade] = React.useState();
   const [showAddSchoolGrade, setShowAddSchoolGrade] = React.useState(false);
+  const [showUpdateSchoolGrade, setShowUpdateSchoolGrade] =
+    React.useState(false);
 
   const { data, isLoading, refetch } = useGetSchoolGradesQuery({
     school_id: user?.school_id,
   });
 
   const [createGrade] = useAddSchoolGradeMutation();
+  const [updateGrade] = useUpdateSchoolGradeMutation();
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -44,12 +52,49 @@ const SchoolGradesContainer = () => {
 
   const handleCreateGrade = async (values) => {
     setShowAddSchoolGrade(false);
-    console.log(user?.school_id, values.name);
+    if (user) {
+      try {
+        const createGrades = await createGrade({
+          school_id: user?.school_id,
+          name: values.name,
+          is_active: true,
+        })
+          .unwrap()
+          .then((payload) => {
+            refetch();
+            toast.success("User Updated", {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: false,
+              theme: "colored",
+            });
+          });
+      } catch (err) {
+        console.log(err);
+        toast.error("Error", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: false,
+          theme: "colored",
+        });
+      }
+    }
+  };
+
+  const handleUpdateGrade = async (grade, values) => {
+    setShowUpdateSchoolGrade(false);
+    console.log("selectedGrade", grade, values.name);
     try {
-      const createGrades = await createGrade({
-        school_id: user?.school_id,
+      const updateGrades = await updateGrade({
+        grade_id: grade?.id,
         name: values.name,
-        is_active: true,
+        is_active: values.is_active,
       })
         .unwrap()
         .then((payload) => {
@@ -66,7 +111,6 @@ const SchoolGradesContainer = () => {
         });
     } catch (err) {
       console.log(err);
-
       toast.error("Error", {
         position: "top-right",
         autoClose: 2000,
@@ -81,10 +125,25 @@ const SchoolGradesContainer = () => {
 
   const columns = [
     {
+      width: "1%",
+      render: (item) => (
+        <div style={{ display: "flex", alignItems:'center', justifyContent: 'center' }}>
+          <img
+            src={
+              item?.is_active
+                ? require("../../assets/icons/active.png")
+                : require("../../assets/icons/inactive.png")
+            }
+            style={{ width: 16, height: 16 }}
+          />
+        </div>
+      ),
+    },
+    {
       title: () => {
         return <>Name</>;
       },
-      width: "85%",
+      width: "60%",
       render: (item) => <div>{item.name}</div>,
     },
     {
@@ -98,7 +157,7 @@ const SchoolGradesContainer = () => {
             type={"link"}
             onClick={() => {
               setSelectedGrade(record);
-              //   setShowUpdateUser(true);
+              setShowUpdateSchoolGrade(true);
             }}
           >
             Change
@@ -111,7 +170,7 @@ const SchoolGradesContainer = () => {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <Header text={"Users"} />
+        <Header text={"Grades"} />
         <Profile />
       </div>
       <div style={styles.tableCont}>
@@ -153,6 +212,13 @@ const SchoolGradesContainer = () => {
         showAddSchoolGrade={showAddSchoolGrade}
         setShowAddSchoolGrade={setShowAddSchoolGrade}
         handleCreateGrade={handleCreateGrade}
+      />
+      <UpdateSchoolGrade
+        grade={selectedGrade}
+        setGrade={setSelectedGrade}
+        showUpdateSchoolGrade={showUpdateSchoolGrade}
+        setShowUpdateSchoolGrade={setShowUpdateSchoolGrade}
+        handleUpdateGrade={handleUpdateGrade}
       />
     </div>
   );

@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"admin\"\n}",
+							"raw": "{\n    \"email\": \"user19@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -678,12 +678,7 @@
 									"value": "true",
 									"type": "text"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/schools/1/users",
@@ -806,12 +801,7 @@
 									"value": "true",
 									"type": "text"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/users/3",
@@ -857,7 +847,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"1 класс\",\n    \"is_active\": true\n}",
+							"raw": "{\n    \"school\": 2,\n    \"name\": \"1 класс\",\n    \"is_active\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -865,13 +855,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/grades",
+							"raw": "{{BASE_URL}}/grades",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
-								"schools",
-								"1",
 								"grades"
 							]
 						}
@@ -1131,6 +1119,398 @@
 									"key": "offset",
 									"value": null
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Students cards",
+			"item": [
+				{
+					"name": "Get one student card",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/students/43",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"students",
+								"43"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update student card",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"group\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/students/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"students",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/students",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get group students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/groups/8/students",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"groups",
+								"8",
+								"students"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subjects",
+			"item": [
+				{
+					"name": "Get one subject",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/subjects/43",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"subjects",
+								"43"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create subject",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school\": 1,\n    \"grade\": 5,\n    \"name\": 4,\n    \"description\": \"\",\n    \"code\": \"\",\n    \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/subjects",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"subjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update subject",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school\": 1,\n    \"grade\": 9,\n    \"name\": \"Algebra\",\n    \"description\": \"\",\n    \"code\": \"LOLKEK\",\n    \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/subjects/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"subjects",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school subjects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/students",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get grade subjects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/grades/9/subjects",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"grades",
+								"9",
+								"subjects"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Academic years",
+			"item": [
+				{
+					"name": "Get one year",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/years/43",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"years",
+								"43"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create year",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school\": 1,\n    \"name\": \"2023-2024\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/years",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"years"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update year",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school\": 1,\n    \"name\": \"2023-2024\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/years/7",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"years",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school years",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/years",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"years"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Terms",
+			"item": [
+				{
+					"name": "Get one term",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/terms/43",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"terms",
+								"43"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create term",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school\": 1,\n    \"name\": \"2023-2024\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/terms",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"terms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update term",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school\": 1,\n    \"name\": \"2023-2024\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/terms/7",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"terms",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get terms of year",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/years/1/terms",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"years",
+								"1",
+								"terms"
 							]
 						}
 					},

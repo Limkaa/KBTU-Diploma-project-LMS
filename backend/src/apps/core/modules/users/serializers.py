@@ -12,7 +12,7 @@ class UserSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     school_id = serializers.IntegerField(read_only=True)
-    role = serializers.ChoiceField(required=True, choices=User.Role.choices)
+    role = serializers.ChoiceField(read_only=True, choices=User.Role.choices)
     avatar = serializers.ImageField(required=False, allow_null=True)
     gender = serializers.ChoiceField(required=True, choices=User.Gender.choices)
     date_of_birth = serializers.DateField(required=True)
@@ -41,6 +41,7 @@ class UserPublicSerializer(UserSerializer):
 
 class UserCreateSerializer(UserSerializer):
     password = serializers.CharField(required=True, write_only=True)
+    role = serializers.ChoiceField(required=True, choices=User.Role.choices)
     
     def create(self, validated_data):
         password = validated_data.pop("password")

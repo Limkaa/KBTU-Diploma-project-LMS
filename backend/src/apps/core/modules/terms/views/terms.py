@@ -12,6 +12,8 @@ from ..serializers import (
 
 from ... import permissions
 
+from apps.core.utils.pagination import OptionalPaginationListAPIView
+
 
 class TermCreateAPI(generics.CreateAPIView):
     permission_classes = [
@@ -46,7 +48,7 @@ class TermRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         return super().perform_update(serializer)
 
 
-class AcademicYearTermsListAPI(generics.ListAPIView):
+class AcademicYearTermsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager

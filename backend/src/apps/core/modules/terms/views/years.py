@@ -8,6 +8,8 @@ from ..serializers import YearModelSerializer
 
 from ... import permissions
 
+from apps.core.utils.pagination import OptionalPaginationListAPIView
+
 
 class YearCreateAPI(generics.CreateAPIView):
     permission_classes = [
@@ -37,7 +39,7 @@ class YearRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         return super().perform_update(serializer)
 
 
-class SchoolYearsListAPI(generics.ListAPIView):
+class SchoolYearsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager

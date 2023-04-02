@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user15@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -700,25 +700,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/users",
+							"raw": "{{BASE_URL}}/schools/2/users?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"1",
+								"2",
 								"users"
 							],
 							"query": [
 								{
-									"key": "limit",
-									"value": "10",
-									"disabled": true
-								},
-								{
-									"key": "offset",
-									"value": "0",
-									"disabled": true
+									"key": "page",
+									"value": "1"
 								}
 							]
 						}
@@ -822,7 +816,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/grades",
+							"raw": "{{BASE_URL}}/schools/2/grades?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -830,6 +824,12 @@
 								"schools",
 								"2",
 								"grades"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1038,23 +1038,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/groups?limit=&offset=",
+							"raw": "{{BASE_URL}}/schools/2/groups?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"1",
+								"2",
 								"groups"
 							],
 							"query": [
 								{
-									"key": "limit",
-									"value": ""
-								},
-								{
-									"key": "offset",
-									"value": ""
+									"key": "page",
+									"value": "1"
 								}
 							]
 						}
@@ -1067,23 +1063,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/47/groups?limit&offset",
+							"raw": "{{BASE_URL}}/teachers/41/groups?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"47",
+								"41",
 								"groups"
 							],
 							"query": [
 								{
-									"key": "limit",
-									"value": null
-								},
-								{
-									"key": "offset",
-									"value": null
+									"key": "page",
+									"value": "1"
 								}
 							]
 						}
@@ -1096,7 +1088,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/grades/1/groups?limit&offset",
+							"raw": "{{BASE_URL}}/grades/1/groups?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1107,12 +1099,8 @@
 							],
 							"query": [
 								{
-									"key": "limit",
-									"value": null
-								},
-								{
-									"key": "offset",
-									"value": null
+									"key": "page",
+									"value": "1"
 								}
 							]
 						}
@@ -1175,14 +1163,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/students",
+							"raw": "{{BASE_URL}}/schools/2/students?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"1",
+								"2",
 								"students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1194,14 +1188,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/groups/8/students",
+							"raw": "{{BASE_URL}}/groups/11/students?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"groups",
-								"8",
+								"11",
 								"students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1289,14 +1289,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/students",
+							"raw": "{{BASE_URL}}/schools/2/students?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"1",
+								"2",
 								"students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1308,7 +1314,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/grades/9/subjects",
+							"raw": "{{BASE_URL}}/grades/9/subjects?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1316,6 +1322,12 @@
 								"grades",
 								"9",
 								"subjects"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1403,14 +1415,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/years",
+							"raw": "{{BASE_URL}}/schools/2/years?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"1",
+								"2",
 								"years"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1498,14 +1516,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/years/3/terms",
+							"raw": "{{BASE_URL}}/years/5/terms",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"years",
-								"3",
+								"5",
 								"terms"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
 							]
 						}
 					},

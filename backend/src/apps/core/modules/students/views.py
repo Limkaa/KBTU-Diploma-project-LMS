@@ -14,6 +14,7 @@ from .serializers import (
 from .. import permissions
 from .permissions import IsGroupTeacher, IsStudentItself
 
+from apps.core.utils.pagination import OptionalPaginationListAPIView
 
 class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Student.objects.all().select_related('group', 'user')
@@ -41,7 +42,7 @@ class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         return super().get_permissions()
 
 
-class SchoolStudentsListAPI(generics.ListAPIView):
+class SchoolStudentsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager
@@ -55,7 +56,7 @@ class SchoolStudentsListAPI(generics.ListAPIView):
 
 
 
-class GroupStudentsListAPI(generics.ListAPIView):
+class GroupStudentsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager | permissions.IsGroupTeacher

@@ -12,6 +12,8 @@ from .serializers import (
 
 from .. import permissions
 
+from apps.core.utils.pagination import OptionalPaginationListAPIView
+
 
 class SubjectCreateAPI(generics.CreateAPIView):
     permission_classes = [
@@ -45,7 +47,7 @@ class SubjectRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         return super().perform_update(serializer)
 
 
-class SchoolSubjectsListAPI(generics.ListAPIView):
+class SchoolSubjectsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager
@@ -58,7 +60,7 @@ class SchoolSubjectsListAPI(generics.ListAPIView):
         return Subject.objects.filter(school = school).select_related('school', 'grade')
     
 
-class GradeSubjectsListAPI(generics.ListAPIView):
+class GradeSubjectsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager

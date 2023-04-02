@@ -1,0 +1,52 @@
+[
+	{
+		"name": "2020-2021",
+		"terms": [
+			{
+				"name": "Fall term",
+				"from_date": "2020-09-01",
+				"to_date": "2020-12-20"
+			},
+			{
+				"name": "Spring term",
+				"from_date": "2021-01-10",
+				"to_date": "2021-05-25"
+			}
+		]
+	},
+	{
+		"name": "2021-2022",
+		"terms": [
+			{
+				"name": "Fall term",
+				"from_date": "2021-09-01",
+				"to_date": "2021-12-20"
+			},
+			{
+				"name": "Spring term",
+				"from_date": "2022-01-10",
+				"to_date": "2022-05-25"
+			}
+		]
+	},
+	{
+		"name": "2022-2023",
+		"terms": [
+			{
+				"name": "Fall term",
+				"from_date": "2022-09-01",
+				"to_date": "2022-12-20"
+			},
+			{
+				"name": "Spring term",
+				"from_date": "2023-01-10",
+				"to_date": "2023-05-25"
+			},
+			{
+				"name": "Summer term",
+				"from_date": "2023-06-10",
+				"to_date": "2023-07-10"
+			}
+		]
+	}
+]

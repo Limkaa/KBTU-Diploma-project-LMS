@@ -1,33 +1,35 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
 
-from .models import Grade
-from ..schools.models import School
-from . import serializers
+from ..models import Year
+from ...schools.models import School
 
-from .. import permissions
+from ..serializers import YearModelSerializer
+
+from ... import permissions
 
 
-class GradeCreateAPI(generics.CreateAPIView):
+class YearCreateAPI(generics.CreateAPIView):
     permission_classes = [
-        permissions.IsManager,
-        permissions.OnlyOwnSchoolObject
+        permissions.OnlyOwnSchoolObject,
+        permissions.IsManager
     ]
-    serializer_class = serializers.GradeModelSerializer
-            
+    serializer_class = YearModelSerializer
+    queryset = Year.objects.all()
+    
     def perform_create(self, serializer):
         school = serializer.validated_data.get('school')
         self.check_object_permissions(self.request, school)
         return super().perform_create(serializer)
+    
 
-
-class GradeRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
+class YearRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
+    queryset = Year.objects.all()
+    serializer_class = YearModelSerializer
     permission_classes = [
-        permissions.IsManager,
-        permissions.OnlyOwnSchoolObject
+        permissions.OnlyOwnSchoolObject,
+        permissions.IsManager
     ]
-    serializer_class = serializers.GradeModelSerializer
-    queryset = Grade.objects.all()
     
     def perform_update(self, serializer):
         school = serializer.validated_data.get('school')
@@ -35,15 +37,14 @@ class GradeRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         return super().perform_update(serializer)
 
 
-class SchoolGradesListAPI(generics.ListAPIView):
+class SchoolYearsListAPI(generics.ListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager
     ]
-    serializer_class = serializers.GradeModelSerializer
+    serializer_class = YearModelSerializer
     
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])
         self.check_object_permissions(self.request, school)
-        return Grade.objects.filter(school = school)
-  
+        return Year.objects.filter(school = school)

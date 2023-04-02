@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import Subject
 
-from ..grades.serializers import GradeSerializer
+from ..grades.serializers import GradeModelSerializer
 
 
 class SubjectModelSerializer(serializers.ModelSerializer):  
@@ -13,7 +13,7 @@ class SubjectModelSerializer(serializers.ModelSerializer):
 
 
 class SubjectModelNestedSerializer(SubjectModelSerializer):
-    grade = GradeSerializer(read_only=True)
+    grade = GradeModelSerializer(read_only=True)
 
 
 class SubjectModelCreateUpdateSerializer(SubjectModelSerializer):

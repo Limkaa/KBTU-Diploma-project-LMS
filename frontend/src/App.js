@@ -16,6 +16,7 @@ import UsersContainer from "./components/Users/Users.container";
 import SchoolGradesContainer from "./components/SchoolGrades/SchoolGrades.container";
 import { toast } from "react-toastify";
 import SubjectsContainer from "./components/Subjects/Subjects.container";
+import AcademicYears from "./components/AcademicYears/AcademicYears.container";
 
 function App() {
   React.useEffect(() => {
@@ -48,7 +49,12 @@ function App() {
             path="/school/grades"
             element={<SchoolGradesContainer />}
           />
-          <Route exact path="/school/subjects" element={<SubjectsContainer />} />
+          <Route
+            exact
+            path="/school/subjects"
+            element={<SubjectsContainer />}
+          />
+          <Route exact path="/academicyears" element={<AcademicYears />} />
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>

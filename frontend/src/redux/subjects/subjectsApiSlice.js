@@ -3,7 +3,8 @@ import { authApi } from "../api/apiService";
 export const subjectsApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getSubjects: builder.query({
-      query: ({ school_id }) => `/api/schools/${school_id}/subjects`,
+      query: ({ school_id, page }) =>
+        `/api/schools/${school_id}/subjects?page=${page}`,
       keepUnusedDataFor: 5,
     }),
     addSubjects: builder.mutation({

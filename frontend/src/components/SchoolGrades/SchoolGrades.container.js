@@ -6,7 +6,7 @@ import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import active from "../../assets/icons/active.svg";
 import inactive from "../../assets/icons/inactive.svg";
-
+import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import {
   useAddSchoolGradeMutation,
   useGetSchoolGradesQuery,
@@ -19,16 +19,20 @@ import { toast } from "react-toastify";
 import UpdateSchoolGrade from "./UpdateSchoolGrade";
 
 const SchoolGradesContainer = () => {
-  const user = useSelector(selectCurrentUser);
+  const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
+
   const [grades, setGrades] = React.useState();
   const [search, setSearch] = React.useState("");
   const [selectedGrade, setSelectedGrade] = React.useState();
   const [showAddSchoolGrade, setShowAddSchoolGrade] = React.useState(false);
   const [showUpdateSchoolGrade, setShowUpdateSchoolGrade] =
     React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [total, setTotal] = React.useState();
 
   const { data, isLoading, refetch } = useGetSchoolGradesQuery({
     school_id: user?.school_id,
+    page,
   });
 
   const [createGrade] = useAddSchoolGradeMutation();
@@ -36,6 +40,9 @@ const SchoolGradesContainer = () => {
 
   React.useEffect(() => {
     if (data && !isLoading) {
+      if (page === 1) {
+        setTotal(data?.count);
+      }
       setGrades(data.results);
     }
   }, [data, isLoading]);
@@ -55,14 +62,14 @@ const SchoolGradesContainer = () => {
     if (user) {
       try {
         const createGrades = await createGrade({
-          school_id: user?.school_id,
+          school: user?.school_id,
           name: values.name,
           is_active: true,
         })
           .unwrap()
           .then((payload) => {
             refetch();
-            toast.success("User Updated", {
+            toast.success("Grade Created", {
               position: "top-right",
               autoClose: 2000,
               hideProgressBar: false,
@@ -93,13 +100,14 @@ const SchoolGradesContainer = () => {
     try {
       const updateGrades = await updateGrade({
         grade_id: grade?.id,
+        school: user?.school_id,
         name: values.name,
         is_active: values.is_active,
       })
         .unwrap()
         .then((payload) => {
           refetch();
-          toast.success("User Updated", {
+          toast.success("Grade Updated", {
             position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -127,7 +135,13 @@ const SchoolGradesContainer = () => {
     {
       width: "1%",
       render: (item) => (
-        <div style={{ display: "flex", alignItems:'center', justifyContent: 'center' }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <img
             src={
               item?.is_active
@@ -205,7 +219,14 @@ const SchoolGradesContainer = () => {
               },
             };
           }}
-          pagination={false}
+          pagination={{
+            total: total,
+            current: page,
+            onChange: (page) => {
+              setPage(page);
+            },
+            showSizeChanger: false,
+          }}
         />
       </div>
       <AddSchoolGrade

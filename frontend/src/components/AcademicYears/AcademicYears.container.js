@@ -4,71 +4,24 @@ import Header from "../shared/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { toast } from "react-toastify";
-import { useGetSubjectsQuery } from "../../redux/subjects/subjectsApiSlice";
+import { useGetAcademicYearsQuery } from "../../redux/academicYears/academicYearsApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 
-import UpdateSubjects from "./UpdateSubjects";
-const SubjectsContainer = () => {
+const AcademicYears = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
-  const [subjects, setSubjects] = React.useState();
+  const [years, setYears] = React.useState();
   const [search, setSearch] = React.useState("");
-  const [selectedSubject, setSelectedSubject] = React.useState();
-  const [showAddSubject, setShowAddSubject] = React.useState(false);
-  const [showUpdateSubject, setShowUpdateSubject] = React.useState(false);
+  const [selectedYear, setSelectedYear] = React.useState();
+  const [showAddYear, setShowAddYear] = React.useState(false);
+  const [showUpdateYear, setShowUpdateYear] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
 
-  const { data, isLoading, refetch } = useGetSubjectsQuery({
+  const { data, isLoading, refetch } = useGetAcademicYearsQuery({
     school_id: user?.school_id,
     page,
   });
-
-  React.useEffect(() => {
-    if (data && !isLoading) {
-      if (page === 1) {
-        setTotal(data?.count);
-      }
-      setSubjects(data.results);
-    }
-  }, [data, isLoading]);
-  //   const handleUpdateGrade = async (grade, values) => {
-  //     setShowUpdateSubject(false);
-  //     console.log("selectedGrade", grade, values.name);
-  //     try {
-  //       const updateGrades = await updateGrade({
-  //         grade_id: grade?.id,
-  //         name: values.name,
-  //         is_active: values.is_active,
-  //       })
-  //         .unwrap()
-  //         .then((payload) => {
-  //           refetch();
-  //           toast.success("User Updated", {
-  //             position: "top-right",
-  //             autoClose: 2000,
-  //             hideProgressBar: false,
-  //             closeOnClick: false,
-  //             pauseOnHover: true,
-  //             draggable: false,
-  //             theme: "colored",
-  //           });
-  //         });
-  //     } catch (err) {
-  //       console.log(err);
-  //       toast.error("Error", {
-  //         position: "top-right",
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //         closeOnClick: false,
-  //         pauseOnHover: true,
-  //         draggable: false,
-  //         theme: "colored",
-  //       });
-  //     }
-  //   };
 
   const columns = [
     {
@@ -123,8 +76,8 @@ const SubjectsContainer = () => {
             style={{ color: "#00899E", fontWeight: 500 }}
             type={"link"}
             onClick={() => {
-              setSelectedSubject(record);
-              setShowUpdateSubject(true);
+              // setSelectedSubject(record);
+              // setShowUpdateSubject(true);
             }}
           >
             Change
@@ -133,10 +86,11 @@ const SubjectsContainer = () => {
       ),
     },
   ];
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <Header text={"Subjects"} />
+        <Header text={"Academic Years"} />
         <Profile />
       </div>
       <div style={styles.tableCont}>
@@ -153,14 +107,14 @@ const SubjectsContainer = () => {
               type="primary"
               style={styles.btnAdd}
               icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-              onClick={() => setShowAddSubject(true)}
+              // onClick={() => setShowAddSubject(true)}
             >
-              Add subject
+              Add year
             </Button>
           </div>
         </div>
         <Table
-          dataSource={subjects}
+          dataSource={years}
           columns={columns}
           rowKey={(item) => item?.id}
           onRow={(record) => {
@@ -181,13 +135,13 @@ const SubjectsContainer = () => {
           }}
         />
       </div>
-      <UpdateSubjects
+      {/* <UpdateSubjects
         subject={selectedSubject}
         setSubject={setSelectedSubject}
         showUpdateSubject={showUpdateSubject}
         setShowUpdateSubject={setShowUpdateSubject}
         // handleUpdateSubject={handleUpdateSubject}
-      />
+      /> */}
     </div>
   );
 };
@@ -230,4 +184,4 @@ const styles = {
   },
 };
 
-export default SubjectsContainer;
+export default AcademicYears;

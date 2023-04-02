@@ -3,12 +3,13 @@ import { authApi } from "../api/apiService";
 export const schoolGradesApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getSchoolGrades: builder.query({
-      query: ({ school_id }) => `/api/schools/${school_id}/grades`,
+      query: ({ school_id, page }) =>
+        `/api/schools/${school_id}/grades?page=${page}`,
       keepUnusedDataFor: 5,
     }),
     addSchoolGrade: builder.mutation({
       query: ({ ...data }) => ({
-        url: `/api/schools/2/grades`,
+        url: `/api/grades`,
         method: "POST",
         body: data,
       }),

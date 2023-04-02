@@ -31,6 +31,11 @@ export const managerMenu = [
     path: `/school/subjects`,
     icon: SubjectsSvg,
   },
+  {
+    title: "Terms",
+    path: `/academicyears`,
+    icon: SubjectsSvg,
+  },
 ];
 
 export const studentMenu = [

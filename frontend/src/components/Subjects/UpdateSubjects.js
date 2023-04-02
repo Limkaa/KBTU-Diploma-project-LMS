@@ -4,6 +4,10 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Checkbox } from "antd";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 
 const InputStyled = styled(TextField)(({ theme }) => ({
   "& fieldset": {
@@ -40,10 +44,11 @@ const UpdateSubjects = ({
     name: "",
     code: "",
     description: "",
+    grade: "",
     is_active: "",
   });
 
-  const { name, code, description, is_active } = values;
+  const { name, code, description, is_active, grade } = values;
 
   React.useEffect(() => {
     if (subject) {
@@ -62,7 +67,7 @@ const UpdateSubjects = ({
   return (
     <div style={{ ...styles.wrapper, right: showUpdateSubject ? "0" : "-30%" }}>
       <div style={styles.header}>
-        <div style={styles.headerTitle}>Update Grade</div>
+        <div style={styles.headerTitle}>Update Subject</div>
         <img
           src={Cancel}
           style={styles.close}
@@ -73,7 +78,7 @@ const UpdateSubjects = ({
         />
       </div>
       <div style={styles.form}>
-        <p style={styles.contentTitle}>Grade</p>
+        <p style={styles.contentTitle}>Subject</p>
         <br />
         <InputStyled
           InputLabelProps={{
@@ -119,6 +124,23 @@ const UpdateSubjects = ({
           minRows={4}
         />
         <br />
+        <FormControl
+          sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+          size="small"
+        >
+          <InputLabel id="grade">Grade</InputLabel>
+          <Select
+            labelId="grade"
+            id="grade"
+            value={grade}
+            label="Grade"
+            onChange={handleInputChange}
+          >
+            <MenuItem value={"female"}>Female</MenuItem>
+            <MenuItem value={"male"}>Male</MenuItem>
+          </Select>
+          {/* {error && <div className="error">{"Required"}</div>} */}
+        </FormControl>
         <div>
           <Checkbox
             checked={is_active}
@@ -134,7 +156,7 @@ const UpdateSubjects = ({
           style={styles.btn}
           onClick={() => handleUpdateSubject(subject, values)}
         >
-          Update grade
+          Update subject
         </button>
       </div>
     </div>

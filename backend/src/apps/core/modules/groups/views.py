@@ -10,6 +10,7 @@ from .serializers import GroupModelSerializer, GroupModelReadOnlySerializer
 
 from .. import permissions
 
+from apps.core.utils.pagination import OptionalPaginationListAPIView
 
 class GroupCreateAPI(generics.CreateAPIView):
     permission_classes = [
@@ -55,7 +56,7 @@ class GroupRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         return super().perform_update(serializer)
 
 
-class SchoolGroupsListAPI(generics.ListAPIView):
+class SchoolGroupsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager
@@ -68,7 +69,7 @@ class SchoolGroupsListAPI(generics.ListAPIView):
         return Group.objects.filter(school = school).select_related('grade', 'teacher')
     
     
-class TeacherGroupsListAPI(generics.ListAPIView):
+class TeacherGroupsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager | (permissions.IsTeacher & permissions.IsUserItself)
@@ -83,7 +84,7 @@ class TeacherGroupsListAPI(generics.ListAPIView):
         return self.queryset.filter(teacher=teacher).select_related('grade', 'teacher')
 
 
-class GradeGroupsListAPI(generics.ListAPIView):
+class GradeGroupsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager

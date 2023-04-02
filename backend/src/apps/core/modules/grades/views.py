@@ -6,7 +6,7 @@ from ..schools.models import School
 from . import serializers
 
 from .. import permissions
-
+from apps.core.utils.pagination import OptionalPaginationListAPIView
 
 class GradeCreateAPI(generics.CreateAPIView):
     permission_classes = [
@@ -35,7 +35,7 @@ class GradeRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         return super().perform_update(serializer)
 
 
-class SchoolGradesListAPI(generics.ListAPIView):
+class SchoolGradesListAPI(OptionalPaginationListAPIView):
     permission_classes = [
         permissions.OnlyOwnSchoolObject,
         permissions.IsManager

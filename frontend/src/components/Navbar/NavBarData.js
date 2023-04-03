@@ -33,8 +33,20 @@ export const managerMenu = [
   },
   {
     title: "Terms",
-    path: `/academicyears`,
+    path: `/terms`,
     icon: SubjectsSvg,
+    submenu: [
+      {
+        title: "Terms",
+        path: `/term`,
+        icon: SubjectsSvg,
+      },
+      {
+        title: "Years",
+        path: `/year`,
+        icon: SubjectsSvg,
+      },
+    ],
   },
 ];
 

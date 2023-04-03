@@ -205,8 +205,7 @@ const styles = {
   tableCont: {
     marginTop: 20,
     borderRadius: 8,
-    border: "1px solid #0000000D",
-    borderBottom: "none",
+    border: "1px solid #0000000D"
   },
   filter: {
     padding: 8,

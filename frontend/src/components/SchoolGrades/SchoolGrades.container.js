@@ -258,7 +258,6 @@ const styles = {
     marginTop: 20,
     borderRadius: 8,
     border: "1px solid #0000000D",
-    borderBottom: "none",
   },
   filter: {
     padding: 8,

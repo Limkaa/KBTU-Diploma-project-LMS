@@ -41,6 +41,7 @@ function App() {
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
           <Route exact path="/users" element={<UsersContainer />} />
+          <Route exact path="/schools" element={<UsersContainer />} />
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>

@@ -32,15 +32,15 @@ const THEME = createTheme({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <ThemeProvider theme={THEME}>
-        <Provider store={store}>
-          {/*<AuthProvider>*/}
-          <App />
-          {/*</AuthProvider>*/}
-        </Provider>
-      </ThemeProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <BrowserRouter>
+    <ThemeProvider theme={THEME}>
+      <Provider store={store}>
+        {/*<AuthProvider>*/}
+        <App />
+        {/*</AuthProvider>*/}
+      </Provider>
+    </ThemeProvider>
+  </BrowserRouter>
+  // </React.StrictMode>
 );

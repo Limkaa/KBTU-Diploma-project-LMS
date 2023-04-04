@@ -168,28 +168,6 @@ const UsersContainer = () => {
       </div>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          {/* <Select
-            defaultValue="lucy"
-            style={{
-              width: 180,
-            }}
-            size={"large"}
-            onChange={handleChange}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "Yiminghe",
-                label: "yiminghe",
-              },
-            ]}
-          /> */}
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
               size="default size"
@@ -225,14 +203,6 @@ const UsersContainer = () => {
           dataSource={filteredUsers()}
           columns={columns}
           rowKey={(item) => item?.id}
-          onRow={(record) => {
-            return {
-              onClick: () => {
-                // setShowBusket(true);
-                // setSale(record);
-              },
-            };
-          }}
           pagination={{
             total: total,
             current: page,

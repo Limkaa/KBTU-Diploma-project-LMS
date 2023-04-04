@@ -4,16 +4,22 @@ import Header from "../shared/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { toast } from "react-toastify";
-import { useGetSubjectsQuery } from "../../redux/subjects/subjectsApiSlice";
+import {
+  useAddSubjectMutation,
+  useGetSubjectsQuery,
+  useUpdateSubjectMutation,
+} from "../../redux/subjects/subjectsApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
-
 import UpdateSubjects from "./UpdateSubjects";
+import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
+import AddSubject from "./AddSubject";
+import { toasty } from "../Alert/Toast";
+
 const SubjectsContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
   const [subjects, setSubjects] = React.useState();
+  const [grades, setGrades] = React.useState();
   const [search, setSearch] = React.useState("");
   const [selectedSubject, setSelectedSubject] = React.useState();
   const [showAddSubject, setShowAddSubject] = React.useState(false);
@@ -26,6 +32,16 @@ const SubjectsContainer = () => {
     page,
   });
 
+  const [addSubject] = useAddSubjectMutation();
+
+  const [updateSubject] = useUpdateSubjectMutation();
+
+  const { data: dataGrades, isLoading: isLoadingGrades } =
+    useGetSchoolGradesWithoutPageQuery({
+      school_id: user?.school_id,
+      page,
+    });
+
   React.useEffect(() => {
     if (data && !isLoading) {
       if (page === 1) {
@@ -34,41 +50,60 @@ const SubjectsContainer = () => {
       setSubjects(data.results);
     }
   }, [data, isLoading]);
-  //   const handleUpdateGrade = async (grade, values) => {
-  //     setShowUpdateSubject(false);
-  //     console.log("selectedGrade", grade, values.name);
-  //     try {
-  //       const updateGrades = await updateGrade({
-  //         grade_id: grade?.id,
-  //         name: values.name,
-  //         is_active: values.is_active,
-  //       })
-  //         .unwrap()
-  //         .then((payload) => {
-  //           refetch();
-  //           toast.success("User Updated", {
-  //             position: "top-right",
-  //             autoClose: 2000,
-  //             hideProgressBar: false,
-  //             closeOnClick: false,
-  //             pauseOnHover: true,
-  //             draggable: false,
-  //             theme: "colored",
-  //           });
-  //         });
-  //     } catch (err) {
-  //       console.log(err);
-  //       toast.error("Error", {
-  //         position: "top-right",
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //         closeOnClick: false,
-  //         pauseOnHover: true,
-  //         draggable: false,
-  //         theme: "colored",
-  //       });
-  //     }
-  //   };
+
+  React.useEffect(() => {
+    if (dataGrades && !isLoadingGrades) {
+      setGrades(dataGrades.filter((el) => el.is_active));
+    }
+  }, [dataGrades, isLoadingGrades]);
+
+  const handleAddSubject = async (values) => {
+    console.log(values);
+    if (user) {
+      try {
+        await addSubject({
+          school: user?.school_id,
+          name: values.name,
+          code: values.code,
+          description: values.description,
+          grade: values.grade,
+          is_active: true,
+        })
+          .unwrap()
+          .then((payload) => {
+            refetch();
+            toasty({ type: "success", text: "Subject Created" });
+          });
+      } catch (err) {
+        console.log(err);
+        toasty();
+      }
+    }
+  };
+
+  const handleUpdateSubject = async (values) => {
+    setShowUpdateSubject(false);
+    if (user) {
+      try {
+        const updateSubjects = await updateSubject({
+          subject_id: selectedSubject?.id,
+          school: user?.school_id,
+          name: values.name,
+          code: values.code.toUpperCase(),
+          description: values.description,
+          grade: values.grade,
+          is_active: values.is_active,
+        })
+          .unwrap()
+          .then((payload) => {
+            refetch();
+            toasty({ type: "success", text: "Subject Updated" });
+          });
+      } catch (err) {
+        toasty();
+      }
+    }
+  };
 
   const columns = [
     {
@@ -163,14 +198,6 @@ const SubjectsContainer = () => {
           dataSource={subjects}
           columns={columns}
           rowKey={(item) => item?.id}
-          onRow={(record) => {
-            return {
-              onClick: () => {
-                // setShowBusket(true);
-                // setSale(record);
-              },
-            };
-          }}
           pagination={{
             total: total,
             current: page,
@@ -186,7 +213,14 @@ const SubjectsContainer = () => {
         setSubject={setSelectedSubject}
         showUpdateSubject={showUpdateSubject}
         setShowUpdateSubject={setShowUpdateSubject}
-        // handleUpdateSubject={handleUpdateSubject}
+        grades={grades}
+        handleUpdateSubject={handleUpdateSubject}
+      />
+      <AddSubject
+        showAddSubject={showAddSubject}
+        setShowAddSubject={setShowAddSubject}
+        grades={grades}
+        handleAddSubject={handleAddSubject}
       />
     </div>
   );
@@ -205,7 +239,7 @@ const styles = {
   tableCont: {
     marginTop: 20,
     borderRadius: 8,
-    border: "1px solid #0000000D"
+    border: "1px solid #0000000D",
   },
   filter: {
     padding: 8,

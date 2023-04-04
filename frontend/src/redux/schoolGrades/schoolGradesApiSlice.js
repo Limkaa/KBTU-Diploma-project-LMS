@@ -7,6 +7,10 @@ export const schoolGradesApiSlice = authApi.injectEndpoints({
         `/api/schools/${school_id}/grades?page=${page}`,
       keepUnusedDataFor: 5,
     }),
+    getSchoolGradesWithoutPage: builder.query({
+      query: ({ school_id }) => `/api/schools/${school_id}/grades`,
+      keepUnusedDataFor: 5,
+    }),
     addSchoolGrade: builder.mutation({
       query: ({ ...data }) => ({
         url: `/api/grades`,
@@ -26,6 +30,7 @@ export const schoolGradesApiSlice = authApi.injectEndpoints({
 
 export const {
   useGetSchoolGradesQuery,
+  useGetSchoolGradesWithoutPageQuery,
   useAddSchoolGradeMutation,
   useUpdateSchoolGradeMutation,
 } = schoolGradesApiSlice;

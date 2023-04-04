@@ -24,11 +24,6 @@ const InputStyled = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  backgroundColor: "#163A61",
-  borderRadius: "10px",
-}));
-
 const UpdateSchoolGrade = ({
   grade,
   setGrade,
@@ -84,14 +79,14 @@ const UpdateSchoolGrade = ({
           type="text"
           className="input"
           name="name"
-          value={name}
+          value={name || ""}
           onChange={handleInputChange}
           size="small"
         />
         <br />
         <div>
           <Checkbox
-            checked={is_active}
+            checked={is_active || false}
             onChange={handleInputChange}
             name="is_active"
             style={{ fontWeight: 400, fontSize: 15 }}

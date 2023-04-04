@@ -46,15 +46,6 @@ const InputStyled = styled(TextField)(({ theme }) => ({
     fontSize: 14,
     fontWeight: 500,
   },
-
-  // "& .MuiOutlinedInput-root": {
-  //   "& fieldset": {
-  //     borderColor: "rgba(0, 0, 0, 0.23)",
-  //   },
-  //   "&.Mui-focused fieldset": {
-  //     border: "2px solid #163A61",
-  //   },
-  // },
 }));
 
 const AddingUserModal = ({
@@ -162,7 +153,7 @@ const AddingUserModal = ({
           }
           return errors;
         }}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           const phoneFormat = `8${removeSpecSymbols(values.phone)}`;
           setSubmitting(false);
           if (gender && role) {
@@ -171,6 +162,9 @@ const AddingUserModal = ({
           } else {
             setError(true);
           }
+          resetForm();
+          setRole();
+          setGender();
         }}
       >
         {({ isSubmitting }) => (

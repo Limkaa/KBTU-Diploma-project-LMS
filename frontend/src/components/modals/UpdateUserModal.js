@@ -123,7 +123,7 @@ const UpdateUserModal = ({
           type="text"
           className="input"
           name="first_name"
-          value={first_name}
+          value={first_name || ""}
           onChange={handleInputChange}
           size="small"
         />
@@ -137,7 +137,7 @@ const UpdateUserModal = ({
           type="text"
           className="input"
           name="last_name"
-          value={last_name}
+          value={last_name || ""}
           onChange={handleInputChange}
           size="small"
         />
@@ -151,7 +151,7 @@ const UpdateUserModal = ({
           type="text"
           className="input"
           name="email"
-          value={email}
+          value={email || ""}
           onChange={handleInputChange}
           size="small"
         />
@@ -165,7 +165,7 @@ const UpdateUserModal = ({
           type="text"
           className="input"
           name="phone"
-          value={phone}
+          value={phone || ""}
           onChange={handleInputChange}
           size="small"
           InputProps={{
@@ -182,7 +182,7 @@ const UpdateUserModal = ({
           type="text"
           className="input"
           name="telegram_id"
-          value={telegram_id}
+          value={telegram_id || ""}
           onChange={handleInputChange}
           size="small"
         />
@@ -196,7 +196,7 @@ const UpdateUserModal = ({
           type="text"
           className="input"
           name="date_of_birth"
-          value={date_of_birth}
+          value={date_of_birth || ""}
           onChange={handleInputChange}
           size="small"
           InputProps={{
@@ -206,7 +206,7 @@ const UpdateUserModal = ({
         <br />
         <div>
           <Checkbox
-            checked={is_active}
+            checked={is_active || false}
             onChange={handleInputChange}
             name="is_active"
             style={{ fontWeight: 400, fontSize: 16 }}

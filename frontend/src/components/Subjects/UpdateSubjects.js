@@ -39,6 +39,7 @@ const UpdateSubjects = ({
   showUpdateSubject,
   setShowUpdateSubject,
   handleUpdateSubject,
+  grades,
 }) => {
   const [values, setValues] = React.useState({
     name: "",
@@ -52,7 +53,13 @@ const UpdateSubjects = ({
 
   React.useEffect(() => {
     if (subject) {
-      setValues({ ...subject });
+      setValues({
+        name: subject.name,
+        code: subject.code,
+        description: subject.description,
+        grade: subject.grade.id,
+        is_active: subject.is_active,
+      });
     }
   }, [subject]);
 
@@ -64,6 +71,7 @@ const UpdateSubjects = ({
       setValues({ ...values, [name]: value });
     }
   };
+
   return (
     <div style={{ ...styles.wrapper, right: showUpdateSubject ? "0" : "-30%" }}>
       <div style={styles.header}>
@@ -89,7 +97,7 @@ const UpdateSubjects = ({
           type="text"
           className="input"
           name="name"
-          value={name}
+          value={name || ""}
           onChange={handleInputChange}
           size="small"
         />
@@ -103,7 +111,7 @@ const UpdateSubjects = ({
           type="text"
           className="input"
           name="code"
-          value={code}
+          value={code || ""}
           onChange={handleInputChange}
           size="small"
         />
@@ -117,7 +125,7 @@ const UpdateSubjects = ({
           type="text"
           className="input"
           name="description"
-          value={description}
+          value={description || ""}
           onChange={handleInputChange}
           size="small"
           multiline
@@ -132,18 +140,24 @@ const UpdateSubjects = ({
           <Select
             labelId="grade"
             id="grade"
-            value={grade}
+            value={grade || ""}
+            name="grade"
             label="Grade"
             onChange={handleInputChange}
           >
-            <MenuItem value={"female"}>Female</MenuItem>
-            <MenuItem value={"male"}>Male</MenuItem>
+            <MenuItem value="" disabled>
+              <em>Choose grade</em>
+            </MenuItem>
+            {grades?.map((item) => (
+              <MenuItem value={item.id} key={item.id}>
+                {item.name}
+              </MenuItem>
+            ))}
           </Select>
-          {/* {error && <div className="error">{"Required"}</div>} */}
         </FormControl>
         <div>
           <Checkbox
-            checked={is_active}
+            checked={is_active || false}
             onChange={handleInputChange}
             name="is_active"
             style={{ fontWeight: 400, fontSize: 15 }}
@@ -154,7 +168,7 @@ const UpdateSubjects = ({
         <button
           type="submit"
           style={styles.btn}
-          onClick={() => handleUpdateSubject(subject, values)}
+          onClick={() => handleUpdateSubject(values)}
         >
           Update subject
         </button>

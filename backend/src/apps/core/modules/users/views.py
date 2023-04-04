@@ -7,6 +7,8 @@ from ..permissions import IsManager, OnlyOwnSchool, OnlyOwnSchoolObject
 
 from .models import User
 
+from apps.core.utils.pagination import OptionalPaginationListAPIView
+
 
 class OwnProfileAPI(APIView):
     def get(self, request):
@@ -14,7 +16,7 @@ class OwnProfileAPI(APIView):
         return Response(serializer.data)
 
 
-class UsersListCreateAPI(generics.ListCreateAPIView):
+class UsersListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
     permission_classes = [IsManager, OnlyOwnSchool]
     serializer_class = serializers.UserCreateSerializer
 

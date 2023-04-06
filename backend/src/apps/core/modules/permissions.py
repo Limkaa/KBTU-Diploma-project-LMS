@@ -1,6 +1,7 @@
 from rest_framework import permissions
 
 from .users.models import User
+from .schools.models import School
 from .groups.models import Group
 from .students.models import Student
 from .courses.models import Course
@@ -12,6 +13,8 @@ class OnlyOwnSchool(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Student):
             obj = obj.user.school
+        elif not isinstance(obj, School):
+            obj = obj.school
         return obj == request.user.school
 
 
@@ -42,9 +45,9 @@ class IsGroupTeacher(IsTeacher):
     message = 'You are not a teacher of related group'
     
     def has_object_permission(self, request, view, obj):
-        if isinstance(obj, Group):
-            return obj.teacher == request.user
-        return obj.group.teacher == request.user
+        if not isinstance(obj, Group):
+            obj = obj.group
+        return obj.teacher == request.user
 
 
 class IsGroupStudent(IsStudent):
@@ -57,33 +60,28 @@ class IsGroupStudent(IsStudent):
 
 
 class IsCourseTeacher(IsTeacher):
+    message = 'Only teacher of related course can perform this action'
     
     def has_object_permission(self, request, view, obj):
-        if isinstance(obj, Course):
-            self.message = 'You are not a teacher of this course'
-            return obj.teacher == request.user
-        
-        self.message = 'You are not a teacher of course, to which this object(s) related'
-        return obj.course.teacher == request.user
+        if not isinstance(obj, Course):
+            obj = obj.course
+        return obj.teacher == request.user
 
 
 class IsCourseStudent(IsStudent):
-    message = 'You are not a student of related course'
-    
+    message = 'Only student of related course can perform this action'
+     
     def has_object_permission(self, request, view, obj):
-        permission = IsGroupStudent()
-        if isinstance(obj, Course):
-            return permission.has_object_permission(request, view, obj.group)
-        return permission.has_object_permission(request, view, obj.course.group)
+        if not isinstance(obj, Course):
+            obj = obj.course
+        return IsGroupStudent().has_object_permission(request, view, obj.group)
 
 
 class IsUserItself(permissions.BasePermission):
     message = 'Only assigned user to this object(s) can perform this action'
     
     def has_object_permission(self, request, view, obj):
-        if isinstance(obj, User):
-            return obj == request.user
-        return obj.user == request.user
+        return obj == request.user
     
 
 default_operand_message = 'You cannot perform this action'

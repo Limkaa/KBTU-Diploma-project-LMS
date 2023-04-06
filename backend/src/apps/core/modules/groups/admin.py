@@ -13,7 +13,7 @@ class GroupAdmin(admin.ModelAdmin):
         "is_active"
     )
 
-    search_fields = ("school", "grade", "code")
+    search_fields = ("school__name", "grade__name", "code")
 
     list_filter = ("is_active", "school")
 

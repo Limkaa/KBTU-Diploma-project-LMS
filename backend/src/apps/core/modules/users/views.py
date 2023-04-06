@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 
 from . import serializers
-from ..permissions import IsManager, OnlyOwnSchool, OnlyOwnSchoolObject
+from ..permissions import *
 
 from .models import User
 
@@ -17,7 +17,7 @@ class OwnProfileAPI(APIView):
 
 
 class UsersListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
-    permission_classes = [IsManager, OnlyOwnSchool]
+    permission_classes = [IsUserOfSchool, IsManager]
     serializer_class = serializers.UserCreateSerializer
 
     def get_queryset(self):
@@ -28,6 +28,6 @@ class UsersListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIVi
 
 
 class UserDetailAPI(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsManager, OnlyOwnSchoolObject]
+    permission_classes = [IsUserOfSchool, IsManager]
     serializer_class = serializers.UserSerializer
     queryset = User.objects.all()

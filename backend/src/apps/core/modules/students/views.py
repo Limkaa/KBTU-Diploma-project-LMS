@@ -1,9 +1,11 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
 
-from .models import Student
+from apps.core.utils.pagination import OptionalPaginationListAPIView
+from ..permissions import *
+
+from .models import Student, Group
 from ..schools.models import School
-from ..groups.models import Group
 
 from .serializers import (
     StudentModelSerializer,
@@ -11,10 +13,6 @@ from .serializers import (
     StudentModelSerializerPut
 )
 
-from .. import permissions
-from .permissions import IsGroupTeacher, IsStudentItself
-
-from apps.core.utils.pagination import OptionalPaginationListAPIView
 
 class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Student.objects.all().select_related('group', 'user')
@@ -29,24 +27,22 @@ class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         method = self.request.method
         
         if method == "PUT":
-            self.permission_classes = [
-                permissions.OnlyOwnSchoolGroup,
-                permissions.IsManager
-            ]
+            self.permission_classes = [IsUserOfSchool, IsManager]
         elif method == "GET":
             self.permission_classes = [
-                permissions.OnlyOwnSchoolGroup,
-                permissions.IsManager | IsGroupTeacher | IsStudentItself
+                IsUserOfSchool, 
+                CustomOperandHolder(
+                    operand = CustomOR,
+                    message = "This view can be accessed only by manager, group teacher or student itself",
+                    permissions = [IsManager, IsGroupTeacher, IsUserItself]
+                )       
             ]
 
         return super().get_permissions()
 
 
 class SchoolStudentsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager
-    ]
+    permission_classes = [IsUserOfSchool, IsManager]
     serializer_class = StudentModelNestedSerializer
     
     def get_queryset(self):
@@ -58,8 +54,12 @@ class SchoolStudentsListAPI(OptionalPaginationListAPIView):
 
 class GroupStudentsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager | permissions.IsGroupTeacher
+        IsUserOfSchool,
+        CustomOperandHolder(
+            operand = CustomOR,
+            message = "This view can be accessed only by manager or group teacher",
+            permissions = [IsManager, IsGroupTeacher]
+        ) 
     ]
     serializer_class = StudentModelNestedSerializer
     

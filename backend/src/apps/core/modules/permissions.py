@@ -81,6 +81,8 @@ class IsUserItself(permissions.BasePermission):
     message = 'Only assigned user to this object(s) can perform this action'
     
     def has_object_permission(self, request, view, obj):
+        if not isinstance(obj, User):
+            obj = obj.user
         return obj == request.user
     
 

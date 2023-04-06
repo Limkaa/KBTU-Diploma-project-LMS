@@ -8,13 +8,19 @@ from .courses.models import Course
 
 
 class IsUserOfSchool(permissions.BasePermission):
+    message = 'You are not a user of this school'
+    
     def has_object_permission(self, request, view, obj):
+        user_school = request.user.school
+        
         if isinstance(obj, School):
-            self.message = 'You are not a user of this school'
-            return obj == request.user.school
+            return obj == user_school
 
         self.message = 'You are not a user of school, to which this object(s) related'
-        return obj.school == request.user.school
+        if isinstance(obj, Student):
+            return obj.user.school == user_school
+        
+        return obj.school == user_school
 
 
 class IsUserWithRole(permissions.BasePermission):
@@ -98,7 +104,7 @@ class CustomOperandHolder(permissions.OperandHolder):
     
     def __call__(self, *args, **kwargs):
         permissions = [permission(*args, **kwargs) for permission in self.permissions]
-        return self.operand(self.message, permissions)
+        return self.operand(permissions, self.message)
 
 
 class CustomOR(permissions.OR):

@@ -13,7 +13,7 @@ from .serializers import (
 
 
 class SubjectCreateAPI(generics.CreateAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = SubjectModelCreateUpdateSerializer
     queryset = Subject.objects.all()
     
@@ -25,7 +25,7 @@ class SubjectCreateAPI(generics.CreateAPIView):
 
 class SubjectRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Subject.objects.all().select_related('grade', 'school')
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     
     def get_serializer_class(self):
         if self.request.method == "PUT":
@@ -39,7 +39,7 @@ class SubjectRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class SchoolSubjectsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = SubjectModelNestedSerializer
     
     def get_queryset(self):
@@ -49,7 +49,7 @@ class SchoolSubjectsListAPI(OptionalPaginationListAPIView):
     
 
 class GradeSubjectsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = SubjectModelNestedSerializer
     queryset = Subject.objects.all()
     

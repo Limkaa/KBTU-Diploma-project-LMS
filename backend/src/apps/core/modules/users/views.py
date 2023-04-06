@@ -18,7 +18,7 @@ class OwnProfileAPI(APIView):
 
 
 class UsersListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = serializers.UserCreateSerializer
 
     def check_school(self):
@@ -35,6 +35,6 @@ class UsersListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIVi
 
 
 class UserDetailAPI(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = serializers.UserSerializer
     queryset = User.objects.all()

@@ -27,10 +27,10 @@ class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         method = self.request.method
         
         if method == "PUT":
-            self.permission_classes = [IsUserOfSchool, IsManager]
+            self.permission_classes = [OnlyOwnSchool, IsManager]
         elif method == "GET":
             self.permission_classes = [
-                IsUserOfSchool, 
+                OnlyOwnSchool, 
                 CustomOperandHolder(
                     operand = CustomOR,
                     message = "This view can be accessed only by manager, group teacher or student itself",
@@ -42,7 +42,7 @@ class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class SchoolStudentsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = StudentModelNestedSerializer
     
     def get_queryset(self):
@@ -54,7 +54,7 @@ class SchoolStudentsListAPI(OptionalPaginationListAPIView):
 
 class GroupStudentsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
-        IsUserOfSchool,
+        OnlyOwnSchool,
         CustomOperandHolder(
             operand = CustomOR,
             message = "This view can be accessed only by manager or group teacher",

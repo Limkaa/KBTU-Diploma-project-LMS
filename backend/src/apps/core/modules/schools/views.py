@@ -14,8 +14,8 @@ class SchoolRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         method = self.request.method
         
         if method == "PUT":
-            self.permission_classes = [IsUserOfSchool, IsManager]
+            self.permission_classes = [OnlyOwnSchool, IsManager]
         elif method == "GET":
-            self.permission_classes = [IsUserOfSchool]
+            self.permission_classes = [OnlyOwnSchool]
 
         return super().get_permissions()

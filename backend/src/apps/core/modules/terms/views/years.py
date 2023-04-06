@@ -10,7 +10,7 @@ from ..serializers import YearModelSerializer
 
 
 class YearCreateAPI(generics.CreateAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = YearModelSerializer
     queryset = Year.objects.all()
     
@@ -23,7 +23,7 @@ class YearCreateAPI(generics.CreateAPIView):
 class YearRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Year.objects.all()
     serializer_class = YearModelSerializer
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     
     def perform_update(self, serializer):
         school = serializer.validated_data.get('school')
@@ -32,7 +32,7 @@ class YearRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class SchoolYearsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = YearModelSerializer
     
     def get_queryset(self):

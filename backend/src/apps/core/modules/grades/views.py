@@ -11,7 +11,7 @@ from apps.core.utils.pagination import OptionalPaginationListAPIView
 
 
 class GradeCreateAPI(generics.CreateAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = serializers.GradeModelSerializer
             
     def perform_create(self, serializer):
@@ -21,7 +21,7 @@ class GradeCreateAPI(generics.CreateAPIView):
 
 
 class GradeRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = serializers.GradeModelSerializer
     queryset = Grade.objects.all()
     
@@ -32,7 +32,7 @@ class GradeRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class SchoolGradesListAPI(OptionalPaginationListAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = serializers.GradeModelSerializer
     
     def get_queryset(self):

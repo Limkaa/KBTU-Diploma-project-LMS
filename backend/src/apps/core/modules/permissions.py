@@ -1,26 +1,18 @@
 from rest_framework import permissions
 
 from .users.models import User
-from .schools.models import School
 from .groups.models import Group
 from .students.models import Student
 from .courses.models import Course
 
 
-class IsUserOfSchool(permissions.BasePermission):
-    message = 'You are not a user of this school'
+class OnlyOwnSchool(permissions.BasePermission):
+    message = 'You cannot interact with other schools and all related to them objects'
     
     def has_object_permission(self, request, view, obj):
-        user_school = request.user.school
-        
-        if isinstance(obj, School):
-            return obj == user_school
-
-        self.message = 'You are not a user of school, to which this object(s) related'
         if isinstance(obj, Student):
-            return obj.user.school == user_school
-        
-        return obj.school == user_school
+            obj = obj.user.school
+        return obj == request.user.school
 
 
 class IsUserWithRole(permissions.BasePermission):
@@ -138,7 +130,7 @@ class CustomAND(permissions.AND):
 
 
 __all__ = [
-    'IsUserOfSchool', 
+    'OnlyOwnSchool', 
     'IsManager',
     'IsTeacher',
     'IsGroupTeacher',

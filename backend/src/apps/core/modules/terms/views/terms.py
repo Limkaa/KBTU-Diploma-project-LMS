@@ -14,7 +14,7 @@ from ..serializers import (
 
 
 class TermCreateAPI(generics.CreateAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = TermModelCreateUpdateSerializer
     queryset = Term.objects.all()
     
@@ -27,7 +27,7 @@ class TermCreateAPI(generics.CreateAPIView):
 class TermRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Term.objects.all()
     serializer_class = TermModelCreateUpdateSerializer
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     
     def get_object(self):
         term: Term = get_object_or_404(Term, pk=self.kwargs['pk'])
@@ -41,7 +41,7 @@ class TermRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class AcademicYearTermsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [IsUserOfSchool, IsManager]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = TermModelSerializer
     
     def get_queryset(self):

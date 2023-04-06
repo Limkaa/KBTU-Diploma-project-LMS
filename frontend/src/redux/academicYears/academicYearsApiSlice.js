@@ -2,21 +2,25 @@ import { authApi } from "../api/apiService";
 
 export const academicYearsApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAcademicYears: builder.query({
+    getYears: builder.query({
       query: ({ school_id, page }) =>
         `/api/schools/${school_id}/years?page=${page}`,
       keepUnusedDataFor: 5,
     }),
-    addAcademicYears: builder.mutation({
+    getYearsWithoutPage: builder.query({
+      query: ({ school_id }) => `/api/schools/${school_id}/years`,
+      keepUnusedDataFor: 5,
+    }),
+    addYear: builder.mutation({
       query: ({ ...data }) => ({
         url: `/api/years`,
         method: "POST",
         body: data,
       }),
     }),
-    updateAcademicYears: builder.mutation({
-      query: ({ years_id, ...data }) => ({
-        url: `/api/years/${years_id}`,
+    updateYear: builder.mutation({
+      query: ({ year_id, ...data }) => ({
+        url: `/api/years/${year_id}`,
         method: "PUT",
         body: data,
       }),
@@ -25,7 +29,8 @@ export const academicYearsApiSlice = authApi.injectEndpoints({
 });
 
 export const {
-  useGetAcademicYearsQuery,
-  useAddAcademicYearsMutation,
-  useUpdateAcademicYearsMutation,
+  useGetYearsQuery,
+  useGetYearsWithoutPageQuery,
+  useAddYearMutation,
+  useUpdateYearMutation,
 } = academicYearsApiSlice;

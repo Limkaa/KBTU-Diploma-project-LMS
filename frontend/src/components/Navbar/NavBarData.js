@@ -9,11 +9,16 @@ import GradesSvg from "../../assets/icons/GradesIcon";
 import UsersSvg from "../../assets/icons/UsersIcon";
 import SchoolGradesSvg from "../../assets/icons/SchoolGradesIcon";
 import SubjectsSvg from "../../assets/icons/SubjectsIcon";
+import YearSvg from "../../assets/icons/YearIcon";
+import TermsSvg from "../../assets/icons/TermsIcon";
+import TermSvg from "../../assets/icons/TermIcon";
+
+
 
 export const managerMenu = [
   {
     title: "Home",
-    path: "/home",
+    path: "/",
     icon: HomeSvg,
   },
   {
@@ -34,17 +39,17 @@ export const managerMenu = [
   {
     title: "Terms",
     path: `/terms`,
-    icon: SubjectsSvg,
+    icon: TermsSvg,
     submenu: [
       {
         title: "Terms",
-        path: `/term`,
-        icon: SubjectsSvg,
+        path: `/terms/term`,
+        icon: TermSvg,
       },
       {
-        title: "Years",
-        path: `/year`,
-        icon: SubjectsSvg,
+        title: "Academic Year",
+        path: `/terms/years`,
+        icon: YearSvg,
       },
     ],
   },
@@ -53,7 +58,7 @@ export const managerMenu = [
 export const studentMenu = [
   {
     title: "Home",
-    path: "/home",
+    path: "/",
     icon: HomeSvg,
   },
   {
@@ -96,7 +101,7 @@ export const studentMenu = [
 export const teacherMenu = [
   {
     title: "Home",
-    path: "/home",
+    path: "/",
     icon: HomeSvg,
   },
   {

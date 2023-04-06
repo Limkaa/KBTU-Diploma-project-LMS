@@ -1,7 +1,7 @@
 import React from "react";
 import Cancel from "../../assets/icons/close.svg";
 import InputMask from "react-input-mask";
-import "./Modals.css";
+import "../modals/Modals.css";
 import TextField from "@mui/material/TextField";
 import { Checkbox } from "antd";
 import { styled } from "@mui/material/styles";

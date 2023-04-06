@@ -138,26 +138,31 @@ const AddSubject = ({
             <div style={{ margin: 6 }} />
             <Field name="grade">
               {({ field, form: { touched, errors } }) => (
-                <FormControl
-                  sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
-                  size="small"
-                >
-                  <InputLabel id="grade">Grade</InputLabel>
-                  <Select labelId="grade" id="grade" label="Grade" {...field}>
-                    <MenuItem value="" disabled>
-                      <em>Choose grade</em>
-                    </MenuItem>
-                    {grades?.map((item) => (
-                      <MenuItem value={item.id} key={item.id}>
-                        {item.name}
+                <>
+                  <FormControl
+                    sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+                    size="small"
+                  >
+                    <InputLabel id="grade">Grade</InputLabel>
+                    <Select labelId="grade" id="grade" label="Grade" {...field}>
+                      <MenuItem value="" disabled>
+                        <em>Choose grade</em>
                       </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                      {grades?.map((item) => (
+                        <MenuItem value={item.id} key={item.id}>
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="error">{errors[field.name]}</div>
+                  )}
+                </>
               )}
             </Field>
             <button type="submit" disabled={isSubmitting} style={styles.btn}>
-              Create user
+              Create subject
             </button>
           </Form>
         )}

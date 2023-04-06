@@ -4,60 +4,48 @@ import Header from "../shared/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
-import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import {
-  useAddSchoolGradeMutation,
-  useGetSchoolGradesQuery,
-  useUpdateSchoolGradeMutation,
-} from "../../redux/schoolGrades/schoolGradesApiSlice";
-import AddSchoolGrade from "./AddSchoolGrade";
-import UpdateSchoolGrade from "./UpdateSchoolGrade";
+  useAddYearMutation,
+  useGetYearsQuery,
+  useUpdateYearMutation,
+} from "../../redux/academicYears/academicYearsApiSlice";
+import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import CreateYear from "./CreateYear";
 import { toasty } from "../shared/Toast";
+import UpdateYear from "./UpdateYear";
 
-const SchoolGradesContainer = () => {
+const AcademicYearsContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
-
-  const [grades, setGrades] = React.useState();
+  const [years, setYears] = React.useState();
   const [search, setSearch] = React.useState("");
-  const [selectedGrade, setSelectedGrade] = React.useState();
-  const [showAddSchoolGrade, setShowAddSchoolGrade] = React.useState(false);
-  const [showUpdateSchoolGrade, setShowUpdateSchoolGrade] =
-    React.useState(false);
+  const [selectedYear, setSelectedYear] = React.useState();
+  const [showAddYear, setShowAddYear] = React.useState(false);
+  const [showUpdateYear, setShowUpdateYear] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
 
-  const { data, isLoading, refetch } = useGetSchoolGradesQuery({
+  const { data, isLoading, refetch } = useGetYearsQuery({
     school_id: user?.school_id,
     page,
   });
 
-  const [createGrade] = useAddSchoolGradeMutation();
-  const [updateGrade] = useUpdateSchoolGradeMutation();
+  const [addYear] = useAddYearMutation();
+  const [updateYear] = useUpdateYearMutation();
+
 
   React.useEffect(() => {
     if (data && !isLoading) {
       if (page === 1) {
         setTotal(data?.count);
       }
-      setGrades(data.results);
+      setYears(data.results);
     }
   }, [data, isLoading]);
 
-  const filteredUsers = () => {
-    if (search) {
-      return grades.filter((itm) => {
-        return search !== "" && itm.name.toLowerCase().indexOf(search) > -1;
-      });
-    } else {
-      return grades;
-    }
-  };
-
-  const handleCreateGrade = async (values) => {
-    setShowAddSchoolGrade(false);
+  const handleAddYear = async (values) => {
     if (user) {
       try {
-        await createGrade({
+        await addYear({
           school: user?.school_id,
           name: values.name,
           is_active: true,
@@ -65,19 +53,20 @@ const SchoolGradesContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Grade Created" });
+            toasty({ type: "success", text: "Academic Year Created" });
           });
       } catch (err) {
+        console.log(err);
         toasty();
       }
     }
   };
 
-  const handleUpdateGrade = async (grade, values) => {
-    setShowUpdateSchoolGrade(false);
+  const handleUpdateYear = async (values) => {
+    setShowUpdateYear(false);
     try {
-      await updateGrade({
-        grade_id: grade?.id,
+      await updateYear({
+        year_id: selectedYear?.id,
         school: user?.school_id,
         name: values.name,
         is_active: values.is_active,
@@ -85,7 +74,7 @@ const SchoolGradesContainer = () => {
         .unwrap()
         .then((payload) => {
           refetch();
-          toasty({ type: "success", text: "Grade Updated" });
+          toasty({ type: "success", text: "Year Updated" });
         });
     } catch (err) {
       toasty();
@@ -118,7 +107,7 @@ const SchoolGradesContainer = () => {
       title: () => {
         return <>Name</>;
       },
-      width: "60%",
+      width: "70%",
       render: (item) => <div>{item.name}</div>,
     },
     {
@@ -131,8 +120,8 @@ const SchoolGradesContainer = () => {
             style={{ color: "#00899E", fontWeight: 500 }}
             type={"link"}
             onClick={() => {
-              setSelectedGrade(record);
-              setShowUpdateSchoolGrade(true);
+              setSelectedYear(record);
+              setShowUpdateYear(true);
             }}
           >
             Change
@@ -145,9 +134,10 @@ const SchoolGradesContainer = () => {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <Header text={"Grades"} />
+        <Header text={"Academic Years"} />
         <Profile />
       </div>
+
       <div style={styles.tableCont}>
         <div style={styles.filter}>
           <div style={{ alignItems: "center", display: "flex" }}>
@@ -162,14 +152,14 @@ const SchoolGradesContainer = () => {
               type="primary"
               style={styles.btnAdd}
               icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-              onClick={() => setShowAddSchoolGrade(true)}
+              onClick={() => setShowAddYear(true)}
             >
-              Add grade
+              Create Year
             </Button>
           </div>
         </div>
         <Table
-          dataSource={filteredUsers()}
+          dataSource={years}
           columns={columns}
           rowKey={(item) => item?.id}
           pagination={{
@@ -182,21 +172,21 @@ const SchoolGradesContainer = () => {
           }}
         />
       </div>
-      <AddSchoolGrade
-        showAddSchoolGrade={showAddSchoolGrade}
-        setShowAddSchoolGrade={setShowAddSchoolGrade}
-        handleCreateGrade={handleCreateGrade}
+      <CreateYear
+        setShowAddYear={setShowAddYear}
+        showAddYear={showAddYear}
+        handleAddYear={handleAddYear}
       />
-      <UpdateSchoolGrade
-        grade={selectedGrade}
-        setGrade={setSelectedGrade}
-        showUpdateSchoolGrade={showUpdateSchoolGrade}
-        setShowUpdateSchoolGrade={setShowUpdateSchoolGrade}
-        handleUpdateGrade={handleUpdateGrade}
+      <UpdateYear
+        year={selectedYear}
+        showUpdateYear={showUpdateYear}
+        setShowUpdateYear={setShowUpdateYear}
+        handleUpdateYear={handleUpdateYear}
       />
     </div>
   );
 };
+
 const styles = {
   container: {
     flex: 1,
@@ -206,6 +196,7 @@ const styles = {
   },
   header: {
     display: "flex",
+    flexDirection: "space-between",
   },
   tableCont: {
     marginTop: 20,
@@ -233,4 +224,5 @@ const styles = {
     borderRadius: 8,
   },
 };
-export default SchoolGradesContainer;
+
+export default AcademicYearsContainer;

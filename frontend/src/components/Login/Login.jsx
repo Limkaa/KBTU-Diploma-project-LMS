@@ -25,7 +25,7 @@ function Login() {
             dispatch(setCredentials({userAccessToken: userTokens.access, userRefreshToken: userTokens.refresh}));
             setEmail("");
             setPassword("");
-            navigate('/home');
+            navigate('/');
         } catch(err) {
             console.log(err);
             if (err?.response) {

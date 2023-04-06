@@ -14,7 +14,7 @@ import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import UpdateSubjects from "./UpdateSubjects";
 import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import AddSubject from "./AddSubject";
-import { toasty } from "../Alert/Toast";
+import { toasty } from "../shared/Toast";
 
 const SubjectsContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -58,7 +58,6 @@ const SubjectsContainer = () => {
   }, [dataGrades, isLoadingGrades]);
 
   const handleAddSubject = async (values) => {
-    console.log(values);
     if (user) {
       try {
         await addSubject({

@@ -17,6 +17,8 @@ import SchoolGradesContainer from "./components/SchoolGrades/SchoolGrades.contai
 import { toast } from "react-toastify";
 import SubjectsContainer from "./components/Subjects/Subjects.container";
 import AcademicYears from "./components/Terms/Terms.container";
+import TermsContainer from "./components/Terms/Terms.container";
+import AcademicYearsContainer from "./components/AcademicYears/AcademicYears.container";
 
 function App() {
   React.useEffect(() => {
@@ -32,7 +34,7 @@ function App() {
             <PrivateRoute allowedRoles={["manager", "student", "teacher"]} />
           }
         >
-          <Route exact path="/home" element={<DashboardContainer />} />
+          <Route exact path="/" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />
@@ -54,9 +56,12 @@ function App() {
             path="/school/subjects"
             element={<SubjectsContainer />}
           />
-          <Route exact path="/terms" element={<AcademicYears />} />
-          <Route exact path="/terms/term" element={<AcademicYears />} />
-          <Route exact path="/terms/years" element={<AcademicYears />} />
+          <Route exact path="/terms/term" element={<TermsContainer />} />
+          <Route
+            exact
+            path="/terms/years"
+            element={<AcademicYearsContainer />}
+          />
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>

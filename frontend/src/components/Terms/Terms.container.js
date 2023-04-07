@@ -11,8 +11,15 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 import InputLabel from "@mui/material/InputLabel";
-import { useGetTermsQuery } from "../../redux/terms/termsApiSlice";
+import {
+  useAddTermMutation,
+  useGetTermsQuery,
+  useUpdateTermMutation,
+} from "../../redux/terms/termsApiSlice";
 import moment from "moment-timezone";
+import { toasty } from "../shared/Toast";
+import AddTerm from "./AddTerm";
+import UpdateTerm from "./UpdateTerm";
 
 const TermsContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -20,8 +27,10 @@ const TermsContainer = () => {
   const [terms, setTerms] = React.useState();
   const [search, setSearch] = React.useState("");
   const [selectedYear, setSelectedYear] = React.useState();
-  const [showAddYear, setShowAddYear] = React.useState(false);
-  const [showUpdateYear, setShowUpdateYear] = React.useState(false);
+  const [selectedTerm, setSelectedTerm] = React.useState();
+
+  const [showAddTerm, setShowAddTerm] = React.useState(false);
+  const [showUpdateTerm, setShowUpdateTerm] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
 
@@ -29,6 +38,9 @@ const TermsContainer = () => {
     year_id: selectedYear,
     page,
   });
+
+  const [createTerm] = useAddTermMutation();
+  const [updateTerm] = useUpdateTermMutation();
 
   const { data: dataYears, isLoading: isLoadingYears } =
     useGetYearsWithoutPageQuery({
@@ -41,7 +53,6 @@ const TermsContainer = () => {
         setTotal(data?.count);
       }
       setTerms(data.results);
-      console.log(data);
     }
   }, [data, isLoading, selectedYear]);
 
@@ -50,6 +61,53 @@ const TermsContainer = () => {
       setYears(dataYears.filter((el) => el.is_active));
     }
   }, [dataYears, isLoadingYears]);
+
+  const handleAddTerm = async (values, start, end) => {
+    console.log(values, start, end);
+    if (user) {
+      try {
+        await createTerm({
+          year: values.year,
+          name: values.name,
+          from_date: moment(start).format("YYYY-MM-DD"),
+          to_date: moment(end).format("YYYY-MM-DD"),
+          is_closed: values.is_closed,
+        })
+          .unwrap()
+          .then((payload) => {
+            refetch();
+            toasty({ type: "success", text: "Term Created" });
+          });
+      } catch (err) {
+        console.log(err);
+        toasty();
+      }
+    }
+  };
+
+  const handleUpdateTerm = async (values) => {
+    console.log(values);
+    if (user) {
+      try {
+        await updateTerm({
+          term_id: selectedTerm?.id,
+          year: values.year,
+          name: values.name,
+          from_date: values.from_date,
+          to_date: values.to_date,
+          is_closed: values.is_closed,
+        })
+          .unwrap()
+          .then((payload) => {
+            refetch();
+            toasty({ type: "success", text: "Term Updated" });
+          });
+      } catch (err) {
+        console.log(err);
+        toasty();
+      }
+    }
+  };
 
   const columns = [
     {
@@ -67,7 +125,7 @@ const TermsContainer = () => {
         >
           <img
             src={
-              item?.is_active
+              item?.is_closed
                 ? require("../../assets/icons/active.png")
                 : require("../../assets/icons/inactive.png")
             }
@@ -109,8 +167,8 @@ const TermsContainer = () => {
             style={{ color: "#00899E", fontWeight: 500 }}
             type={"link"}
             onClick={() => {
-              // setSelectedSubject(record);
-              // setShowUpdateSubject(true);
+              setSelectedTerm(record);
+              setShowUpdateTerm(true);
             }}
           >
             Change
@@ -171,9 +229,9 @@ const TermsContainer = () => {
               type="primary"
               style={styles.btnAdd}
               icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-              // onClick={() => setShowAddSubject(true)}
+              onClick={() => setShowAddTerm(true)}
             >
-              Add subject
+              Create term
             </Button>
           </div>
         </div>
@@ -196,9 +254,22 @@ const TermsContainer = () => {
             <p>Loading</p>
           )
         ) : (
-          <h2>Choose year</h2>
+          <p style={styles.choose}>Choose year</p>
         )}
       </div>
+      <AddTerm
+        showAddTerm={showAddTerm}
+        setShowAddTerm={setShowAddTerm}
+        years={years}
+        handleAddTerm={handleAddTerm}
+      />
+      <UpdateTerm
+        years={years}
+        showUpdateTerm={showUpdateTerm}
+        setShowUpdateTerm={setShowUpdateTerm}
+        term={selectedTerm}
+        handleUpdateTerm={handleUpdateTerm}
+      />
     </div>
   );
 };
@@ -238,6 +309,13 @@ const styles = {
     width: 280,
     border: "none",
     borderRadius: 8,
+  },
+  choose: {
+    textAlign: "center",
+    padding: 20,
+    fontWeight: 500,
+    fontSize: 20,
+    color: "#00000050",
   },
 };
 

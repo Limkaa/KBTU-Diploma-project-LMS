@@ -19,7 +19,8 @@ import SubjectsContainer from "./components/Subjects/Subjects.container";
 import AcademicYears from "./components/Terms/Terms.container";
 import TermsContainer from "./components/Terms/Terms.container";
 import AcademicYearsContainer from "./components/AcademicYears/AcademicYears.container";
-
+import NotFound from "./components/NotFound/NotFound";
+import "./App.css";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -63,6 +64,7 @@ function App() {
             element={<AcademicYearsContainer />}
           />
         </Route>
+        <Route path="*" element={<NotFound />} />
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>
     </div>

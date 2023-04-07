@@ -13,7 +13,7 @@ const PrivateRoute = ({ allowedRoles }) => {
       <Outlet />
     </div>
   ) : (
-    <Navigate to="/login" state={{from: location}} replace />
+    <Navigate to="/" state={{from: location}} replace />
   );
 };
 

@@ -33,7 +33,7 @@ class CourseAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (
-            "Group information",
+            "Course information",
             {
                 "fields": (
                     "school",

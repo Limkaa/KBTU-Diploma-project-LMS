@@ -12,7 +12,21 @@ from apps.core.modules.students.models import Student
 from apps.core.modules.subjects.models import Subject
 from apps.core.modules.terms.models import Year, Term
 from apps.core.modules.courses.models import Course
+from apps.core.modules.syllabus.models import Syllabus
 
+lorems = [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Quisque vitae varius ex, eu volutpat orci.",
+    "Aenean ullamcorper orci et vulputate fermentum.",
+    "Cras erat dui, finibus vel lectus ac, pharetra dictum odio.",
+    "Nullam tempus scelerisque purus, sed mattis elit condimentum nec.",
+    "Etiam risus sapien, auctor eu volutpat sit amet, porta in nunc.",
+    "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
+    "Proin ipsum purus, laoreet quis dictum a, laoreet sed ligula.",
+    "Integer ultricies malesuada quam.",
+    "Cras vel elit sed mi placerat pharetra eget vel odio.",
+    "Duis ac nulla varius diam ultrices rutrum."
+]
 
 class Command(BaseCommand):
     help = 'Fills database with mock data'
@@ -29,6 +43,10 @@ class Command(BaseCommand):
     def _get_data_from_json_file(self, path):
         with open(path) as file:
             return json.load(file)
+        
+    def _get_lorem(self, sentences=1, total_length = None):
+        text = " ".join(random.sample(lorems, sentences))
+        return text[:total_length] if total_length else text
     
     def _create_superuser(self):
         return User.objects.create_superuser(
@@ -178,7 +196,25 @@ class Command(BaseCommand):
             
         Course.objects.bulk_create(courses)
         self.stdout.write(self.style.SUCCESS('Courses created'))
-                
+    
+    def _create_syllabuses(self):
+        courses = Course.objects.all()
+        syllabuses = []
+        
+        for course in courses:
+            syllabus_plans_points_number = random.randint(1, 10)
+            
+            for plan in range(syllabus_plans_points_number):
+                syllabuses.append(Syllabus(
+                    course=course,
+                    name=self._get_lorem(),
+                    description=self._get_lorem(sentences=random.randint(0, len(lorems))),
+                    hours=random.randint(1, 4),
+                    is_completed=random.choice([True, False * 3])
+                ))
+        
+        Syllabus.objects.bulk_create(syllabuses)
+        self.stdout.write(self.style.SUCCESS('Syllabuses created'))
     
     def handle(self, *args, **options):
         self.schools = self._create_schools()
@@ -189,6 +225,7 @@ class Command(BaseCommand):
         self._create_academic_years_and_terms()
         self._assign_students_to_groups()
         self._create_courses()
+        self._create_syllabuses()
         
         self._create_superuser()
         

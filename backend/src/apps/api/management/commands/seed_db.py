@@ -1,8 +1,12 @@
 import json
 import random
 import string
+from datetime import timedelta
+import datetime
 
 from django.core.management.base import BaseCommand
+import pytz
+from django.conf import settings
 
 from apps.core.modules.users.models import User
 from apps.core.modules.schools.models import School
@@ -13,6 +17,7 @@ from apps.core.modules.subjects.models import Subject
 from apps.core.modules.terms.models import Year, Term
 from apps.core.modules.courses.models import Course
 from apps.core.modules.syllabus.models import Syllabus
+from apps.core.modules.assignments.models import Assignment
 
 lorems = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -47,6 +52,12 @@ class Command(BaseCommand):
     def _get_lorem(self, sentences=1, total_length = None):
         text = " ".join(random.sample(lorems, sentences))
         return text[:total_length] if total_length else text
+    
+    def _get_random_date(self, start, end):
+        delta = end - start
+        int_delta = (delta.days * 24 * 60 * 60) + delta.seconds + random.randint(0, 86400)
+        random_second = random.randrange(int_delta)
+        return datetime.datetime.fromtimestamp(random_second, tz=pytz.timezone(settings.TIME_ZONE))
     
     def _create_superuser(self):
         return User.objects.create_superuser(
@@ -216,6 +227,27 @@ class Command(BaseCommand):
         Syllabus.objects.bulk_create(syllabuses)
         self.stdout.write(self.style.SUCCESS('Syllabuses created'))
     
+    def _create_assignments(self):
+        courses = Course.objects.exclude(teacher__isnull=True)
+        assignments = []
+        
+        for course in courses:
+            for term in Term.objects.filter(year=course.year):
+                assignment_number = random.randint(0, 5)
+                
+                for assignment in range(assignment_number):
+                    assignments.append(Assignment(
+                        course=course,
+                        term=term,
+                        name=self._get_lorem(),
+                        description=self._get_lorem(sentences=random.randint(0, len(lorems))),
+                        datetime=self._get_random_date(term.from_date, term.to_date),
+                        is_active=random.choice([True, True, True, True, False])
+                    ))
+        
+        Assignment.objects.bulk_create(assignments)
+        self.stdout.write(self.style.SUCCESS('Assignments created'))
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
@@ -226,8 +258,10 @@ class Command(BaseCommand):
         self._assign_students_to_groups()
         self._create_courses()
         self._create_syllabuses()
+        self._create_assignments()
         
         self._create_superuser()
+        
         
         
 

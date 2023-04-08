@@ -59,6 +59,7 @@ PROJECT_APPS = [
     "apps.core.modules.awards",
     "apps.core.modules.files",
     "apps.core.modules.syllabus",
+    "apps.core.modules.assignments",
 ]
 
 THIRD_PARTY_APPS = [

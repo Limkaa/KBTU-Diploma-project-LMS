@@ -4,8 +4,8 @@ import Header from "../shared/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
-import AddingUserModal from "../modals/AddingUserModal";
-import UpdateUserModal from "../modals/UpdateUserModal";
+import AddingUserModal from "./AddingUserModal";
+import UpdateUserModal from "./UpdateUserModal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -13,6 +13,7 @@ import {
   useGetUsersQuery,
 } from "../../redux/users/usersApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import { toasty } from "../shared/Toast";
 
 const UsersContainer = () => {
   const [users, setUsers] = React.useState();
@@ -45,9 +46,8 @@ const UsersContainer = () => {
   const handleUpdateUser = async (values) => {
     setShowUpdateUser(false);
     const phoneFormat = `${removeSpecSymbols(values.phone)}`;
-    console.log(user);
     try {
-      const updateUsers = await updateUser({
+      await updateUser({
         id: selectedUser.id,
         email: values.email,
         first_name: values.first_name,
@@ -63,26 +63,10 @@ const UsersContainer = () => {
         .then((payload) => {
           refetch();
           refetchUser();
-          toast.success("User Updated", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: false,
-            theme: "colored",
-          });
+          toasty({ type: "success", text: "User Updated" });
         });
     } catch (err) {
-      toast.error("Error", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: false,
-        theme: "colored",
-      });
+      toasty();
     }
   };
 
@@ -169,28 +153,6 @@ const UsersContainer = () => {
       </div>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          {/* <Select
-            defaultValue="lucy"
-            style={{
-              width: 180,
-            }}
-            size={"large"}
-            onChange={handleChange}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "Yiminghe",
-                label: "yiminghe",
-              },
-            ]}
-          /> */}
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
               size="default size"
@@ -226,14 +188,6 @@ const UsersContainer = () => {
           dataSource={filteredUsers()}
           columns={columns}
           rowKey={(item) => item?.id}
-          onRow={(record) => {
-            return {
-              onClick: () => {
-                // setShowBusket(true);
-                // setSale(record);
-              },
-            };
-          }}
           pagination={{
             total: total,
             current: page,
@@ -276,7 +230,6 @@ const styles = {
     marginTop: 20,
     borderRadius: 8,
     border: "1px solid #0000000D",
-    borderBottom: "none",
   },
   filter: {
     padding: 8,

@@ -7,11 +7,18 @@ import TimelineSvg from "../../assets/icons/TimelineIcon";
 import ClassroomSvg from "../../assets/icons/ClassroomIcon";
 import GradesSvg from "../../assets/icons/GradesIcon";
 import UsersSvg from "../../assets/icons/UsersIcon";
+import SchoolGradesSvg from "../../assets/icons/SchoolGradesIcon";
+import SubjectsSvg from "../../assets/icons/SubjectsIcon";
+import YearSvg from "../../assets/icons/YearIcon";
+import TermsSvg from "../../assets/icons/TermsIcon";
+import TermSvg from "../../assets/icons/TermIcon";
+
+
 
 export const managerMenu = [
   {
     title: "Home",
-    path: "/home",
+    path: "/",
     icon: HomeSvg,
   },
   {
@@ -19,12 +26,39 @@ export const managerMenu = [
     path: "/users",
     icon: UsersSvg,
   },
+  {
+    title: "Grades",
+    path: `/school/grades`,
+    icon: SchoolGradesSvg,
+  },
+  {
+    title: "Subjects",
+    path: `/school/subjects`,
+    icon: SubjectsSvg,
+  },
+  {
+    title: "Terms",
+    path: `/terms`,
+    icon: TermsSvg,
+    submenu: [
+      {
+        title: "Terms",
+        path: `/terms/term`,
+        icon: TermSvg,
+      },
+      {
+        title: "Academic Year",
+        path: `/terms/years`,
+        icon: YearSvg,
+      },
+    ],
+  },
 ];
 
 export const studentMenu = [
   {
     title: "Home",
-    path: "/home",
+    path: "/",
     icon: HomeSvg,
   },
   {
@@ -67,7 +101,7 @@ export const studentMenu = [
 export const teacherMenu = [
   {
     title: "Home",
-    path: "/home",
+    path: "/",
     icon: HomeSvg,
   },
   {

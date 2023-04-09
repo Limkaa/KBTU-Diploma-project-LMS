@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector } from 'react-redux';
+import {useNavigate, Navigate, useLocation} from "react-router-dom";
 import {useTokenObtainMutation} from "../../redux/api/authApiSlice";
 import {setCredentials} from "../../redux/auth/authSlice";
 import Alert from "../Alert/Alert";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 function Login() {
     const [password, setPassword] = useState("");
@@ -11,6 +12,8 @@ function Login() {
     const [err, setErr] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const user = useSelector(selectCurrentUser);
+    const location = useLocation();
 
     const [obtainTokens, {isLoading}] = useTokenObtainMutation();
 
@@ -36,6 +39,10 @@ function Login() {
                 setErr("Login failed");
             }
         }
+    }
+
+    if(user){
+        return <Navigate to="/" state={{ from: location }} replace />
     }
 
     return (

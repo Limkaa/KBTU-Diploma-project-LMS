@@ -16,7 +16,7 @@ const PrivateRoute = ({ allowedRoles }) => {
       <Navigate to="/" state={{ from: location }} replace />
     );
   } else {
-    <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 };
 

@@ -41,7 +41,7 @@ function Login() {
         }
     }
 
-    if(user){
+    if(user !== null){
         return <Navigate to="/" state={{ from: location }} replace />
     }
 

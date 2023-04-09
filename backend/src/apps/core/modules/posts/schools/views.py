@@ -47,7 +47,7 @@ class SchoolPostRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         method = self.request.method
         
-        if method == "POST":
+        if method in ["PUT", "DELETE"]:
             self.permission_classes = [OnlyOwnSchool, IsManager]
         elif method == "GET":
             self.permission_classes = [OnlyOwnSchool,]

@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user14@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2003,7 +2003,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/33/assignments",
+							"raw": "{{BASE_URL}}/courses/33/assignments?ordering=datetime",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2030,14 +2030,295 @@
 								},
 								{
 									"key": "ordering",
-									"value": "-datetime",
-									"description": "datetime, -datetime",
-									"disabled": true
+									"value": "datetime",
+									"description": "datetime, -datetime"
 								},
 								{
 									"key": "search",
 									"value": "nul",
 									"description": "in fields: name",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Course posts",
+			"item": [
+				{
+					"name": "Get one course post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses-posts/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses-posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create course post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test title\",\n    \"text\": \"Some information\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/courses/27/posts",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"27",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update course post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test title updated\",\n    \"text\": \"Some information\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/courses-posts/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses-posts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete course post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses-posts/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses-posts",
+								"2"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get course posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/27/posts",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"27",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "created_at",
+									"description": "created_at, updated_at (\"-\" if descending)",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "test",
+									"description": "in fields: title",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "School posts",
+			"item": [
+				{
+					"name": "Get one school post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools-posts/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools-posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create school post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test title\",\n    \"text\": \"Some information\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schools/2/posts",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"2",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update school post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test title updated\",\n    \"text\": \"Some information\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schools-posts/3",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools-posts",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete school post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools-posts/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools-posts",
+								"2"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/posts",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "created_at",
+									"description": "created_at, updated_at (\"-\" if descending)",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "test",
+									"description": "in fields: title",
 									"disabled": true
 								}
 							]

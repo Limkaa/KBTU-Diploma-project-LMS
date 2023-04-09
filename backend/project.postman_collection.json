@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user14@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2074,7 +2074,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"course\": 41,\n    \"title\": \"Test title\",\n    \"text\": \"Some information\"\n}",
+							"raw": "{\n    \"title\": \"Test title\",\n    \"text\": \"Some information\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2191,7 +2191,7 @@
 			"name": "School posts",
 			"item": [
 				{
-					"name": "Get one course post",
+					"name": "Get one school post",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -2209,13 +2209,13 @@
 					"response": []
 				},
 				{
-					"name": "Create course post",
+					"name": "Create school post",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"course\": 41,\n    \"title\": \"Test title\",\n    \"text\": \"Some information\"\n}",
+							"raw": "{\n    \"title\": \"Test title\",\n    \"text\": \"Some information\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2223,13 +2223,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/schools/27/posts",
+							"raw": "{{BASE_URL}}/schools/2/posts",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"27",
+								"2",
 								"posts"
 							]
 						}
@@ -2237,7 +2237,7 @@
 					"response": []
 				},
 				{
-					"name": "Update course post",
+					"name": "Update school post",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -2251,20 +2251,20 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/schools-posts/2",
+							"raw": "{{BASE_URL}}/schools-posts/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools-posts",
-								"2"
+								"3"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete course post",
+					"name": "Delete school post",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -2289,18 +2289,18 @@
 					"response": []
 				},
 				{
-					"name": "Get course posts",
+					"name": "Get school posts",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/posts",
+							"raw": "{{BASE_URL}}/schools/1/posts",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"2",
+								"1",
 								"posts"
 							],
 							"query": [

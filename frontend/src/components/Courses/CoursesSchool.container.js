@@ -4,37 +4,27 @@ import Header from "../shared/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
-import { toast } from "react-toastify";
-import {
-  useAddSubjectMutation,
-  useGetSubjectsQuery,
-  useUpdateSubjectMutation,
-} from "../../redux/subjects/subjectsApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
-import UpdateSubjects from "./UpdateSubjects";
 import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
-import AddSubject from "./AddSubject";
 import { toasty } from "../shared/Toast";
+import { useGetSchoolCoursesQuery } from "../../redux/courses/coursesApiSlice";
+import CoursesSchoolAdd from "./CoursesSchoolAdd";
 
-const SubjectsContainer = () => {
+const CoursesSchoolContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
-  const [subjects, setSubjects] = React.useState();
+  const [courses, setCourses] = React.useState();
   const [grades, setGrades] = React.useState();
   const [search, setSearch] = React.useState("");
   const [selectedSubject, setSelectedSubject] = React.useState();
-  const [showAddSubject, setShowAddSubject] = React.useState(false);
+  const [showAddCourse, setShowAddCourse] = React.useState(false);
   const [showUpdateSubject, setShowUpdateSubject] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
 
-  const { data, isLoading, refetch } = useGetSubjectsQuery({
+  const { data, isLoading, refetch } = useGetSchoolCoursesQuery({
     school_id: user?.school_id,
     page,
   });
-
-  const [addSubject] = useAddSubjectMutation();
-
-  const [updateSubject] = useUpdateSubjectMutation();
 
   const { data: dataGrades, isLoading: isLoadingGrades } =
     useGetSchoolGradesWithoutPageQuery({
@@ -42,66 +32,19 @@ const SubjectsContainer = () => {
     });
 
   React.useEffect(() => {
-    if (data && !isLoading) {
-      if (page === 1) {
-        setTotal(data?.count);
-      }
-      setSubjects(data.results);
-    }
-  }, [data, isLoading]);
-
-  React.useEffect(() => {
     if (dataGrades && !isLoadingGrades) {
       setGrades(dataGrades.filter((el) => el.is_active));
     }
   }, [dataGrades, isLoadingGrades]);
 
-  const handleAddSubject = async (values) => {
-    if (user) {
-      try {
-        await addSubject({
-          school: user?.school_id,
-          name: values.name,
-          code: values.code,
-          description: values.description,
-          grade: values.grade,
-          is_active: true,
-        })
-          .unwrap()
-          .then((payload) => {
-            refetch();
-            toasty({ type: "success", text: "Subject Created" });
-          });
-      } catch (err) {
-        console.log(err);
-        toasty();
+  React.useEffect(() => {
+    if (data && !isLoading) {
+      if (page === 1) {
+        setTotal(data?.count);
       }
+      setCourses(data.results);
     }
-  };
-
-  const handleUpdateSubject = async (values) => {
-    setShowUpdateSubject(false);
-    if (user) {
-      try {
-        const updateSubjects = await updateSubject({
-          subject_id: selectedSubject?.id,
-          school: user?.school_id,
-          name: values.name,
-          code: values.code.toUpperCase(),
-          description: values.description,
-          grade: values.grade,
-          is_active: values.is_active,
-        })
-          .unwrap()
-          .then((payload) => {
-            refetch();
-            toasty({ type: "success", text: "Subject Updated" });
-          });
-      } catch (err) {
-        toasty();
-      }
-    }
-  };
+  }, [data, isLoading]);
 
   const columns = [
     {
@@ -127,24 +70,43 @@ const SubjectsContainer = () => {
     },
     {
       title: () => {
-        return <>Name</>;
+        return <>Subject</>;
       },
       width: "20%",
-      render: (item) => <div>{item.name}</div>,
+      render: (item) => (
+        <div>
+          {item?.subject?.name} ({item?.subject?.code})
+        </div>
+      ),
     },
     {
       title: () => {
-        return <>Code</>;
+        return <>Teacher</>;
       },
       width: "20%",
-      render: (item) => <div>{item.code}</div>,
+      render: (item) => (
+        <div>
+          {item?.teacher?.last_name} {item?.teacher?.first_name}
+        </div>
+      ),
     },
     {
       title: () => {
-        return <>Grade</>;
+        return <>Year</>;
       },
-      width: "20%",
-      render: (item) => <div>{item.grade.name}</div>,
+      width: "15%",
+      render: (item) => <div>{item?.year?.name}</div>,
+    },
+    {
+      title: () => {
+        return <>Group</>;
+      },
+      width: "15%",
+      render: (item) => (
+        <div>
+          {item?.group?.grade?.name} ({item?.group?.code})
+        </div>
+      ),
     },
     {
       title: "Action",
@@ -156,8 +118,8 @@ const SubjectsContainer = () => {
             style={{ color: "#00899E", fontWeight: 500 }}
             type={"link"}
             onClick={() => {
-              setSelectedSubject(record);
-              setShowUpdateSubject(true);
+              //   setSelectedSubject(record);
+              //   setShowUpdateSubject(true);
             }}
           >
             Change
@@ -166,10 +128,11 @@ const SubjectsContainer = () => {
       ),
     },
   ];
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <Header text={"Subjects"} />
+        <Header text={"Courses"} />
         <Profile />
       </div>
       <div style={styles.tableCont}>
@@ -186,14 +149,14 @@ const SubjectsContainer = () => {
               type="primary"
               style={styles.btnAdd}
               icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-              onClick={() => setShowAddSubject(true)}
+              //   onClick={() => setShowAddSubject(true)}
             >
-              Add subject
+              Create course
             </Button>
           </div>
         </div>
         <Table
-          dataSource={subjects}
+          dataSource={courses}
           columns={columns}
           rowKey={(item) => item?.id}
           pagination={{
@@ -206,17 +169,17 @@ const SubjectsContainer = () => {
           }}
         />
       </div>
-      <UpdateSubjects
+      {/* <UpdateSubjects
         subject={selectedSubject}
         setSubject={setSelectedSubject}
         showUpdateSubject={showUpdateSubject}
         setShowUpdateSubject={setShowUpdateSubject}
         grades={grades}
         handleUpdateSubject={handleUpdateSubject}
-      />
-      <AddSubject
-        showAddSubject={showAddSubject}
-        setShowAddSubject={setShowAddSubject}
+      />*/}
+      <CoursesSchoolAdd
+        showAddCourse={showAddCourse}
+        setShowAddCourse={setShowAddCourse}
         grades={grades}
         handleAddSubject={handleAddSubject}
       />
@@ -261,4 +224,4 @@ const styles = {
   },
 };
 
-export default SubjectsContainer;
+export default CoursesSchoolContainer;

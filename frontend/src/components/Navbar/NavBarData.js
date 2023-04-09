@@ -13,8 +13,6 @@ import YearSvg from "../../assets/icons/YearIcon";
 import TermsSvg from "../../assets/icons/TermsIcon";
 import TermSvg from "../../assets/icons/TermIcon";
 
-
-
 export const managerMenu = [
   {
     title: "Home",
@@ -52,6 +50,11 @@ export const managerMenu = [
         icon: YearSvg,
       },
     ],
+  },
+  {
+    title: "Courses",
+    path: `/schools/courses`,
+    icon: CoursesSvg,
   },
 ];
 

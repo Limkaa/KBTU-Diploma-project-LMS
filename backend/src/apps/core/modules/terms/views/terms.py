@@ -1,8 +1,10 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
 
-from ..models import Year, Term
-from ...schools.models import School
+from apps.core.utils.pagination import OptionalPaginationListAPIView
+from ...permissions import *
+
+from ..models import Year, Term, School
 
 from ..serializers import (
     TermModelCreateUpdateSerializer, 
@@ -10,16 +12,9 @@ from ..serializers import (
     TermModelSerializer
 )
 
-from ... import permissions
-
-from apps.core.utils.pagination import OptionalPaginationListAPIView
-
 
 class TermCreateAPI(generics.CreateAPIView):
-    permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager
-    ]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = TermModelCreateUpdateSerializer
     queryset = Term.objects.all()
     
@@ -32,10 +27,7 @@ class TermCreateAPI(generics.CreateAPIView):
 class TermRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Term.objects.all()
     serializer_class = TermModelCreateUpdateSerializer
-    permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager
-    ]
+    permission_classes = [OnlyOwnSchool, IsManager]
     
     def get_object(self):
         term: Term = get_object_or_404(Term, pk=self.kwargs['pk'])
@@ -49,10 +41,7 @@ class TermRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class AcademicYearTermsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager
-    ]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = TermModelSerializer
     
     def get_queryset(self):

@@ -59,11 +59,13 @@ PROJECT_APPS = [
     "apps.core.modules.awards",
     "apps.core.modules.files",
     "apps.core.modules.syllabus",
+    "apps.core.modules.assignments",
 ]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
     "corsheaders",
+    "django_filters",
 ]
 
 INSTALLED_APPS = [
@@ -182,6 +184,11 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.OrderingFilter",
+        "rest_framework.filters.SearchFilter",
+    ],
     "PAGE_SIZE": 10,
 }
 

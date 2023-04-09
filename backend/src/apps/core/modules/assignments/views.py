@@ -4,13 +4,15 @@ from rest_framework import generics
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ..permissions import *
 
-from .models import Course, Syllabus
+from .models import Course, Assignment
+from .serializers import *
 
-from .serializers import SyllabusModelSerializer
 
-
-class SyllabusListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
-    serializer_class = SyllabusModelSerializer
+class CourseAssignmentsListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
+    serializer_class = CreateAssignmentSerializer
+    filterset_fields = ['term', 'is_active']
+    ordering = ['datetime']
+    search_fields = ['name']
     
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)
@@ -27,8 +29,8 @@ class SyllabusListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAP
                 OnlyOwnSchool,
                 CustomOperandHolder(
                     operand = CustomOR, 
-                    message = "This action can be performed only by: school manager, course teacher or student", 
-                    permissions = [IsManager, IsCourseTeacher, IsCourseStudent]
+                    message = "This action can be performed only by: course teacher or student", 
+                    permissions = [IsCourseTeacher, IsCourseStudent]
                 )
             ]
 
@@ -38,17 +40,17 @@ class SyllabusListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAP
         return serializer.save(course=self.course)
     
     def get_queryset(self):
-        return Syllabus.objects.filter(course=self.course)
+        return Assignment.objects.filter(course=self.course).select_related('term', 'course')
 
 
-class SyllabusRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = SyllabusModelSerializer
-    queryset = Syllabus.objects.all()
+class AssignmentRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UpdateAssignmentSerializer
+    queryset = Assignment.objects.all().select_related('term', 'course')
     
     def get_object(self):
-        syllabus = get_object_or_404(Syllabus, pk=self.kwargs['pk'])
-        self.check_object_permissions(self.request, syllabus.course)
-        return syllabus
+        assignment = get_object_or_404(Assignment, pk=self.kwargs['pk'])
+        self.check_object_permissions(self.request, assignment.course)
+        return assignment
     
     def get_permissions(self):
         method = self.request.method
@@ -60,9 +62,10 @@ class SyllabusRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
                 OnlyOwnSchool,
                 CustomOperandHolder(
                     operand = CustomOR, 
-                    message = "This action can be performed only by: school manager, course teacher or student", 
-                    permissions = [IsManager, IsCourseTeacher, IsCourseStudent]
+                    message = "This action can be performed only by: course teacher or student", 
+                    permissions = [IsCourseTeacher, IsCourseStudent]
                 )
             ]
 
         return super().get_permissions()
+

@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user14@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -620,7 +620,7 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "test3@gmail.com",
+									"value": "test12@gmail.com",
 									"type": "text"
 								},
 								{
@@ -681,13 +681,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/users",
+							"raw": "{{BASE_URL}}/schools/2/users",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"1",
+								"2",
 								"users"
 							]
 						}
@@ -700,13 +700,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/users?page=1",
+							"raw": "{{BASE_URL}}/schools/1/users?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"2",
+								"1",
 								"users"
 							],
 							"query": [
@@ -725,13 +725,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/users/2",
+							"raw": "{{BASE_URL}}/users/9",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"2"
+								"9"
 							]
 						}
 					},
@@ -793,13 +793,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/users/15",
+							"raw": "{{BASE_URL}}/users/7",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"15"
+								"7"
 							]
 						}
 					},
@@ -1020,13 +1020,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/groups/4",
+							"raw": "{{BASE_URL}}/groups/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"groups",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -1063,13 +1063,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/41/groups?page=1",
+							"raw": "{{BASE_URL}}/teachers/2/groups?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"41",
+								"2",
 								"groups"
 							],
 							"query": [
@@ -1118,13 +1118,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/students/43",
+							"raw": "{{BASE_URL}}/students/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"students",
-								"43"
+								"2"
 							]
 						}
 					},
@@ -1529,6 +1529,515 @@
 								{
 									"key": "page",
 									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "Get one course",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/3",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create course",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"year\": 2,\n    \"subject\": 12,\n    \"teacher\": 44,\n    \"group\": 1,\n    \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/courses",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update course",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"teacher\": 40,\n    \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/courses/5",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/courses",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"courses"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get teacher courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/teachers/14/courses",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"teachers",
+								"14",
+								"courses"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get subject courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/subjects/1/courses?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"subjects",
+								"1",
+								"courses"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get group courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/groups/7/courses?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"groups",
+								"7",
+								"courses"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get year courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/years/3/courses?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"years",
+								"3",
+								"courses"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get course students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/2/students?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"2",
+								"students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Syllabus",
+			"item": [
+				{
+					"name": "Get one syllabus point",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/syllabus/57",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"syllabus",
+								"57"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create syllabus point",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"What is art\",\n    \"description\": \"Basics of art subject\",\n    \"hours\": 1,\n    \"is_completed\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/courses/3/syllabus",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"3",
+								"syllabus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update syllabus point",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"What is art updated\",\n    \"description\": \"Basics of art subject\",\n    \"hours\": 1,\n    \"is_completed\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/syllabus/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"syllabus",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete syllabus point",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/syllabus/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"syllabus",
+								"2"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get course syllabus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/9/syllabus?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"9",
+								"syllabus"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Assignments",
+			"item": [
+				{
+					"name": "Get one assignment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/assignments/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"assignments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create course assignment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"term\": 5,\n    \"datetime\": \"2019-04-10T00:20:00+06:00\",\n    \"name\": \"Test assignment #2\",\n    \"description\": \"Some description\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/courses/13/assignments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"13",
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update assignment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"datetime\": \"2020-09-10T00:20:00+06:00\",\n    \"name\": \"Test assignment #2 updated one\",\n    \"description\": \"Some description\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/assignments/98",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"assignments",
+								"98"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete assignment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/assignments/98",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"assignments",
+								"98"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get course assignments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/33/assignments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"33",
+								"assignments"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "term",
+									"value": "9",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "False",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "-datetime",
+									"description": "datetime, -datetime",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "nul",
+									"description": "in fields: name",
 									"disabled": true
 								}
 							]

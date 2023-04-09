@@ -1,22 +1,15 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
 
-from .models import Group
-from ..users.models import User
-from ..schools.models import School
-from ..grades.models import Grade
+from apps.core.utils.pagination import OptionalPaginationListAPIView
+from ..permissions import *
 
+from .models import Group, User, School, Grade
 from .serializers import GroupModelSerializer, GroupModelReadOnlySerializer
 
-from .. import permissions
-
-from apps.core.utils.pagination import OptionalPaginationListAPIView
 
 class GroupCreateAPI(generics.CreateAPIView):
-    permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager
-    ]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = GroupModelSerializer
     queryset = Group.objects.all()
     
@@ -38,14 +31,15 @@ class GroupRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         method = self.request.method
         
         if method == "PUT":
-            self.permission_classes = [
-                permissions.OnlyOwnSchoolObject,
-                permissions.IsManager
-            ]
+            self.permission_classes = [OnlyOwnSchool, IsManager]
         elif method == "GET":
             self.permission_classes = [
-                permissions.OnlyOwnSchoolObject,
-                permissions.IsManager | permissions.IsGroupTeacher
+                OnlyOwnSchool,
+                CustomOperandHolder(
+                    operand = CustomOR,
+                    message = "This view can be accessed only by manager or group teacher",
+                    permissions = [IsManager, IsGroupTeacher]
+                ) 
             ]
 
         return super().get_permissions()
@@ -57,10 +51,7 @@ class GroupRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class SchoolGroupsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager
-    ]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = GroupModelReadOnlySerializer
     
     def get_queryset(self):
@@ -71,8 +62,21 @@ class SchoolGroupsListAPI(OptionalPaginationListAPIView):
     
 class TeacherGroupsListAPI(OptionalPaginationListAPIView):
     permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager | (permissions.IsTeacher & permissions.IsUserItself)
+        OnlyOwnSchool,
+        CustomOperandHolder(
+            operand = CustomOR,
+            message = 'This view can be accessed only by manager or teacher itself',
+            permissions = [
+                IsManager,
+                CustomOperandHolder(
+                    operand = CustomAND,
+                    permissions = [
+                        IsTeacher,
+                        IsUserItself
+                    ]
+                ),
+            ]
+        ),
     ]
     serializer_class = GroupModelReadOnlySerializer
     queryset =  Group.objects.all()
@@ -85,10 +89,7 @@ class TeacherGroupsListAPI(OptionalPaginationListAPIView):
 
 
 class GradeGroupsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [
-        permissions.OnlyOwnSchoolObject,
-        permissions.IsManager
-    ]
+    permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = GroupModelReadOnlySerializer
     queryset =  Group.objects.all()
     

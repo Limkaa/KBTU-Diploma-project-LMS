@@ -10,6 +10,9 @@ from .serializers import *
 
 class CourseAssignmentsListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
     serializer_class = CreateAssignmentSerializer
+    filterset_fields = ['term', 'is_active']
+    ordering = ['datetime']
+    search_fields = ['name']
     
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)

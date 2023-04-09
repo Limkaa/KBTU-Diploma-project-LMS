@@ -12,4 +12,6 @@ urlpatterns = [
     path("", include(("apps.core.modules.courses.urls", "courses"))),
     path("", include(("apps.core.modules.syllabus.urls", "syllabus"))),
     path("", include(("apps.core.modules.assignments.urls", "assignments"))),
+    path("", include(("apps.core.modules.posts.courses.urls", "courses-posts"))),
+    path("", include(("apps.core.modules.posts.schools.urls", "schools-posts"))),
 ]

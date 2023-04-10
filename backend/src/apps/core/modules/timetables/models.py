@@ -47,6 +47,9 @@ class Timebound(CustomModel):
     updated_at = models.DateTimeField(auto_now=True)
     
     non_updatable_fields = ['id', 'school', 'created_at']
+    
+    class Meta:
+        unique_together = ['school', 'from_time', 'to_time']
 
     def __str__(self) -> str:
         return f"{self.from_time} - {self.to_time}"

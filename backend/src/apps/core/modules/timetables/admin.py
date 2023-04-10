@@ -71,8 +71,6 @@ class TimeboundAdmin(CustomModelAdmin):
         "to_time"
     )
 
-    list_filter = ("from_time", "to_time")
-
     fieldsets = (
         (
             "Course post information",

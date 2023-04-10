@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user6@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -800,6 +800,154 @@
 							"path": [
 								"users",
 								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school teachers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/teachers",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"teachers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "first_name, last_name, email",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "first_name",
+									"description": "first_name, last_name, rating, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"description": "male, female",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/students?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "first_name, last_name, email",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "first_name",
+									"description": "first_name, last_name, rating, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"description": "male, female",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school managers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/managers?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"managers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "first_name, last_name, email",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "first_name",
+									"description": "first_name, last_name, rating, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"description": "male, female",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								}
 							]
 						}
 					},

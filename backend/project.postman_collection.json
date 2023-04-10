@@ -695,31 +695,6 @@
 					"response": []
 				},
 				{
-					"name": "View school users list",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/schools/1/users?page=1",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"schools",
-								"1",
-								"users"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "View one user",
 					"request": {
 						"method": "GET",
@@ -800,6 +775,61 @@
 							"path": [
 								"users",
 								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/users?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "first_name, last_name, email, phone, telegram_id",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "first_name",
+									"description": "first_name, last_name, rating, updated_at, date_of_birth",
+									"disabled": true
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"description": "male, female",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "student",
+									"description": "teacher, student, manager",
+									"disabled": true
+								}
 							]
 						}
 					},

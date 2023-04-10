@@ -132,6 +132,7 @@ class CustomAND(permissions.AND):
 __all__ = [
     'OnlyOwnSchool', 
     'IsManager',
+    'IsStudent',
     'IsTeacher',
     'IsGroupTeacher',
     'IsGroupStudent',

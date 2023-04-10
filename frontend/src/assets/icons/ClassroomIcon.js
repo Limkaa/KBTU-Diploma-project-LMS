@@ -8,7 +8,7 @@ const ClassromSvg = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <g clipPath="url(#a)" fill={props.fill}>
+    <g clipPath="url(#a)" fill={props.color}>
       <path d="M12.67.414a.75.75 0 0 0-1.34 0L10.784 1.5H3.75A2.25 2.25 0 0 0 1.5 3.75V15h21V3.75a2.25 2.25 0 0 0-2.25-2.25h-7.037L12.671.414Z" />
       <path
         fillRule="evenodd"

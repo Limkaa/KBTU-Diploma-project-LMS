@@ -1,39 +1,42 @@
 from django.db import models
+from ...utils.models import CustomModel
 
-from apps.core.modules.comments.models import DiscussionMixin
+from ..courses.models import Course
+from ..schools.models import School
 
 
-class Feed(models.Model):
-    is_opened = models.BooleanField(default=True)
+class Post(CustomModel):
+    title = models.CharField(max_length=250, blank=False)
+    text = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-
-class FeedMixin(models.Model):
-    feed = models.OneToOneField(
-        to=Feed,
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-    )
 
     class Meta:
         abstract = True
 
-
-class Post(DiscussionMixin):
-    title = models.CharField(max_length=250, blank=False)
-    text = models.TextField(blank=False)
-
-    feed = models.ForeignKey(
-        to=Feed,
-        on_delete=models.CASCADE,
-        null=False,
-        blank=False,
-    )
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     def __str__(self) -> str:
         return self.title
+
+
+class CoursePost(Post):
+    course = models.ForeignKey(
+        to=Course,
+        related_name='posts',
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+    
+    non_updatable_fields = ['id', 'course', 'created_at']
+
+
+class SchoolPost(Post):
+    school = models.ForeignKey(
+        to=School,
+        related_name='posts',
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+    
+    non_updatable_fields = ['id', 'school', 'created_at']

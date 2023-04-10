@@ -24,7 +24,7 @@ const ProfileContainer = () => {
               <p style={styles.inputTitle}>Email address</p>
               <input
                 type="text"
-                defaultValue={user?.email}
+                defaultValue={user?.email || ""}
                 disabled
                 style={styles.input}
               />
@@ -32,7 +32,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>First name</p>
               <input
-                defaultValue={user?.first_name}
+                defaultValue={user?.first_name || ""}
                 disabled
                 style={styles.input}
               />
@@ -40,7 +40,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Last name</p>
               <input
-                defaultValue={user?.last_name}
+                defaultValue={user?.last_name || ""}
                 disabled
                 style={styles.input}
               />
@@ -48,7 +48,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Gender</p>
               <input
-                defaultValue={user?.gender}
+                defaultValue={user?.gender || ""}
                 disabled
                 style={styles.input}
               />
@@ -56,7 +56,7 @@ const ProfileContainer = () => {
             <div>
               <p style={styles.inputTitle}>Date of birth</p>
               <input
-                defaultValue={user?.date_of_birth}
+                defaultValue={user?.date_of_birth || ""}
                 disabled
                 style={styles.input}
               />
@@ -82,14 +82,18 @@ const ProfileContainer = () => {
         <div style={styles.divider} />
         <div style={{ flex: 1 }}>
           <p style={styles.inputTitle}>Phone Number</p>
-          <input defaultValue={user?.phone} disabled style={styles.input} />
+          <input
+            defaultValue={user?.phone || ""}
+            disabled
+            style={styles.input}
+          />
         </div>
         <div style={{ flex: 1 }}>
           <p style={styles.inputTitle}>Telegram ID</p>
           <input
             style={styles.input}
             disabled
-            defaultValue={user?.telegram_id}
+            defaultValue={user?.telegram_id || ""}
           />
         </div>
       </div>

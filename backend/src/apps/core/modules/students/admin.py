@@ -9,7 +9,7 @@ class StudentAdmin(admin.ModelAdmin):
         "group",
     )
 
-    search_fields = ("user",)
+    search_fields = ("user__email", "group__code")
 
     list_filter = ("group",)
 

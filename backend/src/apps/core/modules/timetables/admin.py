@@ -16,7 +16,10 @@ class RoomAdmin(CustomModelAdmin):
     list_display = (
         "__str__",
         "school",
+        "is_active"
     )
+    
+    list_filter = ("is_active", )
 
     search_fields = (
         "school__name",
@@ -30,6 +33,7 @@ class RoomAdmin(CustomModelAdmin):
                 "fields": (
                     "school",
                     "name",
+                    "is_active"
                 )
             },
         ),

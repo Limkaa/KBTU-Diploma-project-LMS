@@ -19,6 +19,16 @@ export const managerMenu = [
     path: "/users",
     icon: UsersSvg,
   },
+  {
+    title: "School",
+    path: "/school",
+    icon: UsersSvg,
+  },
+  {
+    title: "Groups",
+    path: "/groups",
+    icon: UsersSvg,
+  }
 ];
 
 export const studentMenu = [
@@ -62,6 +72,11 @@ export const studentMenu = [
     path: "/grades",
     icon: GradesSvg,
   },
+  {
+    title: "School",
+    path: "/school",
+    icon: UsersSvg,
+  }
 ];
 
 export const teacherMenu = [
@@ -105,4 +120,9 @@ export const teacherMenu = [
     path: "/grades",
     icon: GradesSvg,
   },
+  {
+    title: "School",
+    path: "/school",
+    icon: UsersSvg,
+  }
 ];

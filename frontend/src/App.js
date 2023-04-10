@@ -1,4 +1,3 @@
-import Login from "./components/Login/Login";
 import React from "react";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -13,6 +12,8 @@ import TimelineContainer from "./components/Timeline/Timeline.container";
 import GradesContainer from "./components/Grades/Grades.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
+import SchoolPage from "./pages/SchoolsPage/SchoolPage";
+import GroupsPage from "./pages/Groups/GroupsPage";
 import { toast } from "react-toastify";
 
 function App() {
@@ -38,10 +39,11 @@ function App() {
           <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
+          <Route exact path="/school" element={<SchoolPage />} />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
           <Route exact path="/users" element={<UsersContainer />} />
-          <Route exact path="/schools" element={<UsersContainer />} />
+          <Route exact path="/groups" element={<GroupsPage />} />
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>

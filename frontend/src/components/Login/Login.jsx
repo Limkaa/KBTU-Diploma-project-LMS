@@ -3,7 +3,8 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
 import {useTokenObtainMutation} from "../../redux/api/authApiSlice";
 import {setCredentials} from "../../redux/auth/authSlice";
-import Alert from "../Alert/Alert";
+// import Alert from "../Alert/Alert";
+// import {Button, Form, Input, notification} from 'antd';
 
 function Login() {
     const [password, setPassword] = useState("");
@@ -41,7 +42,7 @@ function Login() {
     return (
         <form onSubmit={handleSubmit}>
             <h1>StudyMate</h1>
-            {err !== "" && <Alert message={err}/>}
+            {/*{err !== "" && <Alert message={err}/>}*/}
             <div className="form-group">
                 <input
                     placeholder='Username'

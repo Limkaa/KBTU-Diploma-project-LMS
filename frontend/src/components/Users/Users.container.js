@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header";
-import { Table, Input, Button, Space } from "antd";
+import {Table, Input, Button, Space, Spin, Tag} from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "../modals/AddingUserModal";
@@ -24,6 +24,12 @@ const UsersContainer = () => {
   const removeSpecSymbols = (str) => str.replace(/[^A-Z0-9]/gi, "");
   const [search, setSearch] = React.useState("");
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
+
+  const roleColor = {
+    'manager': 'orange',
+    'teacher': 'purple',
+    'student': 'green',
+  }
 
   const { data, isLoading, isSuccess, isError, error, refetch } =
     useGetUsersQuery({
@@ -134,8 +140,14 @@ const UsersContainer = () => {
       title: () => {
         return <>Role</>;
       },
-      dataIndex: "role",
       width: "15%",
+      render: (user) => (
+          <Tag
+              style={{minWidth: 70, textAlign: "center"}}
+              color={roleColor[user.role]}>
+            {user.role}
+          </Tag>
+      ),
     },
     {
       title: "Action",
@@ -144,7 +156,7 @@ const UsersContainer = () => {
       render: (_, record) => (
         <Space size="middle">
           <Button
-            style={{ color: "#00899E", fontWeight: 500 }}
+            style={{ color: "#00899E", fontWeight: 500, padding: 0}}
             type={"link"}
             onClick={() => {
               setSelectedUser(record);
@@ -157,40 +169,14 @@ const UsersContainer = () => {
       ),
     },
   ];
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
+    <main style={styles.container}>
+      <header style={styles.header}>
         <Header text={"Users"} />
         <Profile />
-      </div>
+      </header>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          {/* <Select
-            defaultValue="lucy"
-            style={{
-              width: 180,
-            }}
-            size={"large"}
-            onChange={handleChange}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "Yiminghe",
-                label: "yiminghe",
-              },
-            ]}
-          /> */}
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
               size="default size"
@@ -222,27 +208,26 @@ const UsersContainer = () => {
             </Button>
           </div>
         </div>
-        <Table
-          dataSource={filteredUsers()}
-          columns={columns}
-          rowKey={(item) => item?.id}
-          onRow={(record) => {
-            return {
-              onClick: () => {
-                // setShowBusket(true);
-                // setSale(record);
-              },
-            };
-          }}
-          pagination={{
-            total: total,
-            current: page,
-            onChange: (page) => {
-              setPage(page);
-            },
-            showSizeChanger: false,
-          }}
-        />
+        <Spin spinning={isLoading}>
+          <Table
+              dataSource={filteredUsers()}
+              columns={columns}
+              rowKey={(item) => item?.id}
+              onRow={(record) => {
+                return {
+                  onClick: () => {},
+                };
+              }}
+              pagination={{
+                total: total,
+                current: page,
+                onChange: (page) => {
+                  setPage(page);
+                },
+                showSizeChanger: false,
+              }}
+          />
+        </Spin>
       </div>
       <AddingUserModal
         setShowAddUser={setShowAddUser}
@@ -258,7 +243,7 @@ const UsersContainer = () => {
         setSelectedUser={setSelectedUser}
         handleUpdateUser={handleUpdateUser}
       />
-    </div>
+    </main>
   );
 };
 

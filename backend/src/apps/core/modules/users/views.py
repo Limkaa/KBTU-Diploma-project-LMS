@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
+from rest_framework.generics import get_object_or_404
 
 from . import serializers
 from ..permissions import *
@@ -20,6 +21,9 @@ class OwnProfileAPI(APIView):
 class UsersListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = serializers.UserCreateSerializer
+    filterset_fields = ['gender', 'is_active', 'role']
+    ordering = ['date_of_birth', 'first_name', 'last_name', 'rating', 'updated_at']
+    search_fields = ['first_name', 'last_name', 'email', 'phone', 'telegram_id']
 
     def check_school(self):
         school = generics.get_object_or_404(School, pk = self.kwargs['school_id'])
@@ -38,3 +42,36 @@ class UserDetailAPI(generics.RetrieveUpdateAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = serializers.UserSerializer
     queryset = User.objects.all()
+
+
+class SchoolTeachersList(OptionalPaginationListAPIView):
+    permission_classes = [OnlyOwnSchool, IsManager]
+    serializer_class = serializers.UserPublicSerializer
+    queryset = User.objects.all()
+    role = User.Role.TEACHER
+    filterset_fields = ['gender', 'is_active']
+    ordering = ['first_name', 'last_name', 'rating', 'updated_at']
+    search_fields = ['first_name', 'last_name', 'email']
+    
+    def initial(self, request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
+        self.school = get_object_or_404(School, pk=self.kwargs['school_id'])
+        self.check_object_permissions(request, self.school)
+
+    def get_queryset(self):
+        return self.queryset.filter(school=self.school, role=self.role)
+
+
+class SchoolStudentsList(SchoolTeachersList):
+    permission_classes = [
+        OnlyOwnSchool, 
+        CustomOperandHolder(
+            operand=CustomOR,
+            permissions=[IsManager, IsStudent],
+            message="Only school manager or student can perform this action"
+        )
+    ]
+    role = User.Role.STUDENT
+
+class SchoolManagersList(SchoolTeachersList):
+    role = User.Role.MANAGER

@@ -18,6 +18,7 @@ from apps.core.modules.terms.models import Year, Term
 from apps.core.modules.courses.models import Course
 from apps.core.modules.syllabus.models import Syllabus
 from apps.core.modules.assignments.models import Assignment
+from apps.core.modules.posts.models import CoursePost, SchoolPost
 
 lorems = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -248,6 +249,40 @@ class Command(BaseCommand):
         Assignment.objects.bulk_create(assignments)
         self.stdout.write(self.style.SUCCESS('Assignments created'))
     
+    def _create_courses_posts(self):
+        courses = Course.objects.all()
+        posts = []
+        
+        for course in courses:
+            posts_number = random.randint(0, 10)
+            
+            for post in range(posts_number):
+                posts.append(CoursePost(
+                    course=course,
+                    title=self._get_lorem(),
+                    text=self._get_lorem(sentences=random.randint(0, len(lorems))),
+                ))
+        
+        CoursePost.objects.bulk_create(posts)
+        self.stdout.write(self.style.SUCCESS('Courses posts created'))
+    
+    def _create_schools_posts(self):
+        schools = School.objects.all()
+        posts = []
+        
+        for school in schools:
+            posts_number = random.randint(0, 10)
+            
+            for post in range(posts_number):
+                posts.append(SchoolPost(
+                    school=school,
+                    title=self._get_lorem(),
+                    text=self._get_lorem(sentences=random.randint(0, len(lorems))),
+                ))
+        
+        SchoolPost.objects.bulk_create(posts)
+        self.stdout.write(self.style.SUCCESS('Schools posts created'))
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
@@ -259,6 +294,8 @@ class Command(BaseCommand):
         self._create_courses()
         self._create_syllabuses()
         self._create_assignments()
+        self._create_courses_posts()
+        self._create_schools_posts()
         
         self._create_superuser()
         

@@ -20,7 +20,14 @@ const InputStyled = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const CoursesSchoolAdd = ({ showAddCourse, setShowAddCourse }) => {
+const CoursesSchoolAdd = ({
+  showAddCourse,
+  setShowAddCourse,
+  years,
+  groups,
+  teachers,
+  subjects,
+}) => {
   return (
     <div style={{ ...styles.wrapper, right: showAddCourse ? "0" : "-30%" }}>
       <div style={styles.header}>
@@ -35,10 +42,11 @@ const CoursesSchoolAdd = ({ showAddCourse, setShowAddCourse }) => {
       </div>
       <Formik
         initialValues={{
-          grade: "",
-          name: "",
-          description: "",
-          code: "",
+          year: "",
+          subject: "",
+          teacher: "",
+          group: "",
+          is_active: true,
         }}
         validate={(values) => {
           const errors = {};
@@ -59,10 +67,11 @@ const CoursesSchoolAdd = ({ showAddCourse, setShowAddCourse }) => {
           //   handleAddSubject(values);
           resetForm({
             values: {
-              grade: "",
-              name: "",
-              description: "",
-              code: "",
+              year: "",
+              subject: "",
+              teacher: "",
+              group: "",
+              is_active: true,
             },
           });
         }}
@@ -70,63 +79,6 @@ const CoursesSchoolAdd = ({ showAddCourse, setShowAddCourse }) => {
         {({ isSubmitting }) => (
           <Form style={styles.form}>
             <p style={styles.contentTitle}>Subject</p>
-            <Field name="name">
-              {({ field, form: { touched, errors } }) => (
-                <>
-                  <InputStyled
-                    {...field}
-                    label="Name"
-                    variant="outlined"
-                    type="text"
-                    className="input"
-                    size="small"
-                  />
-                  {touched[field.name] && errors[field.name] && (
-                    <div className="error">{errors[field.name]}</div>
-                  )}
-                </>
-              )}
-            </Field>
-            <div style={{ margin: 6 }} />
-            <Field name="code">
-              {({ field, form: { touched, errors } }) => (
-                <>
-                  <InputStyled
-                    {...field}
-                    label="Code"
-                    variant="outlined"
-                    type="text"
-                    className="input"
-                    size="small"
-                    sx={{ "& input": { textTransform: "uppercase" } }}
-                  />
-                  {touched[field.name] && errors[field.name] && (
-                    <div className="error">{errors[field.name]}</div>
-                  )}
-                </>
-              )}
-            </Field>
-            <div style={{ margin: 6 }} />
-            <Field name="description">
-              {({ field, form: { touched, errors } }) => (
-                <>
-                  <InputStyled
-                    {...field}
-                    type="description"
-                    label="Description"
-                    variant="outlined"
-                    className="input"
-                    size="small"
-                    multiline
-                    minRows={4}
-                  />
-                  {touched[field.name] && errors[field.name] && (
-                    <div className="error">{errors[field.name]}</div>
-                  )}
-                </>
-              )}
-            </Field>
-
             <div style={{ margin: 6 }} />
             <Field name="grade">
               {({ field, form: { touched, errors } }) => (
@@ -140,11 +92,11 @@ const CoursesSchoolAdd = ({ showAddCourse, setShowAddCourse }) => {
                       <MenuItem value="" disabled>
                         <em>Choose grade</em>
                       </MenuItem>
-                      {grades?.map((item) => (
+                      {/* {grades?.map((item) => (
                         <MenuItem value={item.id} key={item.id}>
                           {item.name}
                         </MenuItem>
-                      ))}
+                      ))} */}
                     </Select>
                   </FormControl>
                   {touched[field.name] && errors[field.name] && (

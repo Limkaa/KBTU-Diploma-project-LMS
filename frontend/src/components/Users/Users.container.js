@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   useUpdateUserMutation,
-  useGetUsersQuery,
+  useLazyGetUsersQuery,
 } from "../../redux/users/usersApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import { toasty } from "../shared/Toast";
@@ -26,11 +26,14 @@ const UsersContainer = () => {
   const [search, setSearch] = React.useState("");
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
 
-  const { data, isLoading, isSuccess, isError, error, refetch } =
-    useGetUsersQuery({
-      school_id: user?.school_id,
-      page,
-    });
+  const [getUsers, { data, isLoading, isSuccess, isError, error, refetch }] =
+    useLazyGetUsersQuery();
+
+  React.useEffect(() => {
+    if (user?.school_id) {
+      getUsers({ school_id: user?.school_id, page, search });
+    }
+  }, [user, page, search]);
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -70,23 +73,23 @@ const UsersContainer = () => {
     }
   };
 
-  const filteredUsers = () => {
-    if (search) {
-      return users.filter((itm) => {
-        let full_name = itm?.first_name + " " + itm?.last_name;
-        return (
-          search !== "" &&
-          (full_name.toLowerCase().indexOf(search) > -1 ||
-            itm?.first_name.toLowerCase().indexOf(search) > -1 ||
-            itm?.last_name.toLowerCase().indexOf(search) > -1 ||
-            itm?.email.toLowerCase().indexOf(search) > -1 ||
-            itm?.phone.toLowerCase().indexOf(search) > -1)
-        );
-      });
-    } else {
-      return users;
-    }
-  };
+  // const filteredUsers = () => {
+  //   if (search) {
+  //     return users.filter((itm) => {
+  //       let full_name = itm?.first_name + " " + itm?.last_name;
+  //       return (
+  //         search !== "" &&
+  //         (full_name.toLowerCase().indexOf(search) > -1 ||
+  //           itm?.first_name.toLowerCase().indexOf(search) > -1 ||
+  //           itm?.last_name.toLowerCase().indexOf(search) > -1 ||
+  //           itm?.email.toLowerCase().indexOf(search) > -1 ||
+  //           itm?.phone.toLowerCase().indexOf(search) > -1)
+  //       );
+  //     });
+  //   } else {
+  //     return users;
+  //   }
+  // };
 
   const columns = [
     {
@@ -185,7 +188,7 @@ const UsersContainer = () => {
           </div>
         </div>
         <Table
-          dataSource={filteredUsers()}
+          dataSource={users}
           columns={columns}
           rowKey={(item) => item?.id}
           pagination={{

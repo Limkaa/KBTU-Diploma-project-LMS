@@ -3,8 +3,12 @@ import { authApi } from "../api/apiService";
 export const usersApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
-      query: ({ school_id, page }) =>
-        `/api/schools/${school_id}/users?page=${page}`,
+      query: ({ school_id, page, search }) =>
+        `/api/schools/${school_id}/users?page=${page}&search=${search}`,
+      keepUnusedDataFor: 5,
+    }),
+    getTeachers: builder.query({
+      query: ({ school_id }) => `/api/schools/${school_id}/teachers`,
       keepUnusedDataFor: 5,
     }),
     addUser: builder.mutation({
@@ -27,5 +31,9 @@ export const usersApiSlice = authApi.injectEndpoints({
   }),
 });
 
-export const { useGetUsersQuery, useAddUserMutation, useUpdateUserMutation } =
-  usersApiSlice;
+export const {
+  useLazyGetUsersQuery,
+  useGetTeachersQuery,
+  useAddUserMutation,
+  useUpdateUserMutation,
+} = usersApiSlice;

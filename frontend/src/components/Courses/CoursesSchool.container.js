@@ -7,13 +7,24 @@ import Plus from "../../assets/icons/plus.svg";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import { toasty } from "../shared/Toast";
-import { useGetSchoolCoursesQuery } from "../../redux/courses/coursesApiSlice";
+import {
+  useAddCourseMutation,
+  useGetSchoolCoursesQuery,
+} from "../../redux/courses/coursesApiSlice";
 import CoursesSchoolAdd from "./CoursesSchoolAdd";
+import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
+import { useGetSubjectsWithoutPageQuery } from "../../redux/subjects/subjectsApiSlice";
+import { useGetTeachersQuery } from "../../redux/users/usersApiSlice";
+import { useGetSchoolGroupsQuery } from "../../redux/groups/groupsApiSlice";
 
 const CoursesSchoolContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
   const [courses, setCourses] = React.useState();
-  const [grades, setGrades] = React.useState();
+  const [groups, setGroups] = React.useState();
+  const [years, setYears] = React.useState();
+  const [subjects, setSubjects] = React.useState();
+  const [teachers, setTeachers] = React.useState();
+
   const [search, setSearch] = React.useState("");
   const [selectedSubject, setSelectedSubject] = React.useState();
   const [showAddCourse, setShowAddCourse] = React.useState(false);
@@ -26,16 +37,51 @@ const CoursesSchoolContainer = () => {
     page,
   });
 
-  const { data: dataGrades, isLoading: isLoadingGrades } =
-    useGetSchoolGradesWithoutPageQuery({
-      school_id: user?.school_id
+  const [createCourse] = useAddCourseMutation();
+
+  const { data: dataGroups, isLoading: isLoadingGroups } =
+    useGetSchoolGroupsQuery({
+      school_id: user?.school_id,
+    });
+
+  const { data: dataYears, isLoading: isLoadingYears } =
+    useGetYearsWithoutPageQuery({
+      school_id: user?.school_id,
+    });
+
+  const { data: dataSubjects, isLoading: isLoadingSubjects } =
+    useGetSubjectsWithoutPageQuery({
+      school_id: user?.school_id,
+    });
+
+  const { data: dataTeachers, isLoading: isLoadingTeachers } =
+    useGetTeachersQuery({
+      school_id: user?.school_id,
     });
 
   React.useEffect(() => {
-    if (dataGrades && !isLoadingGrades) {
-      setGrades(dataGrades.filter((el) => el.is_active));
+    if (dataGroups && !isLoadingGroups) {
+      setGroups(dataGroups.filter((el) => el.is_active));
     }
-  }, [dataGrades, isLoadingGrades]);
+  }, [dataGroups, isLoadingGroups]);
+
+  React.useEffect(() => {
+    if (dataYears && !isLoadingYears) {
+      setYears(dataYears.filter((el) => el.is_active));
+    }
+  }, [dataYears, isLoadingYears]);
+
+  React.useEffect(() => {
+    if (dataSubjects && !isLoadingSubjects) {
+      setSubjects(dataSubjects.filter((el) => el.is_active));
+    }
+  }, [dataSubjects, isLoadingSubjects]);
+
+  React.useEffect(() => {
+    if (dataTeachers && !isLoadingTeachers) {
+      setTeachers(dataTeachers);
+    }
+  }, [dataTeachers, isLoadingTeachers]);
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -45,6 +91,8 @@ const CoursesSchoolContainer = () => {
       setCourses(data.results);
     }
   }, [data, isLoading]);
+
+  const handleAddCourse = () => {};
 
   const columns = [
     {
@@ -180,8 +228,11 @@ const CoursesSchoolContainer = () => {
       <CoursesSchoolAdd
         showAddCourse={showAddCourse}
         setShowAddCourse={setShowAddCourse}
-        grades={grades}
-        handleAddSubject={handleAddSubject}
+        handleAddCourse={handleAddCourse}
+        years={years}
+        groups={groups}
+        teachers={teachers}
+        subjects={subjects}
       />
     </div>
   );

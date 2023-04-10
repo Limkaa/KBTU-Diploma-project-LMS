@@ -7,6 +7,10 @@ export const subjectsApiSlice = authApi.injectEndpoints({
         `/api/schools/${school_id}/subjects?page=${page}`,
       keepUnusedDataFor: 5,
     }),
+    getSubjectsWithoutPage: builder.query({
+      query: ({ school_id, page }) => `/api/schools/${school_id}/subjects`,
+      keepUnusedDataFor: 5,
+    }),
     addSubject: builder.mutation({
       query: ({ ...data }) => ({
         url: `/api/subjects`,
@@ -26,6 +30,7 @@ export const subjectsApiSlice = authApi.injectEndpoints({
 
 export const {
   useGetSubjectsQuery,
+  useGetSubjectsWithoutPageQuery,
   useAddSubjectMutation,
   useUpdateSubjectMutation,
 } = subjectsApiSlice;

@@ -41,7 +41,6 @@ const DatePickerStyled = styled(DatePicker)(({ theme }) => ({
 const AddTerm = ({ showAddTerm, setShowAddTerm, years, handleAddTerm }) => {
   const [start, setStart] = React.useState(dayjs());
   const [end, setEnd] = React.useState(dayjs());
-
   return (
     <div style={{ ...styles.wrapper, right: showAddTerm ? "0" : "-30%" }}>
       <div style={styles.header}>
@@ -71,8 +70,6 @@ const AddTerm = ({ showAddTerm, setShowAddTerm, years, handleAddTerm }) => {
           return errors;
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          setSubmitting(false);
-          setShowAddTerm(false);
           handleAddTerm(values, start, end);
           resetForm({
             values: {
@@ -81,6 +78,8 @@ const AddTerm = ({ showAddTerm, setShowAddTerm, years, handleAddTerm }) => {
               is_closed: false,
             },
           });
+          setSubmitting(false);
+          setShowAddTerm(false);
         }}
       >
         {({ isSubmitting }) => (

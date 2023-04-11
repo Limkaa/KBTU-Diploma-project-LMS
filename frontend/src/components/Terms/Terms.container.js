@@ -20,6 +20,7 @@ import moment from "moment-timezone";
 import { toasty } from "../shared/Toast";
 import AddTerm from "./AddTerm";
 import UpdateTerm from "./UpdateTerm";
+import dayjs from "dayjs";
 
 const TermsContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -63,14 +64,13 @@ const TermsContainer = () => {
   }, [dataYears, isLoadingYears]);
 
   const handleAddTerm = async (values, start, end) => {
-    console.log(values, start, end);
     if (user) {
       try {
         await createTerm({
           year: values.year,
           name: values.name,
-          from_date: moment(start).format("YYYY-MM-DD"),
-          to_date: moment(end).format("YYYY-MM-DD"),
+          from_date: dayjs(start).format("YYYY-MM-DD"),
+          to_date: dayjs(end).format("YYYY-MM-DD"),
           is_closed: values.is_closed,
         })
           .unwrap()
@@ -86,7 +86,6 @@ const TermsContainer = () => {
   };
 
   const handleUpdateTerm = async (values) => {
-    console.log(values);
     if (user) {
       try {
         await updateTerm({
@@ -147,7 +146,7 @@ const TermsContainer = () => {
       },
       width: "20%",
       render: (item) => (
-        <div>{moment(item.from_date).format("DD.MM.YYYY")}</div>
+        <div>{moment(item.from_date).format("DD MMMM YYYY")}</div>
       ),
     },
     {
@@ -155,7 +154,9 @@ const TermsContainer = () => {
         return <>To date</>;
       },
       width: "20%",
-      render: (item) => <div>{moment(item.to_date).format("DD.MM.YYYY")}</div>,
+      render: (item) => (
+        <div>{moment(item.to_date).format("DD MMMM YYYY")}</div>
+      ),
     },
     {
       title: "Action",

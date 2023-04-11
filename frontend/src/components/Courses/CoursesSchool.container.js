@@ -5,17 +5,18 @@ import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
-import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import { toasty } from "../shared/Toast";
 import {
   useAddCourseMutation,
   useGetSchoolCoursesQuery,
+  useUpdateCourseMutation,
 } from "../../redux/courses/coursesApiSlice";
 import CoursesSchoolAdd from "./CoursesSchoolAdd";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 import { useGetSubjectsWithoutPageQuery } from "../../redux/subjects/subjectsApiSlice";
 import { useGetTeachersQuery } from "../../redux/users/usersApiSlice";
 import { useGetSchoolGroupsQuery } from "../../redux/groups/groupsApiSlice";
+import CoursesSchoolUpdate from "./CoursesSchoolUpdate";
 
 const CoursesSchoolContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -26,9 +27,9 @@ const CoursesSchoolContainer = () => {
   const [teachers, setTeachers] = React.useState();
 
   const [search, setSearch] = React.useState("");
-  const [selectedSubject, setSelectedSubject] = React.useState();
+  const [selectedCourse, setSelectedCourse] = React.useState();
   const [showAddCourse, setShowAddCourse] = React.useState(false);
-  const [showUpdateSubject, setShowUpdateSubject] = React.useState(false);
+  const [showUpdateCourse, setShowUpdateCourse] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
 
@@ -38,6 +39,7 @@ const CoursesSchoolContainer = () => {
   });
 
   const [createCourse] = useAddCourseMutation();
+  const [updateCourse] = useUpdateCourseMutation();
 
   const { data: dataGroups, isLoading: isLoadingGroups } =
     useGetSchoolGroupsQuery({
@@ -92,7 +94,48 @@ const CoursesSchoolContainer = () => {
     }
   }, [data, isLoading]);
 
-  const handleAddCourse = () => {};
+  const handleAddCourse = async (values, isActive) => {
+    if (user) {
+      try {
+        await createCourse({
+          school_id: user?.school_id,
+          year: values.year,
+          subject: values.subject,
+          teacher: values.teacher,
+          group: values.group,
+          is_active: isActive,
+        })
+          .unwrap()
+          .then((payload) => {
+            refetch();
+            toasty({ type: "success", text: "Course Created" });
+          });
+      } catch (err) {
+        console.log(err);
+        toasty();
+      }
+    }
+  };
+
+  const handleUpdateCourse = async (isActive, teacherId) => {
+    if (user) {
+      try {
+        await updateCourse({
+          course_id: selectedCourse.id,
+          teacher: teacherId,
+          is_active: isActive,
+        })
+          .unwrap()
+          .then((payload) => {
+            refetch();
+            toasty({ type: "success", text: "Course Updated" });
+          });
+      } catch (err) {
+        console.log(err);
+        toasty();
+      }
+    }
+  };
 
   const columns = [
     {
@@ -134,7 +177,7 @@ const CoursesSchoolContainer = () => {
       width: "20%",
       render: (item) => (
         <div>
-          {item?.teacher?.last_name} {item?.teacher?.first_name}
+          {item?.teacher?.first_name} {item?.teacher?.last_name}
         </div>
       ),
     },
@@ -166,8 +209,8 @@ const CoursesSchoolContainer = () => {
             style={{ color: "#00899E", fontWeight: 500 }}
             type={"link"}
             onClick={() => {
-              //   setSelectedSubject(record);
-              //   setShowUpdateSubject(true);
+              setSelectedCourse(record);
+              setShowUpdateCourse(true);
             }}
           >
             Change
@@ -197,7 +240,7 @@ const CoursesSchoolContainer = () => {
               type="primary"
               style={styles.btnAdd}
               icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-              //   onClick={() => setShowAddSubject(true)}
+              onClick={() => setShowAddCourse(true)}
             >
               Create course
             </Button>
@@ -217,14 +260,13 @@ const CoursesSchoolContainer = () => {
           }}
         />
       </div>
-      {/* <UpdateSubjects
-        subject={selectedSubject}
-        setSubject={setSelectedSubject}
-        showUpdateSubject={showUpdateSubject}
-        setShowUpdateSubject={setShowUpdateSubject}
-        grades={grades}
-        handleUpdateSubject={handleUpdateSubject}
-      />*/}
+      <CoursesSchoolUpdate
+        course={selectedCourse}
+        showUpdateCourse={showUpdateCourse}
+        setShowUpdateCourse={setShowUpdateCourse}
+        teachers={teachers}
+        handleUpdateCourse={handleUpdateCourse}
+      />
       <CoursesSchoolAdd
         showAddCourse={showAddCourse}
         setShowAddCourse={setShowAddCourse}

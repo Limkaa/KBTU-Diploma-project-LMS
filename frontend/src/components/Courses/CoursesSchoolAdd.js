@@ -8,6 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import { Checkbox } from "antd";
 
 const InputStyled = styled(TextField)(({ theme }) => ({
   "& fieldset": {
@@ -27,7 +28,9 @@ const CoursesSchoolAdd = ({
   groups,
   teachers,
   subjects,
+  handleAddCourse,
 }) => {
+  const [isActive, setIsActive] = React.useState(true);
   return (
     <div style={{ ...styles.wrapper, right: showAddCourse ? "0" : "-30%" }}>
       <div style={styles.header}>
@@ -46,57 +49,59 @@ const CoursesSchoolAdd = ({
           subject: "",
           teacher: "",
           group: "",
-          is_active: true,
         }}
         validate={(values) => {
           const errors = {};
-          if (!values.grade) {
-            errors.grade = "Required";
+          if (!values.year) {
+            errors.year = "Required";
           }
-          if (!values.name) {
-            errors.name = "Required";
+          if (!values.subject) {
+            errors.subject = "Required";
           }
-          if (!values.code) {
-            errors.code = "Required";
+          // if (!values.teacher) {
+          //   errors.teacher = "Required";
+          // }
+          if (!values.group) {
+            errors.group = "Required";
           }
           return errors;
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          setShowAddCourse(false);
-          //   handleAddSubject(values);
+          handleAddCourse(values, isActive);
           resetForm({
             values: {
               year: "",
               subject: "",
               teacher: "",
               group: "",
-              is_active: true,
             },
           });
+          setIsActive(true);
+          setShowAddCourse(false);
         }}
       >
         {({ isSubmitting }) => (
           <Form style={styles.form}>
-            <p style={styles.contentTitle}>Subject</p>
-            <div style={{ margin: 6 }} />
-            <Field name="grade">
+            <p style={styles.contentTitle}>Course</p>
+            <br />
+            <Field name="year">
               {({ field, form: { touched, errors } }) => (
                 <>
                   <FormControl
                     sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
                     size="small"
                   >
-                    <InputLabel id="grade">Grade</InputLabel>
-                    <Select labelId="grade" id="grade" label="Grade" {...field}>
+                    <InputLabel id="year">Year</InputLabel>
+                    <Select labelId="year" id="year" label="Year" {...field}>
                       <MenuItem value="" disabled>
-                        <em>Choose grade</em>
+                        <em>Choose year</em>
                       </MenuItem>
-                      {/* {grades?.map((item) => (
+                      {years?.map((item) => (
                         <MenuItem value={item.id} key={item.id}>
                           {item.name}
                         </MenuItem>
-                      ))} */}
+                      ))}
                     </Select>
                   </FormControl>
                   {touched[field.name] && errors[field.name] && (
@@ -105,8 +110,107 @@ const CoursesSchoolAdd = ({
                 </>
               )}
             </Field>
+            <br />
+            <Field name="subject">
+              {({ field, form: { touched, errors } }) => (
+                <>
+                  <FormControl
+                    sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+                    size="small"
+                  >
+                    <InputLabel id="subject">Subject</InputLabel>
+                    <Select
+                      labelId="subject"
+                      id="subject"
+                      label="Subject"
+                      {...field}
+                    >
+                      <MenuItem value="" disabled>
+                        <em>Choose subject</em>
+                      </MenuItem>
+                      {subjects?.map((item) => (
+                        <MenuItem value={item.id} key={item.id}>
+                          {item.name} ({item.code})
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="error">{errors[field.name]}</div>
+                  )}
+                </>
+              )}
+            </Field>
+            <br />
+            <Field name="teacher">
+              {({ field, form: { touched, errors } }) => (
+                <>
+                  <FormControl
+                    sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+                    size="small"
+                  >
+                    <InputLabel id="teacher">Teacher</InputLabel>
+                    <Select
+                      labelId="teacher"
+                      id="teacher"
+                      label="Teacher"
+                      {...field}
+                    >
+                      <MenuItem value="">
+                        <em>Choose teacher</em>
+                      </MenuItem>
+                      {teachers?.map((item) => (
+                        <MenuItem value={item.id} key={item.id}>
+                          {item.first_name} {item.last_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="error">{errors[field.name]}</div>
+                  )}
+                </>
+              )}
+            </Field>
+            <br />
+            <Field name="group">
+              {({ field, form: { touched, errors } }) => (
+                <>
+                  <FormControl
+                    sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+                    size="small"
+                  >
+                    <InputLabel id="group">Group</InputLabel>
+                    <Select labelId="group" id="group" label="Group" {...field}>
+                      <MenuItem value="" disabled>
+                        <em>Choose group</em>
+                      </MenuItem>
+                      {groups?.map((item) => (
+                        <MenuItem value={item.id} key={item.id}>
+                          {item.grade.name} ({item.code})
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="error">{errors[field.name]}</div>
+                  )}
+                </>
+              )}
+            </Field>
+            <br />
+            <div>
+              <Checkbox
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+                style={{ fontWeight: 400, fontSize: 15 }}
+              >
+                Active
+              </Checkbox>
+            </div>
+            <br />
             <button type="submit" disabled={isSubmitting} style={styles.btn}>
-              Create subject
+              Create course
             </button>
           </Form>
         )}

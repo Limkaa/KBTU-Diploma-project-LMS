@@ -2245,19 +2245,34 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/9/syllabus?page=1",
+							"raw": "{{BASE_URL}}/courses/45/syllabus?page=1&search=&ordering&is_completed=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"9",
+								"45",
 								"syllabus"
 							],
 							"query": [
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "is_completed",
+									"value": "",
+									"description": "true, false"
 								}
 							]
 						}

@@ -994,7 +994,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/grades?page=1&is_active=true&ordering&search= gr",
+							"raw": "{{BASE_URL}}/schools/2/grades",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1006,22 +1006,26 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "is_active",
 									"value": "true",
-									"description": "true, false"
+									"description": "true, false",
+									"disabled": true
 								},
 								{
 									"key": "ordering",
 									"value": null,
-									"description": "created_at, updated_at"
+									"description": "created_at, updated_at",
+									"disabled": true
 								},
 								{
 									"key": "search",
 									"value": " gr",
-									"description": "name"
+									"description": "name",
+									"disabled": true
 								}
 							]
 						}
@@ -1231,7 +1235,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/groups?page=1",
+							"raw": "{{BASE_URL}}/schools/2/groups",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1243,7 +1247,26 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": null,
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at, code",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "code",
+									"disabled": true
 								}
 							]
 						}
@@ -1256,19 +1279,44 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/2/groups?page=1",
+							"raw": "{{BASE_URL}}/teachers/11/groups",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"2",
+								"11",
 								"groups"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "grade",
+									"value": "",
+									"description": "id",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "code",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at, code",
+									"disabled": true
 								}
 							]
 						}
@@ -1281,19 +1329,44 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/grades/1/groups?page=1",
+							"raw": "{{BASE_URL}}/grades/14/groups",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"grades",
-								"1",
+								"14",
 								"groups"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "teacher",
+									"value": "",
+									"description": "id",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "code",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at, code",
+									"disabled": true
 								}
 							]
 						}

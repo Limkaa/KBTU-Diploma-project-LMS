@@ -19,6 +19,7 @@ from apps.core.modules.courses.models import Course
 from apps.core.modules.syllabus.models import Syllabus
 from apps.core.modules.assignments.models import Assignment
 from apps.core.modules.posts.models import CoursePost, SchoolPost
+from apps.core.modules.timetables.models import Room, Timebound, Timetable
 
 lorems = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -283,6 +284,39 @@ class Command(BaseCommand):
         SchoolPost.objects.bulk_create(posts)
         self.stdout.write(self.style.SUCCESS('Schools posts created'))
     
+    def _create_rooms(self):
+        schools = School.objects.all()
+        rooms = []
+        
+        for school in schools:
+            room_quantity = random.randint(30, 50)
+            rooms_numbers = random.sample(range(1, 1000), room_quantity)
+            
+            for room in rooms_numbers:
+                rooms.append(Room(
+                    school=school,
+                    name=room,
+                    is_active=random.choice([True, True, True, True, True, False])
+                ))
+            
+        Room.objects.bulk_create(rooms)
+        self.stdout.write(self.style.SUCCESS('Rooms created'))
+    
+    def _create_timebounds(self):
+        json = self._get_data_from_json_file('mock_data/timebounds.json')
+        timebounds = []
+
+        for school in self.schools:
+            for timebound in json.get("timebounds", []):
+                timebounds.append(Timebound(
+                    school=school,
+                    from_time=timebound.get("from_time"),
+                    to_time=timebound.get("to_time")
+                ))
+                    
+        Timebound.objects.bulk_create(timebounds)
+        self.stdout.write(self.style.SUCCESS(f'Timebounds created ({len(timebounds)} objects)'))
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
@@ -296,6 +330,8 @@ class Command(BaseCommand):
         self._create_assignments()
         self._create_courses_posts()
         self._create_schools_posts()
+        self._create_rooms()
+        self._create_timebounds()
         
         self._create_superuser()
         

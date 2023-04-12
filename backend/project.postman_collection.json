@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user6@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user7@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2497,6 +2497,268 @@
 									"key": "search",
 									"value": "test",
 									"description": "in fields: title",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rooms",
+			"item": [
+				{
+					"name": "Get one room",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/rooms/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"rooms",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create school room",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"450 cabinet\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/rooms",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update room",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"436 cabinet\",\n    \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/rooms/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"rooms",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete room",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/rooms/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"rooms",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/rooms",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"rooms"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "name",
+									"description": "name, created_at, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "some text",
+									"description": "name",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Timebounds",
+			"item": [
+				{
+					"name": "Get one timebound",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/timebounds/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"timebounds",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create school timebound",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_time\": \"09:00:00\",\n    \"to_time\": \"8:00:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/timebounds",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"timebounds"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update timebound",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_time\": \"09:00:00\",\n    \"to_time\": \"12:00:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/timebounds/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"timebounds",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete timebound",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/timebounds/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"timebounds",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school timebounds",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/timebounds",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"timebounds"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "-to_time",
+									"description": "from_time, to_time, created_at, updated_at",
 									"disabled": true
 								}
 							]

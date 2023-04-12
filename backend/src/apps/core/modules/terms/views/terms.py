@@ -1,5 +1,6 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
+from rest_framework.permissions import SAFE_METHODS
 
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ...permissions import *
@@ -27,7 +28,14 @@ class TermCreateAPI(generics.CreateAPIView):
 class TermRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Term.objects.all()
     serializer_class = TermModelCreateUpdateSerializer
-    permission_classes = [OnlyOwnSchool, IsManager]
+    
+    def get_permissions(self):
+        self.permission_classes = [OnlyOwnSchool, IsManager]
+        
+        if self.request.method in SAFE_METHODS:
+            self.permission_classes = [OnlyOwnSchool]
+        
+        return super().get_permissions()
     
     def get_object(self):
         term: Term = get_object_or_404(Term, pk=self.kwargs['pk'])
@@ -41,7 +49,7 @@ class TermRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class AcademicYearTermsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [OnlyOwnSchool, IsManager]
+    permission_classes = [OnlyOwnSchool]
     serializer_class = TermModelSerializer
     filterset_fields = ['is_closed']
     ordering_fields = ['created_at', 'updated_at', 'from_date', 'to_date']

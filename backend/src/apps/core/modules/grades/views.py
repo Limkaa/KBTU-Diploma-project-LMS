@@ -34,6 +34,9 @@ class GradeRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 class SchoolGradesListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = serializers.GradeModelSerializer
+    filterset_fields = ['is_active']
+    ordering = ['created_at', 'updated_at']
+    search_fields = ['name']
     
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])

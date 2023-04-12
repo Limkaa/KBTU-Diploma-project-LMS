@@ -994,7 +994,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/grades?page=1",
+							"raw": "{{BASE_URL}}/schools/2/grades?page=1&is_active=true&ordering&search= gr",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1007,6 +1007,21 @@
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"description": "true, false"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "search",
+									"value": " gr",
+									"description": "name"
 								}
 							]
 						}

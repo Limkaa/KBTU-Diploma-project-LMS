@@ -1429,7 +1429,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/students?page=1",
+							"raw": "{{BASE_URL}}/schools/2/students",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1441,7 +1441,26 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "user first name, user last name, user email, group code",
+									"disabled": true
+								},
+								{
+									"key": "gender",
+									"value": "",
+									"description": "male, female, unknown",
+									"disabled": true
 								}
 							]
 						}
@@ -1467,6 +1486,24 @@
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "user first name, user last name, user email",
+									"disabled": true
+								},
+								{
+									"key": "gender",
+									"value": "",
+									"description": "male, female, unknown",
+									"disabled": true
 								}
 							]
 						}

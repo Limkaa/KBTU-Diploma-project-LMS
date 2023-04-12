@@ -41,6 +41,9 @@ class SubjectRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 class SchoolSubjectsListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = SubjectModelNestedSerializer
+    filterset_fields = ['is_active']
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['code', 'name']
     
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])
@@ -52,6 +55,9 @@ class GradeSubjectsListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = SubjectModelNestedSerializer
     queryset = Subject.objects.all()
+    filterset_fields = ['is_active']
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['code', 'name']
     
     def get_queryset(self):
         grade = get_object_or_404(Grade, pk=self.kwargs['grade_id'])

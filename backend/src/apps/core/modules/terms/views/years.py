@@ -34,6 +34,9 @@ class YearRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 class SchoolYearsListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = YearModelSerializer
+    filterset_fields = ['is_active']
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['name']
     
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])

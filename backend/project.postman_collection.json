@@ -1756,7 +1756,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/years?page=1",
+							"raw": "{{BASE_URL}}/schools/2/years?page=1&is_active=&search=&ordering",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1769,6 +1769,21 @@
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "is_active",
+									"value": "",
+									"description": "true, false"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
 								}
 							]
 						}
@@ -1857,7 +1872,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/years/5/terms",
+							"raw": "{{BASE_URL}}/years/5/terms?page=1&search=&ordering&is_closed=",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1869,8 +1884,22 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1",
-									"disabled": true
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at, from_date, to_date"
+								},
+								{
+									"key": "is_closed",
+									"value": "",
+									"description": "true, false"
 								}
 							]
 						}

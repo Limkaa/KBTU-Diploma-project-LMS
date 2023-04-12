@@ -43,6 +43,9 @@ class TermRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 class AcademicYearTermsListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = TermModelSerializer
+    filterset_fields = ['is_closed']
+    ordering_fields = ['created_at', 'updated_at', 'from_date', 'to_date']
+    search_fields = ['name']
     
     def get_queryset(self):
         year = get_object_or_404(Year, pk = self.kwargs['year_id'])

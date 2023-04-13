@@ -33,17 +33,6 @@ const InputStyled = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const DatePickerStyled = styled(DatePicker)(({ theme }) => ({
-  "& fieldset": {
-    borderRadius: "10px",
-  },
-  "& input": {
-    fontFamily: "Open Sans",
-    fontSize: 14,
-    fontWeight: 500,
-  },
-}));
-
 const CoursesSchoolUpdate = ({
   showUpdateCourse,
   setShowUpdateCourse,

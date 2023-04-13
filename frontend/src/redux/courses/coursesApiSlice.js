@@ -12,6 +12,10 @@ export const coursesApiSlice = authApi.injectEndpoints({
         `/api/teachers/${teacher_id}/courses?page=${page}`,
       keepUnusedDataFor: 5,
     }),
+    getCourse: builder.query({
+      query: ({ id }) => `/api/courses/${id}`,
+      keepUnusedDataFor: 5,
+    }),
     addCourse: builder.mutation({
       query: ({ school_id, ...data }) => ({
         url: `/api/schools/${school_id}/courses`,
@@ -31,6 +35,7 @@ export const coursesApiSlice = authApi.injectEndpoints({
 
 export const {
   useGetSchoolCoursesQuery,
+  useGetCourseQuery,
   useAddCourseMutation,
   useUpdateCourseMutation,
 } = coursesApiSlice;

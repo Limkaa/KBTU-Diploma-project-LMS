@@ -135,6 +135,7 @@ const CoursesSchoolContainer = () => {
         toasty();
       }
     }
+    setShowUpdateCourse(false);
   };
 
   const columns = [

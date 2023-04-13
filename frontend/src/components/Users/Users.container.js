@@ -73,24 +73,6 @@ const UsersContainer = () => {
     }
   };
 
-  // const filteredUsers = () => {
-  //   if (search) {
-  //     return users.filter((itm) => {
-  //       let full_name = itm?.first_name + " " + itm?.last_name;
-  //       return (
-  //         search !== "" &&
-  //         (full_name.toLowerCase().indexOf(search) > -1 ||
-  //           itm?.first_name.toLowerCase().indexOf(search) > -1 ||
-  //           itm?.last_name.toLowerCase().indexOf(search) > -1 ||
-  //           itm?.email.toLowerCase().indexOf(search) > -1 ||
-  //           itm?.phone.toLowerCase().indexOf(search) > -1)
-  //       );
-  //     });
-  //   } else {
-  //     return users;
-  //   }
-  // };
-
   const columns = [
     {
       title: () => {

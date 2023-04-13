@@ -9,18 +9,6 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import { Checkbox } from "antd";
-
-const InputStyled = styled(TextField)(({ theme }) => ({
-  "& fieldset": {
-    borderRadius: "10px",
-  },
-  "& input": {
-    fontFamily: "Open Sans",
-    fontSize: 14,
-    fontWeight: 500,
-  },
-}));
-
 const CoursesSchoolAdd = ({
   showAddCourse,
   setShowAddCourse,
@@ -58,9 +46,6 @@ const CoursesSchoolAdd = ({
           if (!values.subject) {
             errors.subject = "Required";
           }
-          // if (!values.teacher) {
-          //   errors.teacher = "Required";
-          // }
           if (!values.group) {
             errors.group = "Required";
           }

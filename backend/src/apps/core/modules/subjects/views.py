@@ -1,5 +1,6 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
+from rest_framework.permissions import SAFE_METHODS
 
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ..permissions import *
@@ -25,7 +26,14 @@ class SubjectCreateAPI(generics.CreateAPIView):
 
 class SubjectRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Subject.objects.all().select_related('grade', 'school')
-    permission_classes = [OnlyOwnSchool, IsManager]
+    
+    def get_permissions(self):
+        self.permission_classes = [OnlyOwnSchool, IsManager]
+        
+        if self.request.method in SAFE_METHODS:
+            self.permission_classes = [OnlyOwnSchool]
+        
+        return super().get_permissions()
     
     def get_serializer_class(self):
         if self.request.method == "PUT":
@@ -39,8 +47,11 @@ class SubjectRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class SchoolSubjectsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [OnlyOwnSchool, IsManager]
+    permission_classes = [OnlyOwnSchool]
     serializer_class = SubjectModelNestedSerializer
+    filterset_fields = ['is_active']
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['code', 'name']
     
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])
@@ -49,9 +60,12 @@ class SchoolSubjectsListAPI(OptionalPaginationListAPIView):
     
 
 class GradeSubjectsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [OnlyOwnSchool, IsManager]
+    permission_classes = [OnlyOwnSchool]
     serializer_class = SubjectModelNestedSerializer
     queryset = Subject.objects.all()
+    filterset_fields = ['is_active']
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['code', 'name']
     
     def get_queryset(self):
         grade = get_object_or_404(Grade, pk=self.kwargs['grade_id'])

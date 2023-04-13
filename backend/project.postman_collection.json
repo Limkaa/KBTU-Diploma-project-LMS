@@ -994,7 +994,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/grades?page=1",
+							"raw": "{{BASE_URL}}/schools/2/grades",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1006,7 +1006,26 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": " gr",
+									"description": "name",
+									"disabled": true
 								}
 							]
 						}
@@ -1216,7 +1235,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/groups?page=1",
+							"raw": "{{BASE_URL}}/schools/2/groups",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1228,7 +1247,26 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": null,
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at, code",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "code",
+									"disabled": true
 								}
 							]
 						}
@@ -1241,19 +1279,44 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/2/groups?page=1",
+							"raw": "{{BASE_URL}}/teachers/11/groups",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"2",
+								"11",
 								"groups"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "grade",
+									"value": "",
+									"description": "id",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "code",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at, code",
+									"disabled": true
 								}
 							]
 						}
@@ -1266,19 +1329,44 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/grades/1/groups?page=1",
+							"raw": "{{BASE_URL}}/grades/14/groups",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"grades",
-								"1",
+								"14",
 								"groups"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "teacher",
+									"value": "",
+									"description": "id",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "code",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at, code",
+									"disabled": true
 								}
 							]
 						}
@@ -1341,7 +1429,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/students?page=1",
+							"raw": "{{BASE_URL}}/schools/2/students?page=1&gender=female",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1354,6 +1442,23 @@
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "user first name, user last name, user email, group code",
+									"disabled": true
+								},
+								{
+									"key": "gender",
+									"value": "female",
+									"description": "male, female, unknown"
 								}
 							]
 						}
@@ -1366,19 +1471,36 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/groups/11/students?page=1",
+							"raw": "{{BASE_URL}}/groups/19/students?page=1&user__gender=female",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"groups",
-								"11",
+								"19",
 								"students"
 							],
 							"query": [
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "user first name, user last name, user email",
+									"disabled": true
+								},
+								{
+									"key": "user__gender",
+									"value": "female",
+									"description": "male, female, unknown"
 								}
 							]
 						}
@@ -1467,19 +1589,38 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/students?page=1",
+							"raw": "{{BASE_URL}}/schools/2/subjects",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
 								"2",
-								"students"
+								"subjects"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "code, name",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "false",
+									"description": "true, false",
+									"disabled": true
 								}
 							]
 						}
@@ -1492,7 +1633,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/grades/9/subjects?page=1",
+							"raw": "{{BASE_URL}}/grades/9/subjects",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1504,7 +1645,26 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "code, name",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "false",
+									"description": "true, false",
+									"disabled": true
 								}
 							]
 						}
@@ -1593,7 +1753,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/years?page=1",
+							"raw": "{{BASE_URL}}/schools/2/years?page=1&is_active=&search=&ordering",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1606,6 +1766,21 @@
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "is_active",
+									"value": "",
+									"description": "true, false"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
 								}
 							]
 						}
@@ -1694,7 +1869,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/years/5/terms",
+							"raw": "{{BASE_URL}}/years/5/terms?page=1&search=&ordering&is_closed=",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1706,8 +1881,22 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1",
-									"disabled": true
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at, from_date, to_date"
+								},
+								{
+									"key": "is_closed",
+									"value": "",
+									"description": "true, false"
 								}
 							]
 						}
@@ -1798,20 +1987,49 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/courses",
+							"raw": "{{BASE_URL}}/schools/2/courses?page=1&search=&ordering&is_active&no_teacher=&subject__grade=&year",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"1",
+								"2",
 								"courses"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1",
-									"disabled": true
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "teacher (first or last name, email), group code, subject name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "is_active",
+									"value": null,
+									"description": "true, false"
+								},
+								{
+									"key": "no_teacher",
+									"value": "",
+									"description": "true, false"
+								},
+								{
+									"key": "subject__grade",
+									"value": "",
+									"description": "id"
+								},
+								{
+									"key": "year",
+									"value": null,
+									"description": "id"
 								}
 							]
 						}
@@ -1824,20 +2042,44 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/14/courses",
+							"raw": "{{BASE_URL}}/teachers/9/courses?page=1&search=&ordering&is_active&subject__grade=&year=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"14",
+								"9",
 								"courses"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1",
-									"disabled": true
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "group code, subject name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "is_active",
+									"value": null,
+									"description": "true, false"
+								},
+								{
+									"key": "subject__grade",
+									"value": "",
+									"description": "id"
+								},
+								{
+									"key": "year",
+									"value": "",
+									"description": "id"
 								}
 							]
 						}
@@ -1850,19 +2092,39 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/subjects/1/courses?page=1",
+							"raw": "{{BASE_URL}}/subjects/116/courses?page=1&search=&ordering&is_active&no_teacher=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"subjects",
-								"1",
+								"116",
 								"courses"
 							],
 							"query": [
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "teacher (first or last name, email), group code"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "is_active",
+									"value": null,
+									"description": "true, false"
+								},
+								{
+									"key": "no_teacher",
+									"value": "",
+									"description": "true, false"
 								}
 							]
 						}
@@ -1875,7 +2137,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/groups/7/courses?page=1",
+							"raw": "{{BASE_URL}}/groups/7/courses?page=1&search=&ordering&is_active&no_teacher=&subject__grade=&year",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1888,6 +2150,36 @@
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "teacher (first or last name, email), subject name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "is_active",
+									"value": null,
+									"description": "true, false"
+								},
+								{
+									"key": "no_teacher",
+									"value": "",
+									"description": "true, false"
+								},
+								{
+									"key": "subject__grade",
+									"value": "",
+									"description": "id"
+								},
+								{
+									"key": "year",
+									"value": null,
+									"description": "id"
 								}
 							]
 						}
@@ -1900,7 +2192,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/years/3/courses?page=1",
+							"raw": "{{BASE_URL}}/years/3/courses?page=1&search=&ordering&is_active&no_teacher=&subject__grade=",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1913,6 +2205,31 @@
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "teacher (first or last name, email), group code, subject name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "is_active",
+									"value": null,
+									"description": "true, false"
+								},
+								{
+									"key": "no_teacher",
+									"value": "",
+									"description": "true, false"
+								},
+								{
+									"key": "subject__grade",
+									"value": "",
+									"description": "id"
 								}
 							]
 						}
@@ -1925,19 +2242,34 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/2/students?page=1",
+							"raw": "{{BASE_URL}}/courses/45/students?page=1&search=&ordering&user__gender=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"2",
+								"45",
 								"students"
 							],
 							"query": [
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "user first name, last name, email"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "user__gender",
+									"value": "",
+									"description": "male, female, unknonw"
 								}
 							]
 						}
@@ -2053,19 +2385,34 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/9/syllabus?page=1",
+							"raw": "{{BASE_URL}}/courses/45/syllabus?page=1&search=&ordering&is_completed=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"9",
+								"45",
 								"syllabus"
 							],
 							"query": [
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "created_at, updated_at"
+								},
+								{
+									"key": "is_completed",
+									"value": "",
+									"description": "true, false"
 								}
 							]
 						}

@@ -5,6 +5,7 @@ from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ..permissions import *
 
 from .models import Course, School, User, Subject, Year, Group
+from .filters import *
 
 from .serializers import (
     CourseModelNestedSerializer,
@@ -42,6 +43,9 @@ class CourseRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 class SchoolCoursesListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
+    filterset_class = CoursesFilterSet
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['teacher__first_name', 'teacher__last_name', 'teacher__email', 'group__code', 'subject__name']
     
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)
@@ -70,6 +74,10 @@ class TeacherCoursesListAPI(OptionalPaginationListAPIView):
         )
     ]
     serializer_class = CourseModelNestedSerializer
+    filterset_class = CoursesFilterSet
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['group__code', 'subject__name']
+    
     
     def get_queryset(self):
         teacher = get_object_or_404(User, pk = self.kwargs['teacher_id'], role=User.Role.TEACHER)
@@ -83,6 +91,10 @@ class SubjectCoursesListAPI(OptionalPaginationListAPIView):
         IsManager
     ]
     serializer_class = CourseModelNestedSerializer
+    filterset_class = CoursesFilterSet
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['teacher__first_name', 'teacher__last_name', 'teacher__email', 'group__code']
+    
     
     def get_queryset(self):
         subject = get_object_or_404(Subject, pk = self.kwargs['subject_id'])
@@ -96,6 +108,10 @@ class YearCoursesListAPI(OptionalPaginationListAPIView):
         IsManager
     ]
     serializer_class = CourseModelNestedSerializer
+    filterset_class = CoursesFilterSet
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['teacher__first_name', 'teacher__last_name', 'teacher__email', 'group__code']
+    
     
     def get_queryset(self):
         year = get_object_or_404(Year, pk = self.kwargs['year_id'])
@@ -113,6 +129,10 @@ class GroupCoursesListAPI(OptionalPaginationListAPIView):
         )
     ]
     serializer_class = CourseModelNestedSerializer
+    filterset_class = CoursesFilterSet
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['teacher__first_name', 'teacher__last_name', 'teacher__email', 'subject__name']
+    
     
     def get_queryset(self):
         group = get_object_or_404(Group, pk = self.kwargs['group_id'])
@@ -129,6 +149,9 @@ class CourseGroupStudentsListAPI(OptionalPaginationListAPIView):
             permissions = [IsManager, IsCourseTeacher]
         ) 
     ]
+    filterset_fields = ['user__gender']
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['user__first_name', 'user__last_name', 'user__email']
     
     class OutputSerializer(StudentModelNestedSerializer):
         group = None

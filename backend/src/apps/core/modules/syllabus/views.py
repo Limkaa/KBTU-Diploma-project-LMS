@@ -11,6 +11,9 @@ from .serializers import SyllabusModelSerializer
 
 class SyllabusListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
     serializer_class = SyllabusModelSerializer
+    filterset_fields = ['is_completed']
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['name']
     
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)

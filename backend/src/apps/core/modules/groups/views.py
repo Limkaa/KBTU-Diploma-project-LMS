@@ -53,6 +53,9 @@ class GroupRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 class SchoolGroupsListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = GroupModelReadOnlySerializer
+    filterset_fields = ['is_active']
+    ordering = ['created_at', 'updated_at', 'code']
+    search_fields = ['code']
     
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])
@@ -80,6 +83,9 @@ class TeacherGroupsListAPI(OptionalPaginationListAPIView):
     ]
     serializer_class = GroupModelReadOnlySerializer
     queryset =  Group.objects.all()
+    filterset_fields = ['is_active', 'grade']
+    ordering = ['created_at', 'updated_at', 'code']
+    search_fields = ['code']
     
     def get_queryset(self):
         teacher = get_object_or_404(
@@ -92,6 +98,9 @@ class GradeGroupsListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = GroupModelReadOnlySerializer
     queryset =  Group.objects.all()
+    filterset_fields = ['is_active', 'teacher']
+    ordering = ['created_at', 'updated_at', 'code']
+    search_fields = ['code']
     
     def get_queryset(self):
         grade = get_object_or_404(Grade, pk=self.kwargs['grade_id'])

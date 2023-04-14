@@ -8,8 +8,13 @@ export const coursesApiSlice = authApi.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     getTeacherCourses: builder.query({
-      query: ({ teacher_id, page }) =>
-        `/api/teachers/${teacher_id}/courses?page=${page}`,
+      query: ({ teacher_id, year_id, search }) =>
+        `/api/teachers/${teacher_id}/courses?year=${year_id}&search=${search}`,
+      keepUnusedDataFor: 5,
+    }),
+    getGroupCourses: builder.query({
+      query: ({ group_id, year_id, search }) =>
+        `/api/groups/${group_id}/courses?year=${year_id}&search=${search}`,
       keepUnusedDataFor: 5,
     }),
     getCourse: builder.query({
@@ -36,6 +41,8 @@ export const coursesApiSlice = authApi.injectEndpoints({
 export const {
   useGetSchoolCoursesQuery,
   useGetCourseQuery,
+  useLazyGetGroupCoursesQuery,
+  useLazyGetTeacherCoursesQuery,
   useAddCourseMutation,
   useUpdateCourseMutation,
 } = coursesApiSlice;

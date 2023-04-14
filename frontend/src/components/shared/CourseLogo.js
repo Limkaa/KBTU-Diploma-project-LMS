@@ -18,7 +18,7 @@ const CourseLogo = ({ title, width, height, fontSize }) => {
         backgroundColor: colors[Math.floor(Math.random() * colors?.length)],
       }}
     >
-      {firstLetter(title || 'U')}
+      {firstLetter(title || "U")}
     </div>
   );
 };
@@ -31,7 +31,6 @@ const styles = {
     fontWeight: 500,
     borderRadius: 10,
     color: "black",
-    marginBottom: 15,
   },
 };
 export default CourseLogo;

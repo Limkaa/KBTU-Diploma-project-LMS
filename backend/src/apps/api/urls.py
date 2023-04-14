@@ -17,4 +17,7 @@ urlpatterns = [
     
     path('', include(('apps.core.modules.timetables.rooms.urls', 'rooms'))),
     path('', include(('apps.core.modules.timetables.timebounds.urls', 'timebounds'))),
+    
+    path("", include(("apps.core.modules.comments.course.urls", "courses-posts-comments"))),
+    path("", include(("apps.core.modules.comments.school.urls", "schools-posts-comments"))),
 ]

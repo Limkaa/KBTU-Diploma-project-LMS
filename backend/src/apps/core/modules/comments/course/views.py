@@ -39,7 +39,7 @@ class CoursePostCommentRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAP
     queryset = CoursePostComment.objects.all().select_related('user')
     
     def get_permissions(self):
-        self.permissons = [
+        self.permission_classes = [
             IsCommentOfOwnSchool, 
             CustomOperandHolder(
                 operand=CustomOR,
@@ -49,7 +49,7 @@ class CoursePostCommentRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAP
         ]
         
         if self.request.method not in SAFE_METHODS:
-            self.permissons.append(IsUserItself)
+            self.permission_classes.append(IsUserItself)
         
         return super().get_permissions()
 

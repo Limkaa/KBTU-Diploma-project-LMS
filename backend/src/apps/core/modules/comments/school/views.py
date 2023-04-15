@@ -7,7 +7,7 @@ from ...permissions import *
 
 from ..models import SchoolPost, SchoolPostComment 
 from .serializers import *
-
+from .permissions import *
 
 class SchoolPostCommentsListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool]
@@ -29,4 +29,12 @@ class SchoolPostCommentsListCreateAPI(generics.ListCreateAPIView, OptionalPagina
 class SchoolPostCommentRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SchoolPostCommentModelSerializer
     queryset = SchoolPostComment.objects.all().select_related('user')
-    permission_classes = [IsUserItself]
+    permission_classes = [IsCommentOfOwnSchool, IsUserItself]
+    
+    def get_permissions(self):
+        self.permission_classes = [IsCommentOfOwnSchool]
+        
+        if self.request.method not in SAFE_METHODS:
+            self.permission_classes = [IsCommentOfOwnSchool, IsUserItself]
+        
+        return super().get_permissions()

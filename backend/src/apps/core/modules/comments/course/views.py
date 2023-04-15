@@ -7,6 +7,7 @@ from ...permissions import *
 
 from ..models import CoursePost, CoursePostComment
 from .serializers import *
+from .permissions import *
 
 
 class CoursePostCommentsListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
@@ -34,7 +35,21 @@ class CoursePostCommentsListCreateAPI(generics.ListCreateAPIView, OptionalPagina
 
 
 class CoursePostCommentRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsUserItself]
     serializer_class = CoursePostCommentModelSerializer
     queryset = CoursePostComment.objects.all().select_related('user')
+    
+    def get_permissions(self):
+        self.permissons = [
+            IsCommentOfOwnSchool, 
+            CustomOperandHolder(
+                operand=CustomOR,
+                permissions=[IsCommentOfCourseStudent, IsCommentOfCourseTeacher],
+                message='This view can be accessed only by: course student or teacher'
+            )
+        ]
+        
+        if self.request.method not in SAFE_METHODS:
+            self.permissons.append(IsUserItself)
+        
+        return super().get_permissions()
 

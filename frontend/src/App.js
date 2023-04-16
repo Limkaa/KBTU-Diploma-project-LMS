@@ -23,6 +23,7 @@ import NotFound from "./components/NotFound/NotFound";
 import "./App.css";
 import CoursesSchoolContainer from "./components/Courses/CoursesSchool.container";
 import Course from "./components/Courses/Course";
+import SyllabusContainer from "./components/Syllabus/Syllabus.container";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -48,6 +49,13 @@ function App() {
           <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
+        </Route>
+        <Route element={<PrivateRoute allowedRoles={["teacher"]} />}>
+          <Route
+            exact
+            path="/courses/:id/syllabus"
+            element={<SyllabusContainer />}
+          />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
           <Route exact path="/users" element={<UsersContainer />} />

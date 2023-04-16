@@ -88,10 +88,16 @@ const CoursesContainer = () => {
   }, [user, studentCard, selectedYear, search]);
 
   React.useEffect(() => {
-    if (data && !isLoading) {
-      setCourses(data);
+    if (user?.role === "student") {
+      if (data && !isLoading) {
+        setCourses(data);
+      }
+    } else if (user?.role === "teacher") {
+      if (teacherData && !teacherIsLoading) {
+        setCourses(teacherData);
+      }
     }
-  }, [data, isLoading]);
+  }, [data, isLoading, teacherData, teacherIsLoading]);
 
   return (
     <div style={styles.container}>
@@ -151,8 +157,8 @@ const CoursesContainer = () => {
                   <Item>
                     <CourseLogo
                       title={item?.subject?.name}
-                      width={"40%"}
-                      height={"60%"}
+                      width={"50%"}
+                      height={"55%"}
                       fontSize={30}
                     />
                     <div style={styles.title}>{item?.subject?.name}</div>

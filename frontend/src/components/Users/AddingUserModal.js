@@ -65,7 +65,7 @@ const AddingUserModal = ({
 
   const handleSubmit = async (values, phone) => {
     try {
-      const addUsers = await addUser({
+      await addUser({
         school_id: user?.school_id,
         email: values.email,
         password: values.password,
@@ -93,6 +93,7 @@ const AddingUserModal = ({
           });
         });
     } catch (err) {
+      console.log(err);
       toast.error("Error", {
         position: "top-right",
         autoClose: 2000,
@@ -163,8 +164,8 @@ const AddingUserModal = ({
             setError(true);
           }
           resetForm();
-          setRole();
-          setGender();
+          setRole("");
+          setGender("");
         }}
       >
         {({ isSubmitting }) => (
@@ -310,8 +311,12 @@ const AddingUserModal = ({
                 id="role"
                 value={role}
                 label="Role"
+                defaultValue={""}
                 onChange={(event) => setRole(event.target.value)}
               >
+                <MenuItem value="" disabled>
+                  <em>Choose role</em>
+                </MenuItem>
                 <MenuItem value={"student"}>Student</MenuItem>
                 <MenuItem value={"manager"}>Manager</MenuItem>
                 <MenuItem value={"teacher"}>Teacher</MenuItem>
@@ -329,8 +334,12 @@ const AddingUserModal = ({
                 id="gender"
                 value={gender}
                 label="Gender"
+                defaultValue={""}
                 onChange={(event) => setGender(event.target.value)}
               >
+                <MenuItem value="" disabled>
+                  <em>Choose gender</em>
+                </MenuItem>
                 <MenuItem value={"female"}>Female</MenuItem>
                 <MenuItem value={"male"}>Male</MenuItem>
               </Select>

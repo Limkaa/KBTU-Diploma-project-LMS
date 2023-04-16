@@ -64,7 +64,7 @@ const UsersContainer = () => {
       })
         .unwrap()
         .then((payload) => {
-          refetch();
+          getUsers({ school_id: user?.school_id, page, search });
           refetchUser();
           toasty({ type: "success", text: "User Updated" });
         });

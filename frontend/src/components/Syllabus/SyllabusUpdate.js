@@ -28,35 +28,27 @@ const InputStyled = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const UpdateSubjects = ({
-  subject,
-  setSubject,
-  showUpdateSubject,
-  setShowUpdateSubject,
-  handleUpdateSubject,
-  grades,
+const UpdateSyllabus = ({
+  syllabus,
+  setSyllabus,
+  showUpdateSyllabus,
+  setShowUpdateSyllabus,
+  handleUpdateSyllabus,
 }) => {
   const [values, setValues] = React.useState({
     name: "",
-    code: "",
     description: "",
-    grade: "",
-    is_active: "",
+    hours: "",
+    is_completed: "",
   });
 
-  const { name, code, description, is_active, grade } = values;
+  const { name, description, is_completed, hours } = values;
 
   React.useEffect(() => {
-    if (subject) {
-      setValues({
-        name: subject.name,
-        code: subject.code,
-        description: subject.description,
-        grade: subject.grade.id,
-        is_active: subject.is_active,
-      });
+    if (syllabus) {
+      setValues({ ...syllabus });
     }
-  }, [subject]);
+  }, [syllabus]);
 
   const handleInputChange = (e) => {
     let { name, value, checked } = e.target;
@@ -68,9 +60,11 @@ const UpdateSubjects = ({
   };
 
   return (
-    <div style={{ ...styles.wrapper, right: showUpdateSubject ? "0" : "-30%" }}>
+    <div
+      style={{ ...styles.wrapper, right: showUpdateSyllabus ? "0" : "-30%" }}
+    >
       <div style={styles.header}>
-        <div style={styles.headerTitle}>Update Subject</div>
+        <div style={styles.headerTitle}>Update Syllabus</div>
         <img
           src={Cancel}
           style={styles.close}
@@ -225,4 +219,4 @@ const styles = {
   },
 };
 
-export default UpdateSubjects;
+export default UpdateSyllabus;

@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header";
@@ -9,6 +9,12 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import {
+  useGetCourseSyllabusWithoutQuery,
+  useLazyGetCourseSyllabusQuery,
+} from "../../redux/syllabus/syllabusApiSlice";
+import { Button } from "antd";
+import CourseSyllabus from "./CourseSyllabus";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -16,15 +22,22 @@ const Item = styled(Paper)(({ theme }) => ({
   flexDirection: "column",
   color: "black",
   border: "none",
+  borderRadius: 12,
   boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.12)",
+  padding: 16,
 }));
 
 const Course = () => {
   const { id: courseId } = useParams();
   const [course, setCourse] = React.useState();
+  const [syllabus, setSyllabus] = React.useState();
   const [showMore, setShowMore] = React.useState(false);
+  const navigate = useNavigate();
 
   const { data, isLoading } = useGetCourseQuery({ id: courseId });
+
+  const { data: dataSyllabus, isLoading: isLoadingSyllabus } =
+    useGetCourseSyllabusWithoutQuery({ course_id: courseId });
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -32,7 +45,13 @@ const Course = () => {
     }
   }, [data, isLoading]);
 
-  console.log(course);
+  React.useEffect(() => {
+    if (dataSyllabus && !isLoadingSyllabus) {
+      setSyllabus(dataSyllabus);
+    }
+  }, [dataSyllabus, isLoadingSyllabus]);
+
+  console.log(syllabus);
 
   return (
     <div style={styles.container}>
@@ -60,20 +79,22 @@ const Course = () => {
                       />
                       <div style={styles.title}>{course?.subject?.name}</div>
                     </div>
-                    <div style={styles.teachCont}>
-                      <img
-                        // src={course?.teacher?.avatar}
-                        // alt="teacher"
-                        style={styles.img}
-                      />
-                      <div>
-                        <div style={styles.teacher}>
-                          {course?.teacher?.first_name}{" "}
-                          {course?.teacher?.last_name}
+                    {course?.teacher && (
+                      <div style={styles.teachCont}>
+                        <img
+                          // src={course?.teacher?.avatar}
+                          // alt="teacher"
+                          style={styles.img}
+                        />
+                        <div>
+                          <div style={styles.teacher}>
+                            {course?.teacher?.first_name}{" "}
+                            {course?.teacher?.last_name}
+                          </div>
+                          <div style={styles.podtext}>Teacher</div>
                         </div>
-                        <div style={styles.podtext}>Teacher</div>
                       </div>
-                    </div>
+                    )}
                   </div>
                   {course?.subject?.description && (
                     <>
@@ -99,6 +120,34 @@ const Course = () => {
                 <div>
                   <div>Assignments</div>
                 </div>
+              </Item>
+            </Grid>
+            <Grid item xs={10} sm={9} md={7}>
+              <Item>
+                <div>
+                  <div>Course Posts</div>
+                </div>
+              </Item>
+            </Grid>
+            <Grid item xs={10} sm={9} md={5}>
+              <Item>
+                <div style={styles.cont}>
+                  <div style={styles.titleForCont}>Syllabus</div>
+                  <Button
+                    type="link"
+                    onClick={() =>
+                      navigate(`/courses/${course?.id}/syllabus`, {
+                        state: { courseId: course?.id },
+                      })
+                    }
+                    style={styles.seeAll}
+                  >
+                    See all
+                  </Button>
+                </div>
+                {syllabus?.slice(0, 3).map((item) => (
+                  <CourseSyllabus key={item.id} item={item} />
+                ))}
               </Item>
             </Grid>
           </Grid>
@@ -132,11 +181,12 @@ const styles = {
     border: "none",
     borderRadius: 8,
   },
-  mainCont: {
-    backgroundColor: "white",
-    padding: 16,
-    borderRadius: 10,
+  cont: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
+  mainCont: {},
   teachCont: {
     display: "flex",
     alignItems: "center",
@@ -184,6 +234,16 @@ const styles = {
     backgroundColor: "#DBDBDB",
     borderRadius: 220,
     marginRight: 8,
+  },
+  titleForCont: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: "#4A4D58",
+  },
+  seeAll: {
+    color: "#163A61",
+    fontWeight: 600,
+    fontSize: 14,
   },
 };
 

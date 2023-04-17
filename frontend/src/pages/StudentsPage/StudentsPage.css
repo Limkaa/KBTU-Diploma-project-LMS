@@ -74,27 +74,27 @@
 }
 
 #students .red {
-    background-color: rgba(185, 68, 68, 0.04);
+    background-color: rgba(241, 141, 88, 0.09);
 }
 
 #students .red .head {
-    color: rgb(75, 20, 20);
+    color: #F18D58;
 }
 
 #students .red hr {
-    border-color: rgb(75, 20, 20);
+    border-color: #F18D58;
 }
 
 #students .green {
-    background-color: rgba(69, 183, 100, 0.04);
+    background-color: rgba(69, 183, 100, 0.09);
 }
 
 #students .green .head {
-    color: #13441f;
+    color: #45B764;
 }
 
 #students .green hr {
-    border-color: #1d5d2e;
+    border-color: #45B764;
 }
 /*#students tr {*/
 /*    background-color: #F0F7FF;*/

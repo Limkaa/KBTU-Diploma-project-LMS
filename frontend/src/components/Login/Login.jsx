@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
 import {useTokenObtainMutation} from "../../redux/api/authApiSlice";
 import {setCredentials} from "../../redux/auth/authSlice";
-import { Button, Form, Input } from 'antd';
+import { Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {toastify} from "../shared/Toast/Toast";
 
@@ -14,7 +14,6 @@ function Login() {
     const [obtainTokens] = useTokenObtainMutation();
 
     const onFinish = async (values) => {
-        console.log('Success:', values);
         let {email, password} = values;
         try {
             const userTokens = await obtainTokens({email, password}).unwrap();
@@ -32,7 +31,40 @@ function Login() {
 
     return (
         <div className="form">
-            <h1>StudyMate</h1>
+            <div style={{display: "block", margin: "0 auto", width: 162}}>
+                <div style={{ display: "flex" }}>
+                    <div
+                        style={{
+                            color: "#EA5A0C",
+                            lineHeight: "30px",
+                            fontWeight: 800,
+                            fontSize: 30,
+                        }}
+                    >
+                        S
+                    </div>
+                    <div
+                        style={{
+                            color: "#163A61",
+                            lineHeight: "30px",
+                            fontWeight: 800,
+                            fontSize: 30,
+                        }}
+                    >
+                        tudy
+                    </div>
+                    <div
+                        style={{
+                            color: "#163A61",
+                            lineHeight: "30px",
+                            fontWeight: 800,
+                            fontSize: 30,
+                        }}
+                    >
+                        Mate
+                    </div>
+                </div>
+            </div>
             <div className="form-group">
                 <Form
                     name="basic"
@@ -77,9 +109,9 @@ function Login() {
                             prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password"/>
                     </Form.Item>
                         <div style={{height: 7, margin: 0}}></div>
-                        <Button type="primary" htmlType="submit">
+                        <button type="submit">
                             Submit
-                        </Button>
+                        </button>
                 </Form>
             </div>
         </div>

@@ -61,6 +61,7 @@
     font-size: 16px;
     text-align: center;
     color: #FFFFFF;
+    cursor: pointer;
 }
 
 .ant-input:focus {

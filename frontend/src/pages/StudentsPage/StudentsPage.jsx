@@ -5,7 +5,7 @@ import Profile from "../../components/Dashboard/Profile";
 import {useParams} from "react-router-dom";
 import {useGetOneGroupQuery} from "../../redux/groups/groupsApiSlice";
 import {useGetGroupStudentsQuery} from "../../redux/students/studentsApiSlice";
-import {Spin, Tag, Table, Alert} from "antd";
+import {Spin, Table, Alert} from "antd";
 
 const StudentsPage = () => {
     const {groupId} = useParams();
@@ -32,14 +32,14 @@ const StudentsPage = () => {
         if (isGroupSuccess) {
             setGroup(groupData);
         }
-    }, [isGroupSuccess]);
+    }, [isGroupSuccess, groupData]);
 
     useEffect(() => {
-        if (isGroupSuccess) {
+        if (isStudentsSuccess) {
             if (page === 1) setTotal(studentsData?.count);
             setStudents(studentsData?.results);
         }
-    }, [isStudentsSuccess]);
+    }, [isStudentsSuccess, page, studentsData]);
 
     const columns = [
         {

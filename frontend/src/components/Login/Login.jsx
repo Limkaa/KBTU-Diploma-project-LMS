@@ -4,7 +4,9 @@ import {useNavigate} from "react-router-dom";
 import {useTokenObtainMutation} from "../../redux/api/authApiSlice";
 import {setCredentials} from "../../redux/auth/authSlice";
 // import Alert from "../Alert/Alert";
-// import {Button, Form, Input, notification} from 'antd';
+import { Button, Checkbox, Form, Input } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import {toastify} from "../shared/Toast/Toast";
 
 function Login() {
     const [password, setPassword] = useState("");
@@ -19,53 +21,76 @@ function Login() {
         setErr('');
     }, [email, password])
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const onFinish = async (values) => {
+        console.log('Success:', values);
+        let {email, password} = values;
         try {
             const userTokens = await obtainTokens({email, password}).unwrap();
             dispatch(setCredentials({userAccessToken: userTokens.access, userRefreshToken: userTokens.refresh}));
-            setEmail("");
-            setPassword("");
             navigate('/home');
         } catch(err) {
             console.log(err);
-            if (err?.response) {
-                setErr("No server response");
-            } else if (err.response?.status === 401) {
-                setErr("No active account with given credentials");
+            if (err.status === 401) {
+                toastify("error", "No active account with given credentials");
             } else {
-                setErr("Login failed");
+                toastify("error", "Login failed");
             }
         }
-    }
+    };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <div className="form">
             <h1>StudyMate</h1>
-            {/*{err !== "" && <Alert message={err}/>}*/}
             <div className="form-group">
-                <input
-                    placeholder='Username'
-                    type='email'
-                    id='email'
-                    name='email'
-                    required
-                    autoFocus
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                />
-                <input
-                    placeholder='Password'
-                    type='password'
-                    id='password'
-                    name='password'
-                    required
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                />
+                <Form
+                    name="basic"
+                    initialValues={{
+                        remember: true,
+                    }}
+                    onFinish={onFinish}
+                    autoComplete="off"
+                    size={"large"}
+                    validateTrigger="onSubmit"
+                >
+                    <Form.Item
+                        name="email"
+                        rules={[
+                            {
+                                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                message: 'Invalid email format!',
+                            },
+                            {
+                                required: true,
+                                message: 'Please input your email!',
+                            },
+                        ]}
+                    >
+                        <Input
+                            prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email"/>
+                    </Form.Item>
+                    <Form.Item
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your password!',
+                            },
+                            {
+                                whitespace: true,
+                                message: 'Password can not be empty!',
+                            },
+                        ]}
+                    >
+                        <Input.Password
+                            prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password"/>
+                    </Form.Item>
+                        <div style={{height: 7, margin: 0}}></div>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                </Form>
             </div>
-            <button type='submit'>Login</button>
-        </form>
+        </div>
     );
 }
 

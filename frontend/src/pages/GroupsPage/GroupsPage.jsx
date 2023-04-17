@@ -37,7 +37,7 @@ const GroupsPage = () => {
             if (page === 1) setTotal(groupsData?.count);
             setGroups(groupsData?.results);
         }
-    }, [groupsData, isLoading]);
+    }, [groupsData, isLoading, page]);
 
     useEffect(() => {
         let arr = [];
@@ -48,7 +48,7 @@ const GroupsPage = () => {
             setGradesOptions(arr);
             setGrade(arr[0].value);
         }
-    }, [isGradesLoaded]);
+    }, [isGradesLoaded, grades]);
 
     useEffect(() => {
         let arr = [];
@@ -62,7 +62,7 @@ const GroupsPage = () => {
             setTeacherOptions(arr);
             setTeacher(arr[0].value);
         }
-    }, [isTeachersLoaded]);
+    }, [isTeachersLoaded, teachers]);
 
     const handleGroupTypeChange = (e) => {
         let value = e.target.value;

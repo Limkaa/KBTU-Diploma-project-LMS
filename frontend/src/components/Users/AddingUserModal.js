@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Cancel from "../../assets/icons/close.svg";
 import { Formik, Form, Field } from "formik";
 import InputMask from "react-input-mask";
@@ -65,7 +65,7 @@ const AddingUserModal = ({
 
   const handleSubmit = async (values, phone) => {
     try {
-      const addUsers = await addUser({
+      await addUser({
         school_id: user?.school_id,
         email: values.email,
         password: values.password,
@@ -110,6 +110,7 @@ const AddingUserModal = ({
       <div style={styles.header}>
         <div style={styles.headerTitle}>{"New User"}</div>
         <img
+          alt="cancel"
           src={Cancel}
           style={styles.close}
           onClick={() => {

@@ -5,7 +5,7 @@ import Profile from "../../components/Dashboard/Profile";
 import {useGetGroupsQuery} from "../../redux/groups/groupsApiSlice";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
-import {Table, Spin, Tag, Button, Input, Radio, Space} from 'antd';
+import {Table, Spin, Tag, Input, Radio, Space} from 'antd';
 import Search from "../../assets/icons/search.svg";
 import {Link} from "react-router-dom";
 
@@ -23,7 +23,7 @@ const TeacherGroupsPage = () => {
             if (page === 1) setTotal(teacherGroupsData?.count);
             setGroups(teacherGroupsData?.results);
         }
-    }, [teacherGroupsData, isLoading]);
+    }, [teacherGroupsData, isLoading, page]);
 
     const handleStatusChange = (e) => {
         let value = e.target.value;

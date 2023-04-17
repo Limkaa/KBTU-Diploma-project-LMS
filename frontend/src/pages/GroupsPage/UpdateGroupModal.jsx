@@ -48,10 +48,6 @@ const UpdateGroupModal = ({show, setShow, selectedGroup, setSelectedGroup, refet
         }
     }, [selectedGroup]);
 
-    useEffect(() => {
-        console.log(group);
-    },[])
-
     const [updateGroup] = useUpdateGroupMutation();
 
     const handleUpdateGroup = async () => {

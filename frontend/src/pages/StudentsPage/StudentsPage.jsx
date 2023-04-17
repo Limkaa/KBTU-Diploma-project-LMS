@@ -149,7 +149,6 @@ const StudentsPage = () => {
                     </div>
                 </section>
             }
-
         </main>
     );
 };

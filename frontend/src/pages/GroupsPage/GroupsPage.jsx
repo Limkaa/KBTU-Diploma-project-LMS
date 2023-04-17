@@ -149,7 +149,9 @@ const GroupsPage = () => {
             width: "15%",
             render: (_, record) => (
                 <Space size="middle">
-                    <Link to={`${record.id}/students`}>Students</Link>
+                    <Link
+                        style={{ color: "#45B764", fontWeight: 500, padding: 0 }}
+                        to={`${record.id}/students`}>Students</Link>
                 </Space>
             ),
         },

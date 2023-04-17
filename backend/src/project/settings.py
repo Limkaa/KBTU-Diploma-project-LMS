@@ -61,6 +61,7 @@ PROJECT_APPS = [
     "apps.core.modules.syllabus",
     "apps.core.modules.assignments",
     "apps.core.modules.timetables",
+    "apps.core.modules.marks"
 ]
 
 THIRD_PARTY_APPS = [

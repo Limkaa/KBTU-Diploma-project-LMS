@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user7@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user13@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2575,6 +2575,135 @@
 			"name": "Course posts",
 			"item": [
 				{
+					"name": "Comments",
+					"item": [
+						{
+							"name": "Get one comment",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/courses-posts-comments/500",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"courses-posts-comments",
+										"500"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create comment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"Some information\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/courses-posts/140/comments",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"courses-posts",
+										"140",
+										"comments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update comment",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"Some information\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/courses-posts-comments/318",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"courses-posts-comments",
+										"318"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete comment",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/courses-posts-comments/77",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"courses-posts-comments",
+										"77"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get course post comments",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/courses-posts/133/comments",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"courses-posts",
+										"133",
+										"comments"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get one course post",
 					"request": {
 						"method": "GET",
@@ -2678,13 +2807,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/27/posts",
+							"raw": "{{BASE_URL}}/courses/26/posts",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"27",
+								"26",
 								"posts"
 							],
 							"query": [
@@ -2715,6 +2844,135 @@
 		{
 			"name": "School posts",
 			"item": [
+				{
+					"name": "Comments",
+					"item": [
+						{
+							"name": "Get one comment",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/schools-posts-comments/44",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"schools-posts-comments",
+										"44"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create comment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"Some information\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/schools-posts/11/comments",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"schools-posts",
+										"11",
+										"comments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update comment",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"Some information\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/schools-posts-comments/47",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"schools-posts-comments",
+										"47"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete comment",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/schools-posts-comments/46",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"schools-posts-comments",
+										"46"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get school post comments",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/schools-posts/11/comments",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"schools-posts",
+										"11",
+										"comments"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "Get one school post",
 					"request": {
@@ -2819,13 +3077,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/posts",
+							"raw": "{{BASE_URL}}/schools/2/posts",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"1",
+								"2",
 								"posts"
 							],
 							"query": [

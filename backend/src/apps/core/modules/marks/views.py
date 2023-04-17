@@ -20,6 +20,7 @@ class AssignmentMarksListCreateAPI(generics.ListCreateAPIView,
                                    OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsCourseTeacher]
     queryset = Mark.objects.all()
+    search_fields = ['user__first_name', 'user__last_name']
     
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)

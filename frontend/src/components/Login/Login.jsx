@@ -27,7 +27,7 @@ function Login() {
         try {
             const userTokens = await obtainTokens({email, password}).unwrap();
             dispatch(setCredentials({userAccessToken: userTokens.access, userRefreshToken: userTokens.refresh}));
-            navigate('/home');
+            navigate('/');
         } catch(err) {
             console.log(err);
             if (err.status === 401) {

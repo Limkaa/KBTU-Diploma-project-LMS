@@ -1,25 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
 import {useTokenObtainMutation} from "../../redux/api/authApiSlice";
 import {setCredentials} from "../../redux/auth/authSlice";
-// import Alert from "../Alert/Alert";
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {toastify} from "../shared/Toast/Toast";
 
 function Login() {
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [err, setErr] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [obtainTokens, {isLoading}] = useTokenObtainMutation();
-
-    useEffect(() => {
-        setErr('');
-    }, [email, password])
+    const [obtainTokens] = useTokenObtainMutation();
 
     const onFinish = async (values) => {
         console.log('Success:', values);

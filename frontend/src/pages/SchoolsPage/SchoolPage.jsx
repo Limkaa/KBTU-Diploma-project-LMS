@@ -7,7 +7,6 @@ import {selectCurrentUser} from "../../redux/auth/authSlice";
 import {useGetSchoolQuery, useUpdateSchoolMutation} from "../../redux/schools/schoolsApiSlice";
 import {useEffect, useState} from "react";
 import {Button, Form, Input, Spin} from "antd";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {toastify} from "../../components/shared/Toast/Toast";
 
@@ -32,7 +31,7 @@ const SchoolPage = () => {
                 address: school?.address,
             })
         }
-    }, [school, isSuccess]);
+    }, [school, isSuccess, form]);
 
     const onFinish = () => {
         if (name === school?.name && address === school?.address && desc === school?.description) {

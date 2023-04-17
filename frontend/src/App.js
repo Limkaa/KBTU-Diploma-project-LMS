@@ -1,4 +1,3 @@
-import Login from "./components/Login/Login";
 import React from "react";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -16,7 +15,6 @@ import UsersContainer from "./components/Users/Users.container";
 import SchoolGradesContainer from "./components/SchoolGrades/SchoolGrades.container";
 import { toast } from "react-toastify";
 import SubjectsContainer from "./components/Subjects/Subjects.container";
-import AcademicYears from "./components/Terms/Terms.container";
 import TermsContainer from "./components/Terms/Terms.container";
 import AcademicYearsContainer from "./components/AcademicYears/AcademicYears.container";
 import SchoolPage from "./pages/SchoolsPage/SchoolPage";

@@ -56,11 +56,6 @@ export const managerMenu = [
     path: `/schools/courses`,
     icon: CoursesSvg,
   },
-  {
-    title: "My courses",
-    path: "/courses",
-    icon: CoursesSvg,
-  },
 ];
 
 export const studentMenu = [

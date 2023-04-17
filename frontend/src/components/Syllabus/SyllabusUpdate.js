@@ -28,7 +28,7 @@ const InputStyled = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const UpdateSyllabus = ({
+const SyllabusUpdate = ({
   syllabus,
   setSyllabus,
   showUpdateSyllabus,
@@ -38,21 +38,23 @@ const UpdateSyllabus = ({
   const [values, setValues] = React.useState({
     name: "",
     description: "",
-    hours: "",
     is_completed: "",
   });
 
-  const { name, description, is_completed, hours } = values;
+  const [hours, setHours] = React.useState("");
+
+  const { name, description, is_completed } = values;
 
   React.useEffect(() => {
     if (syllabus) {
       setValues({ ...syllabus });
+      setHours(syllabus.hours);
     }
   }, [syllabus]);
 
   const handleInputChange = (e) => {
     let { name, value, checked } = e.target;
-    if (name === "is_active") {
+    if (name === "is_completed") {
       setValues({ ...values, [name]: checked });
     } else {
       setValues({ ...values, [name]: value });
@@ -69,13 +71,13 @@ const UpdateSyllabus = ({
           src={Cancel}
           style={styles.close}
           onClick={() => {
-            setShowUpdateSubject(false);
-            setSubject();
+            setShowUpdateSyllabus(false);
+            setSyllabus();
           }}
         />
       </div>
       <div style={styles.form}>
-        <p style={styles.contentTitle}>Subject</p>
+        <p style={styles.contentTitle}>Syllabus Point</p>
         <br />
         <InputStyled
           InputLabelProps={{
@@ -87,20 +89,6 @@ const UpdateSyllabus = ({
           className="input"
           name="name"
           value={name || ""}
-          onChange={handleInputChange}
-          size="small"
-        />
-        <br />
-        <InputStyled
-          InputLabelProps={{
-            shrink: true,
-          }}
-          label="Code"
-          variant="outlined"
-          type="text"
-          className="input"
-          name="code"
-          value={code || ""}
           onChange={handleInputChange}
           size="small"
         />
@@ -121,43 +109,42 @@ const UpdateSyllabus = ({
           minRows={4}
         />
         <br />
-        <FormControl
-          sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
-          size="small"
-        >
-          <InputLabel id="grade">Grade</InputLabel>
-          <Select
-            labelId="grade"
-            id="grade"
-            value={grade || ""}
-            name="grade"
-            label="Grade"
-            onChange={handleInputChange}
-          >
-            <MenuItem value="" disabled>
-              <em>Choose grade</em>
-            </MenuItem>
-            {grades?.map((item) => (
-              <MenuItem value={item.id} key={item.id}>
-                {item.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <div style={styles.contHour}>
+          <div style={styles.hourTitle}>Hours</div>
+          <div style={styles.cnt}>
+            <button
+              type="button"
+              style={styles.btnCnt}
+              onClick={() => setHours(hours - 1)}
+              disabled={hours === 1}
+            >
+              -
+            </button>
+            <div style={styles.hour}>{hours}</div>
+            <button
+              type="button"
+              onClick={() => setHours(hours + 1)}
+              style={styles.btnCnt}
+            >
+              +
+            </button>
+          </div>
+        </div>
+        <br />
         <div>
           <Checkbox
-            checked={is_active || false}
+            checked={is_completed || false}
             onChange={handleInputChange}
-            name="is_active"
+            name="is_completed"
             style={{ fontWeight: 400, fontSize: 15 }}
           >
-            Active
+            Completed
           </Checkbox>
         </div>
         <button
           type="submit"
           style={styles.btn}
-          onClick={() => handleUpdateSubject(values)}
+          onClick={() => handleUpdateSyllabus(values, hours)}
         >
           Update subject
         </button>
@@ -217,6 +204,32 @@ const styles = {
     backgroundColor: "#163A61",
     cursor: "pointer",
   },
+  btnCnt: {
+    border: "none",
+    borderRadius: 12,
+    backgroundColor: "#163A61",
+    fontWeight: 500,
+    color: "white",
+    fontSize: 18,
+    width: 25,
+  },
+  hour: {
+    fontWeight: 500,
+    fontSize: 16,
+    padding: "0px 10px",
+  },
+  contHour: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  cnt: {
+    display: "flex",
+  },
+  hourTitle: {
+    fontWeight: 600,
+    color: "#4A4D58",
+    fontSize: 14,
+  },
 };
 
-export default UpdateSyllabus;
+export default SyllabusUpdate;

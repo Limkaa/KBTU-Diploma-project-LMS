@@ -49,6 +49,11 @@ function App() {
           <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
+          <Route
+            exact
+            path="/courses/:id/syllabus"
+            element={<SyllabusContainer />}
+          />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher"]} />}>
           <Route

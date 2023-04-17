@@ -22,13 +22,19 @@ export const syllabusApiSlice = authApi.injectEndpoints({
         body: data,
       }),
     }),
-    // updateCourse: builder.mutation({
-    //   query: ({ course_id, ...data }) => ({
-    //     url: `/api/courses/${course_id}`,
-    //     method: "PUT",
-    //     body: data,
-    //   }),
-    // }),
+    updateSyllabusPoint: builder.mutation({
+      query: ({ syllabus_id, ...data }) => ({
+        url: `/api/syllabus/${syllabus_id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    deleteSyllabusPoint: builder.mutation({
+      query: ({ syllabus_id }) => ({
+        url: `/api/syllabus/${syllabus_id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -37,4 +43,6 @@ export const {
   useLazyGetCourseSyllabusQuery,
   useGetSyllabusPointQuery,
   useAddSyllabusPointMutation,
+  useUpdateSyllabusPointMutation,
+  useDeleteSyllabusPointMutation,
 } = syllabusApiSlice;

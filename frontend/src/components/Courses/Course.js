@@ -15,6 +15,9 @@ import {
 } from "../../redux/syllabus/syllabusApiSlice";
 import { Button } from "antd";
 import CourseSyllabus from "./CourseSyllabus";
+import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
+import CourseAssignments from "./CourseAssignments";
+import { Col, Divider, Row } from "antd";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -26,11 +29,12 @@ const Item = styled(Paper)(({ theme }) => ({
   boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.12)",
   padding: 16,
 }));
-
 const Course = () => {
   const { id: courseId } = useParams();
   const [course, setCourse] = React.useState();
   const [syllabus, setSyllabus] = React.useState();
+  const [assignments, setAssignments] = React.useState();
+
   const [showMore, setShowMore] = React.useState(false);
   const navigate = useNavigate();
 
@@ -38,6 +42,9 @@ const Course = () => {
 
   const { data: dataSyllabus, isLoading: isLoadingSyllabus } =
     useGetCourseSyllabusWithoutQuery({ course_id: courseId });
+
+  const { data: dataAssignments, isLoading: isLoadingAssignments } =
+    useGetCourseAssignmentsQuery({ course_id: courseId });
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -51,7 +58,12 @@ const Course = () => {
     }
   }, [dataSyllabus, isLoadingSyllabus]);
 
-  console.log(syllabus);
+  React.useEffect(() => {
+    if (dataAssignments && !isLoadingAssignments) {
+      setAssignments(dataAssignments);
+      console.log(dataAssignments);
+    }
+  }, [dataAssignments, isLoadingAssignments]);
 
   return (
     <div style={styles.container}>
@@ -60,14 +72,19 @@ const Course = () => {
         <Profile />
       </div>
       <Spin spinning={isLoading} size="large">
-        <Box sx={{ flexGrow: 1, marginTop: 3 }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            marginTop: 3,
+          }}
+        >
           <Grid
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
             <Grid item xs={10} sm={9} md={7}>
-              <Item>
+              <Item style={{ marginBottom: 10 }}>
                 <div style={styles.mainCont}>
                   <div style={styles.titleCont}>
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -114,22 +131,32 @@ const Course = () => {
                   )}
                 </div>
               </Item>
-            </Grid>
-            <Grid item xs={10} sm={9} md={5}>
-              <Item>
-                <div>
-                  <div>Assignments</div>
-                </div>
-              </Item>
-            </Grid>
-            <Grid item xs={10} sm={9} md={7}>
               <Item>
                 <div>
                   <div>Course Posts</div>
                 </div>
               </Item>
             </Grid>
-            <Grid item xs={10} sm={9} md={5}>
+            <Grid item xs={1} sm={9} md={5}>
+              <Item style={{ marginBottom: 10 }}>
+                <div style={styles.cont}>
+                  <div style={styles.titleForCont}>Assignments</div>
+                  <Button
+                    type="link"
+                    onClick={() =>
+                      navigate(`/courses/${course?.id}/syllabus`, {
+                        state: { courseId: course?.id },
+                      })
+                    }
+                    style={styles.seeAll}
+                  >
+                    See all
+                  </Button>
+                </div>
+                {assignments?.slice(0, 3).map((item) => (
+                  <CourseAssignments key={item.id} item={item} />
+                ))}
+              </Item>
               <Item>
                 <div style={styles.cont}>
                   <div style={styles.titleForCont}>Syllabus</div>
@@ -150,6 +177,8 @@ const Course = () => {
                 ))}
               </Item>
             </Grid>
+
+            {/* <Grid item xs={10} sm={9} md={5}></Grid> */}
           </Grid>
         </Box>
       </Spin>

@@ -9,9 +9,13 @@ import { toasty } from "../shared/Toast";
 import { useLocation, useParams } from "react-router-dom";
 import {
   useAddSyllabusPointMutation,
+  useDeleteSyllabusPointMutation,
   useLazyGetCourseSyllabusQuery,
+  useUpdateSyllabusPointMutation,
 } from "../../redux/syllabus/syllabusApiSlice";
 import SyllabusCreate from "./SyllabusCreate";
+import SyllabusUpdate from "./SyllabusUpdate";
+import SyllabusDelete from "./SyllabusDelete";
 
 const SyllabusContainer = () => {
   const location = useLocation();
@@ -20,6 +24,8 @@ const SyllabusContainer = () => {
   const [selectedSyllabus, setSelectedSyllabus] = React.useState();
   const [showAddSyllabus, setShowAddSyllabus] = React.useState(false);
   const [showUpdateSyllabus, setShowUpdateSyllabus] = React.useState(false);
+  const [showDeleteSyllabus, setShowDeleteSyllabus] = React.useState(false);
+
   const [search, setSearch] = React.useState("");
   const [syllabus, setSyllabus] = React.useState();
 
@@ -27,6 +33,8 @@ const SyllabusContainer = () => {
     useLazyGetCourseSyllabusQuery();
 
   const [addSyllabus] = useAddSyllabusPointMutation();
+  const [updateSyllabus] = useUpdateSyllabusPointMutation();
+  const [deleteSyllabus] = useDeleteSyllabusPointMutation();
 
   React.useEffect(() => {
     if (courseId) {
@@ -53,6 +61,44 @@ const SyllabusContainer = () => {
         .then((payload) => {
           getSyllabus({ course_id: courseId, search });
           toasty({ type: "success", text: "Syllabus Point Created" });
+        });
+    } catch (err) {
+      console.log(err);
+      toasty();
+    }
+  };
+
+  const handleUpdateSyllabus = async (values, hours) => {
+    setShowUpdateSyllabus(false);
+    try {
+      await updateSyllabus({
+        syllabus_id: selectedSyllabus?.id,
+        name: values.name,
+        description: values.description,
+        hours: hours,
+        is_completed: values.is_completed,
+      })
+        .unwrap()
+        .then((payload) => {
+          getSyllabus({ course_id: courseId, search });
+          toasty({ type: "success", text: "Syllabus Point Updated" });
+        });
+    } catch (err) {
+      console.log(err);
+      toasty();
+    }
+  };
+
+  const handleDeleteSyllabus = async () => {
+    setShowDeleteSyllabus(false);
+    try {
+      await deleteSyllabus({
+        syllabus_id: selectedSyllabus?.id,
+      })
+        .unwrap()
+        .then((payload) => {
+          getSyllabus({ course_id: courseId, search });
+          toasty({ type: "success", text: "Syllabus Point Deleted" });
         });
     } catch (err) {
       console.log(err);
@@ -113,6 +159,16 @@ const SyllabusContainer = () => {
             }}
           >
             Change
+          </Button>
+          <Button
+            style={{ color: "#F18D58", fontWeight: 500 }}
+            type={"link"}
+            onClick={() => {
+              setSelectedSyllabus(record);
+              setShowDeleteSyllabus(true);
+            }}
+          >
+            Delete
           </Button>
         </Space>
       ),
@@ -198,6 +254,18 @@ const SyllabusContainer = () => {
         showAddSyllabus={showAddSyllabus}
         setShowAddSyllabus={setShowAddSyllabus}
         handleAddSyllabus={handleAddSyllabus}
+      />
+      <SyllabusUpdate
+        showUpdateSyllabus={showUpdateSyllabus}
+        setShowUpdateSyllabus={setShowUpdateSyllabus}
+        syllabus={selectedSyllabus}
+        setSyllabus={setSelectedSyllabus}
+        handleUpdateSyllabus={handleUpdateSyllabus}
+      />
+      <SyllabusDelete
+        showDeleteSyllabus={showDeleteSyllabus}
+        setShowDeleteSyllabus={setShowDeleteSyllabus}
+        handleDeleteSyllabus={handleDeleteSyllabus}
       />
     </div>
   );

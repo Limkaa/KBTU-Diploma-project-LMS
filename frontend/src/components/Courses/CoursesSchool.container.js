@@ -17,6 +17,7 @@ import { useGetSubjectsWithoutPageQuery } from "../../redux/subjects/subjectsApi
 import { useGetTeachersQuery } from "../../redux/users/usersApiSlice";
 import { useGetSchoolGroupsQuery } from "../../redux/groups/groupsApiSlice";
 import CoursesSchoolUpdate from "./CoursesSchoolUpdate";
+import { Link, useNavigate } from "react-router-dom";
 
 const CoursesSchoolContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -25,6 +26,7 @@ const CoursesSchoolContainer = () => {
   const [years, setYears] = React.useState();
   const [subjects, setSubjects] = React.useState();
   const [teachers, setTeachers] = React.useState();
+  const navigate = useNavigate();
 
   const [search, setSearch] = React.useState("");
   const [selectedCourse, setSelectedCourse] = React.useState();
@@ -166,9 +168,12 @@ const CoursesSchoolContainer = () => {
       },
       width: "20%",
       render: (item) => (
-        <div>
+        <Link
+          to={`/courses/${item.id}`}
+          style={{ textDecoration: "none", fontWeight: 600, color: "#00889D" }}
+        >
           {item?.subject?.name} ({item?.subject?.code})
-        </div>
+        </Link>
       ),
     },
     {

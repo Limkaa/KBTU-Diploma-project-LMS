@@ -14,4 +14,10 @@ urlpatterns = [
     path("", include(("apps.core.modules.assignments.urls", "assignments"))),
     path("", include(("apps.core.modules.posts.courses.urls", "courses-posts"))),
     path("", include(("apps.core.modules.posts.schools.urls", "schools-posts"))),
+    
+    path('', include(('apps.core.modules.timetables.rooms.urls', 'rooms'))),
+    path('', include(('apps.core.modules.timetables.timebounds.urls', 'timebounds'))),
+    
+    path("", include(("apps.core.modules.comments.course.urls", "courses-posts-comments"))),
+    path("", include(("apps.core.modules.comments.school.urls", "schools-posts-comments"))),
 ]

@@ -19,6 +19,8 @@ from apps.core.modules.courses.models import Course
 from apps.core.modules.syllabus.models import Syllabus
 from apps.core.modules.assignments.models import Assignment
 from apps.core.modules.posts.models import CoursePost, SchoolPost
+from apps.core.modules.timetables.models import Room, Timebound, Timetable
+from apps.core.modules.comments.models import CoursePostComment, SchoolPostComment
 
 lorems = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -77,7 +79,7 @@ class Command(BaseCommand):
         for school in json_schools:
             objects.append(School.objects.create(**school))
         
-        self.stdout.write(self.style.SUCCESS('Schools created'))
+        self.stdout.write(self.style.SUCCESS(f'Schools created ({len(objects)} objects)'))
         return objects
         
     def _create_users(self):
@@ -93,7 +95,7 @@ class Command(BaseCommand):
                 **user,
             ))
         
-        self.stdout.write(self.style.SUCCESS('Users created'))
+        self.stdout.write(self.style.SUCCESS(f'Users created ({len(objects)} objects)'))
         return objects
     
     def _create_grades(self):
@@ -107,7 +109,7 @@ class Command(BaseCommand):
                     is_active = True
                 ))
         
-        self.stdout.write(self.style.SUCCESS('Grades created'))
+        self.stdout.write(self.style.SUCCESS(f'Grades created ({len(objects)} objects)'))
         return objects
     
     def _create_groups(self):
@@ -127,7 +129,7 @@ class Command(BaseCommand):
                     code=group_code
                 ))
             
-        self.stdout.write(self.style.SUCCESS('Groups created'))
+        self.stdout.write(self.style.SUCCESS(f'Groups created ({len(objects)} objects)'))
         return objects
         
     def _assign_students_to_groups(self):
@@ -161,7 +163,7 @@ class Command(BaseCommand):
                         code=self._get_random_string_code(5)
                     ))
             
-        self.stdout.write(self.style.SUCCESS('Subjects created'))
+        self.stdout.write(self.style.SUCCESS(f'Subjects created ({len(objects)} objects)'))
         return objects
     
     def _create_academic_years_and_terms(self):
@@ -207,7 +209,7 @@ class Command(BaseCommand):
                     ))
             
         Course.objects.bulk_create(courses)
-        self.stdout.write(self.style.SUCCESS('Courses created'))
+        self.stdout.write(self.style.SUCCESS(f'Courses created ({len(courses)} objects)'))
     
     def _create_syllabuses(self):
         courses = Course.objects.all()
@@ -226,7 +228,7 @@ class Command(BaseCommand):
                 ))
         
         Syllabus.objects.bulk_create(syllabuses)
-        self.stdout.write(self.style.SUCCESS('Syllabuses created'))
+        self.stdout.write(self.style.SUCCESS(f'Syllabuses created ({len(syllabuses)} objects)'))
     
     def _create_assignments(self):
         courses = Course.objects.exclude(teacher__isnull=True)
@@ -247,7 +249,7 @@ class Command(BaseCommand):
                     ))
         
         Assignment.objects.bulk_create(assignments)
-        self.stdout.write(self.style.SUCCESS('Assignments created'))
+        self.stdout.write(self.style.SUCCESS(f'Assignments created ({len(assignments)} objects)'))
     
     def _create_courses_posts(self):
         courses = Course.objects.all()
@@ -264,14 +266,14 @@ class Command(BaseCommand):
                 ))
         
         CoursePost.objects.bulk_create(posts)
-        self.stdout.write(self.style.SUCCESS('Courses posts created'))
+        self.stdout.write(self.style.SUCCESS(f'Courses posts created ({len(posts)} objects)'))
     
     def _create_schools_posts(self):
         schools = School.objects.all()
         posts = []
         
         for school in schools:
-            posts_number = random.randint(0, 10)
+            posts_number = random.randint(4, 10)
             
             for post in range(posts_number):
                 posts.append(SchoolPost(
@@ -281,7 +283,87 @@ class Command(BaseCommand):
                 ))
         
         SchoolPost.objects.bulk_create(posts)
-        self.stdout.write(self.style.SUCCESS('Schools posts created'))
+        self.stdout.write(self.style.SUCCESS(f'Schools posts created ({len(posts)} objects)'))
+    
+    def _create_rooms(self):
+        schools = School.objects.all()
+        rooms = []
+        
+        for school in schools:
+            room_quantity = random.randint(30, 50)
+            rooms_numbers = random.sample(range(1, 1000), room_quantity)
+            
+            for room in rooms_numbers:
+                rooms.append(Room(
+                    school=school,
+                    name=room,
+                    is_active=random.choice([True, True, True, True, True, False])
+                ))
+            
+        Room.objects.bulk_create(rooms)
+        self.stdout.write(self.style.SUCCESS(f'Rooms created ({len(rooms)} objects)'))
+    
+    def _create_timebounds(self):
+        json = self._get_data_from_json_file('mock_data/timebounds.json')
+        timebounds = []
+
+        for school in self.schools:
+            for timebound in json.get("timebounds", []):
+                timebounds.append(Timebound(
+                    school=school,
+                    from_time=timebound.get("from_time"),
+                    to_time=timebound.get("to_time")
+                ))
+                    
+        Timebound.objects.bulk_create(timebounds)
+        self.stdout.write(self.style.SUCCESS(f'Timebounds created ({len(timebounds)} objects)'))
+    
+    def _create_schools_comments(self):
+        schools = School.objects.all()
+        comments = []
+        
+        for school in schools:
+            users = User.objects.filter(school=school)
+            posts = SchoolPost.objects.filter(school=school)
+            
+            for post in posts:
+                comments_number = random.randint(0, 5)
+                
+                for comment in range(comments_number):
+                    comments.append(SchoolPostComment(
+                        post=post,
+                        user=random.choice(users),
+                        text=self._get_lorem(sentences=random.randint(1, 5))
+                    ))
+        
+        SchoolPostComment.objects.bulk_create(comments)
+        self.stdout.write(self.style.SUCCESS(f'Schools posts comments created ({len(comments)} objects)'))
+        
+    def _create_courses_comments(self):
+        courses = Course.objects.all()
+        comments = []
+        
+        for course in courses:
+            students = Student.objects.filter(group=course.group)
+            possible_users_ids = [student.pk for student in students]
+            if course.teacher:
+                possible_users_ids.append(course.teacher.pk)
+                
+            posts = CoursePost.objects.filter(course=course)
+            
+            if possible_users_ids:
+                for post in posts:
+                    comments_number = random.randint(0, 5)
+                    
+                    for comment in range(comments_number):
+                        comments.append(CoursePostComment(
+                            post=post,
+                            user_id=random.choice(possible_users_ids),
+                            text=self._get_lorem(sentences=random.randint(1, 5))
+                        ))
+        
+        CoursePostComment.objects.bulk_create(comments)
+        self.stdout.write(self.style.SUCCESS(f'Course posts comments created ({len(comments)} objects)'))
     
     def handle(self, *args, **options):
         self.schools = self._create_schools()
@@ -295,7 +377,11 @@ class Command(BaseCommand):
         self._create_syllabuses()
         self._create_assignments()
         self._create_courses_posts()
+        self._create_courses_comments()
         self._create_schools_posts()
+        self._create_schools_comments()
+        self._create_rooms()
+        self._create_timebounds()
         
         self._create_superuser()
         

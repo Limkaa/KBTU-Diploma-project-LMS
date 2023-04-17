@@ -1,5 +1,6 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
+from rest_framework.permissions import SAFE_METHODS
 
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ...permissions import *
@@ -23,7 +24,14 @@ class YearCreateAPI(generics.CreateAPIView):
 class YearRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     queryset = Year.objects.all()
     serializer_class = YearModelSerializer
-    permission_classes = [OnlyOwnSchool, IsManager]
+
+    def get_permissions(self):
+        self.permission_classes = [OnlyOwnSchool, IsManager]
+        
+        if self.request.method in SAFE_METHODS:
+            self.permission_classes = [OnlyOwnSchool]
+        
+        return super().get_permissions()
     
     def perform_update(self, serializer):
         school = serializer.validated_data.get('school')
@@ -32,8 +40,11 @@ class YearRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class SchoolYearsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [OnlyOwnSchool, IsManager]
+    permission_classes = [OnlyOwnSchool]
     serializer_class = YearModelSerializer
+    filterset_fields = ['is_active']
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['name']
     
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])

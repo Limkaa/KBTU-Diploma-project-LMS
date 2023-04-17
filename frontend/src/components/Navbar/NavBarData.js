@@ -124,5 +124,10 @@ export const teacherMenu = [
     title: "School",
     path: "/school",
     icon: UsersSvg,
+  },
+  {
+    title: "Groups",
+    path: "/groups",
+    icon: UsersSvg,
   }
 ];

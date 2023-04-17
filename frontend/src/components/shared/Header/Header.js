@@ -1,6 +1,6 @@
 import React from "react";
 import "./Header.css";
-import Search from "../../assets/icons/search.svg";
+import Search from "../../../assets/icons/search.svg";
 import { Input } from "antd";
 
 const Header = ({ text, visible }) => {

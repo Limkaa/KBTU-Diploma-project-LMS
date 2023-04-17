@@ -10,12 +10,17 @@
     background-color: white;
 }
 
-.btn {
+.school .btn {
     background-color: #163A61;
 }
 
-.input:hover {
-    box-shadow: 0 0 2px #163A61;
+.school .btn:hover {
+    background-color: #163A61 !important;
+}
+
+.school .input:hover {
+    /*box-shadow: 0 0 2px #163A61;*/
+    border: 1px solid #366caf;
 }
 
 

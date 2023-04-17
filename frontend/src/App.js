@@ -13,8 +13,10 @@ import GradesContainer from "./components/Grades/Grades.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
 import SchoolPage from "./pages/SchoolsPage/SchoolPage";
-import GroupsPage from "./pages/Groups/GroupsPage";
+import GroupsPage from "./pages/GroupsPage/GroupsPage";
 import { toast } from "react-toastify";
+import TeacherGroupsPage from "./pages/GroupsPage/TeacherGroupsPage";
+import StudentsPage from "./pages/StudentsPage/StudentsPage";
 
 function App() {
   React.useEffect(() => {
@@ -40,11 +42,18 @@ function App() {
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
           <Route exact path="/school" element={<SchoolPage />} />
+          {/*<Route exact path="/groups" element={<TeacherGroupsPage />} />*!/*/}
+          {/*<Route exact path="/groups/:groupId/students" element={<StudentsPage />} />*/}
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
           <Route exact path="/users" element={<UsersContainer />} />
           <Route exact path="/groups" element={<GroupsPage />} />
+          <Route exact path="/groups/:groupId/students" element={<StudentsPage />} />
         </Route>
+        {/*<Route element={<PrivateRoute allowedRoles={["teacher"]} />}>*/}
+        {/*  <Route exact path="/groups" element={<TeacherGroupsPage />} />*/}
+        {/*  <Route exact path="/groups/:groupId/students" element={<StudentsPage />} />*/}
+        {/*</Route>*/}
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>
     </div>

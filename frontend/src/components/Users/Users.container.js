@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import {Table, Input, Button, Space, Spin, Tag} from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
-import AddingUserModal from "../modals/AddingUserModal";
-import UpdateUserModal from "../modals/UpdateUserModal";
+import AddingUserModal from "./AddingUserModal";
+import UpdateUserModal from "./UpdateUserModal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -223,6 +223,7 @@ const UsersContainer = () => {
                 current: page,
                 onChange: (page) => {
                   setPage(page);
+                  window.scrollTo(0,0);
                 },
                 showSizeChanger: false,
               }}

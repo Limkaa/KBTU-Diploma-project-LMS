@@ -1,13 +1,15 @@
 import React from 'react';
 import Profile from "../../components/Dashboard/Profile"
-import Header from "../../components/shared/Header";
+import Header from "../../components/shared/Header/Header";
 import "./SchoolPage.css";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
 import {useGetSchoolQuery, useUpdateSchoolMutation} from "../../redux/schools/schoolsApiSlice";
 import {useEffect, useState} from "react";
-import {Button, Form, Input, notification, Spin} from "antd";
-
+import {Button, Form, Input, Spin} from "antd";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {toastify} from "../../components/shared/Toast/Toast";
 
 const SchoolPage = () => {
     const user = useSelector(selectCurrentUser);
@@ -18,39 +20,36 @@ const SchoolPage = () => {
     const [address, setAddress] = useState(school?.address);
     const [desc, setDesc] = useState(school?.description);
     const [form] = Form.useForm();
-    const [api, contextHolder] = notification.useNotification();
-
-    const openNotification = () => {
-        api['warning']({
-            message: 'Form error',
-            description:
-                'Error occurred while sending the form',
-        });
-    }
 
     useEffect(() => {
         if (isSuccess) {
+            setName(school.name);
+            setDesc(school.description);
+            setAddress(school.address);
             form.setFieldsValue({
                 name: school?.name,
                 description: school?.description,
                 address: school?.address,
             })
         }
-    }, [school, isLoading, isSuccess]);
+    }, [school, isSuccess]);
 
     const onFinish = () => {
-        updateSchool({school_id: user.school_id, name, address, description: desc}).unwrap()
-            .then(school => {
-                setName(school.name);
-                setDesc(school.description);
-                setAddress(school.address);
-            })
-            .catch(() => {
-                openNotification();
-            });
-    };
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        if (name === school?.name && address === school?.address && desc === school?.description) {
+            toastify("info", "School information has not changed");
+        }
+        else {
+            updateSchool({school_id: user.school_id, name, address, description: desc}).unwrap()
+                .then(school => {
+                    setName(school.name);
+                    setDesc(school.description);
+                    setAddress(school.address);
+                    toastify("success", "School successfully updated");
+                })
+                .catch(() => {
+                    toastify("error", "School updating failed");
+                });
+        }
     };
 
     return (
@@ -76,9 +75,8 @@ const SchoolPage = () => {
                         }}
                         autoComplete="off"
                         onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
+                        requiredMark={false}
                     >
-                        {contextHolder}
                         <Form.Item label="Name:" name="name" rules={[
                             {
                                 required: true,

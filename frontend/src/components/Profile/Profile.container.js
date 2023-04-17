@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import { Button } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";

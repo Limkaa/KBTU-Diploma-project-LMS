@@ -12,3 +12,18 @@
     display: flex;
     justify-content: end;
 }
+
+
+.modal .error, .modal .hidden {
+    transition: 0.5s;
+    height: 26px;
+    color: #ffb082;
+    font-weight: 500;
+    font-size: 13px;
+    margin-left: 4px;
+    opacity: 1;
+}
+
+.modal .hidden {
+    opacity: 0;
+}

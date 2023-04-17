@@ -1,6 +1,6 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
@@ -14,7 +14,7 @@ import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import UpdateSubjects from "./UpdateSubjects";
 import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import AddSubject from "./AddSubject";
-import { toasty } from "../shared/Toast";
+import { toasty } from "../shared/Toast/Toast";
 
 const SubjectsContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();

@@ -24,8 +24,17 @@ export const usersApiSlice = authApi.injectEndpoints({
         body: data,
       }),
     }),
+    getTeachers: builder.query({
+      query: (school_id) =>
+          `/api/schools/${school_id}/teachers`
+    })
   }),
 });
 
-export const { useGetUsersQuery, useAddUserMutation, useUpdateUserMutation } =
+export const {
+  useGetUsersQuery,
+  useAddUserMutation,
+  useUpdateUserMutation,
+  useGetTeachersQuery
+} =
   usersApiSlice;

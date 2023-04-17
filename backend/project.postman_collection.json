@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user13@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user10@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1914,13 +1914,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/3",
+							"raw": "{{BASE_URL}}/courses/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"3"
+								"1"
 							]
 						}
 					},
@@ -2425,18 +2425,249 @@
 			"name": "Assignments",
 			"item": [
 				{
+					"name": "Marks",
+					"item": [
+						{
+							"name": "Get assignment marks",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/assignments/2/marks?page=1&search=",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"assignments",
+										"2",
+										"marks"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "search",
+											"value": "",
+											"description": "student's first_name, last_name"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create assignment mark",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student\": 25,\n    \"number\": 5,\n    \"comment\": \"Great\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/assignments/6/marks",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"assignments",
+										"6",
+										"marks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one assignment mark",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/marks/4",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"marks",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update assignment mark",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"number\": 5,\n    \"comment\": \"Nice work!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/marks/4",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"marks",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete assignment mark",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/marks/6",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"marks",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all marks of one student",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/students/25/marks?page=1&is_active&term=&course&course__teacher&course__subject=&course__subject__grade=&course__year&no_marks=&ordering=datetime&search",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"students",
+										"25",
+										"marks"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "is_active",
+											"value": null
+										},
+										{
+											"key": "term",
+											"value": ""
+										},
+										{
+											"key": "course",
+											"value": null
+										},
+										{
+											"key": "course__teacher",
+											"value": null
+										},
+										{
+											"key": "course__subject",
+											"value": ""
+										},
+										{
+											"key": "course__subject__grade",
+											"value": ""
+										},
+										{
+											"key": "course__year",
+											"value": null
+										},
+										{
+											"key": "no_marks",
+											"value": "",
+											"description": "true, false (does have any marks or no)"
+										},
+										{
+											"key": "ordering",
+											"value": "datetime",
+											"description": "assignment datetime"
+										},
+										{
+											"key": "search",
+											"value": null,
+											"description": "assignment name"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all marks of one term of course",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/courses/1/terms/1/marks?page=1&ordering=&search=",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"courses",
+										"1",
+										"terms",
+										"1",
+										"marks"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "ordering",
+											"value": "",
+											"description": "average_mark"
+										},
+										{
+											"key": "search",
+											"value": "",
+											"description": "student's first_name, last_name"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get one assignment",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/assignments/1",
+							"raw": "{{BASE_URL}}/assignments/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"assignments",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -2528,13 +2759,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/33/assignments?ordering=datetime",
+							"raw": "{{BASE_URL}}/courses/1/assignments",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"33",
+								"1",
 								"assignments"
 							],
 							"query": [
@@ -2556,13 +2787,73 @@
 								{
 									"key": "ordering",
 									"value": "datetime",
-									"description": "datetime, -datetime"
+									"description": "datetime, -datetime",
+									"disabled": true
 								},
 								{
 									"key": "search",
 									"value": "nul",
 									"description": "in fields: name",
 									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all assignments of teacher",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/teachers/10/assignments?page=1&course&term&is_active&course__subject&course__year&course__group&ordering&search",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"teachers",
+								"10",
+								"assignments"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "course",
+									"value": null
+								},
+								{
+									"key": "term",
+									"value": null
+								},
+								{
+									"key": "is_active",
+									"value": null
+								},
+								{
+									"key": "course__subject",
+									"value": null
+								},
+								{
+									"key": "course__year",
+									"value": null
+								},
+								{
+									"key": "course__group",
+									"value": null
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "assignment datetime"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "assignment name"
 								}
 							]
 						}

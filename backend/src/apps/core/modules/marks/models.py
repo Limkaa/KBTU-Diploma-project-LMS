@@ -35,7 +35,7 @@ class Mark(CustomModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    non_updatable_fields = ["id", "assigment", "student", "number", "created_at"]
+    non_updatable_fields = ["id", "assignment", "student", "number", "created_at"]
     
     def __str__(self) -> str:
         return f"{self.number} - {self.student}"

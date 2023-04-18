@@ -27,7 +27,7 @@ const TermsContainer = () => {
   const [years, setYears] = React.useState();
   const [terms, setTerms] = React.useState();
   const [search, setSearch] = React.useState("");
-  const [selectedYear, setSelectedYear] = React.useState();
+  const [selectedYear, setSelectedYear] = React.useState("");
   const [selectedTerm, setSelectedTerm] = React.useState();
 
   const [showAddTerm, setShowAddTerm] = React.useState(false);
@@ -60,6 +60,12 @@ const TermsContainer = () => {
   React.useEffect(() => {
     if (dataYears && !isLoadingYears) {
       setYears(dataYears.filter((el) => el.is_active));
+      setSelectedYear(
+        dataYears.filter((el) => el.is_active)[dataYears.length - 1].id
+      );
+      console.log(
+        dataYears.filter((el) => el.is_active)[dataYears.length - 1].id
+      );
     }
   }, [dataYears, isLoadingYears]);
 
@@ -200,7 +206,8 @@ const TermsContainer = () => {
               labelId="grade"
               id="grade"
               label="Grade"
-              defaultValue={""}
+              defaultValue={selectedYear}
+              value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
               <MenuItem value="" disabled>

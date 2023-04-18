@@ -9,9 +9,7 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import {
-  useGetCourseSyllabusWithoutQuery,
-} from "../../redux/syllabus/syllabusApiSlice";
+import { useGetCourseSyllabusWithoutQuery } from "../../redux/syllabus/syllabusApiSlice";
 import { Button } from "antd";
 import CourseSyllabus from "./CourseSyllabus";
 import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
@@ -59,7 +57,6 @@ const Course = () => {
   React.useEffect(() => {
     if (dataAssignments && !isLoadingAssignments) {
       setAssignments(dataAssignments);
-      console.log(dataAssignments);
     }
   }, [dataAssignments, isLoadingAssignments]);
 
@@ -81,7 +78,7 @@ const Course = () => {
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
-            <Grid item xs={10} sm={9} md={7}>
+            <Grid item xs={10} sm={9} md={8}>
               <Item style={{ marginBottom: 10 }}>
                 <div style={styles.mainCont}>
                   <div style={styles.titleCont}>
@@ -135,14 +132,14 @@ const Course = () => {
                 </div>
               </Item>
             </Grid>
-            <Grid item xs={1} sm={9} md={5}>
+            <Grid item xs={1} sm={9} md={4}>
               <Item style={{ marginBottom: 10 }}>
                 <div style={styles.cont}>
                   <div style={styles.titleForCont}>Assignments</div>
                   <Button
                     type="link"
                     onClick={() =>
-                      navigate(`/courses/${course?.id}/syllabus`, {
+                      navigate(`/courses/${course?.id}/assignments`, {
                         state: { courseId: course?.id },
                       })
                     }

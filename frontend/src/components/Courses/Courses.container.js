@@ -17,7 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Input, Empty } from "antd";
+import { Input, Empty, Spin } from "antd";
 import Search from "../../assets/icons/search.svg";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 
@@ -62,9 +62,7 @@ const CoursesContainer = () => {
   React.useEffect(() => {
     if (dataYears && !isLoadingYears) {
       setYears(dataYears);
-      setSelectedYear(
-        dataYears[dataYears.length - 1].id
-      );
+      setSelectedYear(dataYears[dataYears.length - 1].id);
     }
   }, [dataYears, isLoadingYears]);
 
@@ -142,46 +140,49 @@ const CoursesContainer = () => {
             </Select>
           </FormControl>
         </div>
-        <Grid
-          container
-          spacing={{ xs: 3, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 15 }}
-        >
-          {courses?.length > 0 ? (
-            courses?.map((item) => (
-              <Grid item xs={6} sm={8} md={3} key={item.id}>
-                <Link
-                  to={`/courses/${item.id}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  <Item>
-                    <CourseLogo
-                      title={item?.subject?.name}
-                      width={"50%"}
-                      height={"55%"}
-                      fontSize={30}
-                    />
-                    <div style={styles.title}>{item?.subject?.name}</div>
-                    <div style={styles.teacher}>
-                      <div style={styles.teachTitle}>Teacher:</div>
-                      {item?.teacher ? (
-                        <div style={styles.teacher_name}>
-                          {item?.teacher?.first_name} {item?.teacher?.last_name}
-                        </div>
-                      ) : (
-                        <div style={styles.teacher_name}>-</div>
-                      )}
-                    </div>
-                  </Item>
-                </Link>
-              </Grid>
-            ))
-          ) : (
-            <div style={{ width: "100%", marginTop: 40 }}>
-              <Empty />
-            </div>
-          )}
-        </Grid>
+        <Spin spinning={isLoading} size="large">
+          <Grid
+            container
+            spacing={{ xs: 3, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 15 }}
+          >
+            {courses?.length > 0 ? (
+              courses?.map((item) => (
+                <Grid item xs={6} sm={8} md={3} key={item.id}>
+                  <Link
+                    to={`/courses/${item.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Item>
+                      <CourseLogo
+                        title={item?.subject?.name}
+                        width={"50%"}
+                        height={"55%"}
+                        fontSize={30}
+                      />
+                      <div style={styles.title}>{item?.subject?.name}</div>
+                      <div style={styles.teacher}>
+                        <div style={styles.teachTitle}>Teacher:</div>
+                        {item?.teacher ? (
+                          <div style={styles.teacher_name}>
+                            {item?.teacher?.first_name}{" "}
+                            {item?.teacher?.last_name}
+                          </div>
+                        ) : (
+                          <div style={styles.teacher_name}>-</div>
+                        )}
+                      </div>
+                    </Item>
+                  </Link>
+                </Grid>
+              ))
+            ) : (
+              <div style={{ width: "100%", marginTop: 40 }}>
+                <Empty />
+              </div>
+            )}
+          </Grid>
+        </Spin>
       </Box>
     </div>
   );

@@ -4,7 +4,7 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getCourseAssignments: builder.query({
       query: ({ course_id }) =>
-        `api/courses/${course_id}/assignments?ordering=datetime`,
+        `api/courses/${course_id}/assignments?ordering=-datetime`,
       keepUnusedDataFor: 5,
     }),
     // addTerm: builder.mutation({

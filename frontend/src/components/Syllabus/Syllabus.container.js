@@ -277,7 +277,6 @@ const SyllabusContainer = () => {
 const styles = {
   container: {
     flex: 1,
-    height: "100%",
     backgroundColor: "#FAFAFA",
     padding: 16,
   },

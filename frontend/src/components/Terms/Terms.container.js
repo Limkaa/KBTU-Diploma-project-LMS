@@ -1,6 +1,6 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
@@ -17,7 +17,7 @@ import {
   useUpdateTermMutation,
 } from "../../redux/terms/termsApiSlice";
 import moment from "moment-timezone";
-import { toasty } from "../shared/Toast";
+import { toasty } from "../shared/Toast/Toast";
 import AddTerm from "./AddTerm";
 import UpdateTerm from "./UpdateTerm";
 import dayjs from "dayjs";

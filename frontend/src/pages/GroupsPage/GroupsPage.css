@@ -1,0 +1,29 @@
+.groups .btn {
+    background-color: #163A61;
+    height: 40px;
+    border-radius: 8px;
+    align-items: center;
+    display: flex;
+    font-weight: 500;
+    margin-left: 16px;
+}
+
+.groups .table-header {
+    display: flex;
+    justify-content: end;
+}
+
+
+.modal .error, .modal .hidden {
+    transition: 0.5s;
+    height: 26px;
+    color: #ffb082;
+    font-weight: 500;
+    font-size: 13px;
+    margin-left: 4px;
+    opacity: 1;
+}
+
+.modal .hidden {
+    opacity: 0;
+}

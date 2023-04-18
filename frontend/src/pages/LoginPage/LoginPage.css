@@ -12,22 +12,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20%;
+    gap: 10%;
 }
 
-.login form {
-    width: 540px;
+.login .form {
+    width: 350px;
     border-radius: 15px;
     background-color: white;
     padding: 20px 20px;
+    position: relative;
+    z-index: 100;
+    box-shadow: 0 0 6px 0 #cecece;
 }
 
 .login form > * {
     display: block;
-    margin: 20px 0;
+    margin: 23px 0;
 }
-
-
 
 .login h1 {
     font-style: normal;
@@ -36,63 +37,37 @@
     line-height: 46px;
     color: #163A61;
     text-align: center;
-    margin: 0;
+    margin: 0 0 20px 0;
 }
 
 .login input {
-    display: block;
-    height: 45px;
     width: 100%;
-    border-radius: 10px;
-    padding: 12px;
-    outline: none;
-    border: 1px solid #DFDFDF;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
-    text-align: left;
-    margin: 10px 0;
-    box-sizing: border-box;
 }
 
-.login input::placeholder {
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
-    text-align: left;
-    color: #9DA6BA;
+.login input:focus {
+    border-color: #163A61;
 }
+
 
 .login button {
-    margin: 0 auto;
-    min-width: 120px;
-    height: 40px;
-    border-radius: 10px;
+    margin: 10px auto 0;
+    min-width: 80px;
+    height: 30px;
+    border-radius: 8px;
     background-color: #163A61;
     border: none;
     font-style: normal;
     font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
+    font-size: 16px;
     text-align: center;
     color: #FFFFFF;
+    cursor: pointer;
 }
 
-.login .graphics {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 500px;
-    height: 500px;
+.ant-input:focus {
+    outline: none;
+    border: 1px solid #163A61;
 }
 
-.login svg {
-    position: absolute;
-    display: block;
-    height: 100%;
-    width: 100%;
-}
 
 

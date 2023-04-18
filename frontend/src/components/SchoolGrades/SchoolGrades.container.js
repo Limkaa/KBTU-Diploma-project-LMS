@@ -1,6 +1,6 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
@@ -12,7 +12,7 @@ import {
 } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import AddSchoolGrade from "./AddSchoolGrade";
 import UpdateSchoolGrade from "./UpdateSchoolGrade";
-import { toasty } from "../shared/Toast";
+import { toasty } from "../shared/Toast/Toast";
 
 const SchoolGradesContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();

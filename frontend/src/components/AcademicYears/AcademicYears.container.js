@@ -1,6 +1,6 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
@@ -11,7 +11,7 @@ import {
 } from "../../redux/academicYears/academicYearsApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import CreateYear from "./CreateYear";
-import { toasty } from "../shared/Toast";
+import { toasty } from "../shared/Toast/Toast";
 import UpdateYear from "./UpdateYear";
 
 const AcademicYearsContainer = () => {

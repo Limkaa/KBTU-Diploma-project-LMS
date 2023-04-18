@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
-import { Table, Input, Button, Space } from "antd";
+import Header from "../shared/Header/Header";
+import { Table, Input, Button, Space, Spin, Tag } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "./AddingUserModal";
@@ -13,7 +13,6 @@ import {
   useLazyGetUsersQuery,
 } from "../../redux/users/usersApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
-import { toasty } from "../shared/Toast";
 
 const UsersContainer = () => {
   const [users, setUsers] = React.useState();
@@ -34,6 +33,11 @@ const UsersContainer = () => {
       getUsers({ school_id: user?.school_id, page, search });
     }
   }, [user, page, search]);
+  const roleColor = {
+    manager: "orange",
+    teacher: "purple",
+    student: "green",
+  };
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -50,7 +54,7 @@ const UsersContainer = () => {
     setShowUpdateUser(false);
     const phoneFormat = `${removeSpecSymbols(values.phone)}`;
     try {
-      await updateUser({
+      const updateUsers = await updateUser({
         id: selectedUser.id,
         email: values.email,
         first_name: values.first_name,
@@ -66,10 +70,26 @@ const UsersContainer = () => {
         .then((payload) => {
           getUsers({ school_id: user?.school_id, page, search });
           refetchUser();
-          toasty({ type: "success", text: "User Updated" });
+          toast.success("User Updated", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: false,
+            theme: "colored",
+          });
         });
     } catch (err) {
-      toasty();
+      toast.error("Error", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        theme: "colored",
+      });
     }
   };
 
@@ -103,8 +123,15 @@ const UsersContainer = () => {
       title: () => {
         return <>Role</>;
       },
-      dataIndex: "role",
       width: "15%",
+      render: (user) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={roleColor[user.role]}
+        >
+          {user.role}
+        </Tag>
+      ),
     },
     {
       title: "Action",
@@ -113,7 +140,7 @@ const UsersContainer = () => {
       render: (_, record) => (
         <Space size="middle">
           <Button
-            style={{ color: "#00899E", fontWeight: 500 }}
+            style={{ color: "#00899E", fontWeight: 500, padding: 0 }}
             type={"link"}
             onClick={() => {
               setSelectedUser(record);
@@ -126,16 +153,12 @@ const UsersContainer = () => {
       ),
     },
   ];
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
+    <main style={styles.container}>
+      <header style={styles.header}>
         <Header text={"Users"} />
         <Profile />
-      </div>
+      </header>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
           <div style={{ alignItems: "center", display: "flex" }}>
@@ -169,19 +192,27 @@ const UsersContainer = () => {
             </Button>
           </div>
         </div>
-        <Table
-          dataSource={users}
-          columns={columns}
-          rowKey={(item) => item?.id}
-          pagination={{
-            total: total,
-            current: page,
-            onChange: (page) => {
-              setPage(page);
-            },
-            showSizeChanger: false,
-          }}
-        />
+        <Spin spinning={isLoading}>
+          <Table
+            dataSource={users}
+            columns={columns}
+            rowKey={(item) => item?.id}
+            onRow={(record) => {
+              return {
+                onClick: () => {},
+              };
+            }}
+            pagination={{
+              total: total,
+              current: page,
+              onChange: (page) => {
+                setPage(page);
+                window.scrollTo(0, 0);
+              },
+              showSizeChanger: false,
+            }}
+          />
+        </Spin>
       </div>
       <AddingUserModal
         setShowAddUser={setShowAddUser}
@@ -197,7 +228,7 @@ const UsersContainer = () => {
         setSelectedUser={setSelectedUser}
         handleUpdateUser={handleUpdateUser}
       />
-    </div>
+    </main>
   );
 };
 
@@ -215,6 +246,7 @@ const styles = {
     marginTop: 20,
     borderRadius: 8,
     border: "1px solid #0000000D",
+    borderBottom: "none",
   },
   filter: {
     padding: 8,

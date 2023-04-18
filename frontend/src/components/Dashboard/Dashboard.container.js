@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import Assignments from "./Assignments";
 import Calendar from "./Calendar";
 import "./Dashboard.css";

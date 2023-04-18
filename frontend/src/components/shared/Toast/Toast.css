@@ -1,0 +1,11 @@
+.success {
+    background: white;
+}
+
+.success .Toastify__progress-bar {
+    background-color: #45b764;
+}
+
+.success .Toastify__progress-bar--animated::before {
+    background-color: #45B764;
+}

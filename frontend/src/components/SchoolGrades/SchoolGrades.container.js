@@ -1,7 +1,7 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
-import { Table, Input, Button, Space } from "antd";
+import { Table, Input, Button, Space, Tag } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
@@ -12,7 +12,7 @@ import {
 } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import AddSchoolGrade from "./AddSchoolGrade";
 import UpdateSchoolGrade from "./UpdateSchoolGrade";
-import { toasty } from "../shared/Toast/Toast";
+import { toastify } from "../shared/Toast/Toast";
 
 const SchoolGradesContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -65,10 +65,11 @@ const SchoolGradesContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Grade Created" });
+            toastify("success", "Grade Created");
           });
       } catch (err) {
-        toasty();
+        let message = err.data.detail?.non_field_errors[0] ?? "Error";
+        toastify("error", message);
       }
     }
   };
@@ -85,41 +86,33 @@ const SchoolGradesContainer = () => {
         .unwrap()
         .then((payload) => {
           refetch();
-          toasty({ type: "success", text: "Grade Updated" });
+          toastify("success", "Grade Updated");
         });
     } catch (err) {
-      toasty();
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
     }
   };
 
   const columns = [
     {
-      width: "1%",
-      render: (item) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={
-              item?.is_active
-                ? require("../../assets/icons/active.png")
-                : require("../../assets/icons/inactive.png")
-            }
-            style={{ width: 16, height: 16 }}
-          />
-        </div>
-      ),
-    },
-    {
       title: () => {
         return <>Name</>;
       },
-      width: "60%",
+      width: "50%",
       render: (item) => <div>{item.name}</div>,
+    },
+    {
+      title: "Status",
+      width: "15%",
+      render: (item) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={item.is_active ? "green" : "volcano"}
+        >
+          {item.is_active ? "Active" : "Inactive"}
+        </Tag>
+      ),
     },
     {
       title: "Action",

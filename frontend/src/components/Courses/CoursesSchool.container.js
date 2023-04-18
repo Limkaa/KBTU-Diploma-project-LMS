@@ -1,11 +1,10 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
-import { Table, Input, Button, Space } from "antd";
+import Header from "../shared/Header/Header";
+import { Table, Input, Button, Space, Tag } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
-import { toasty } from "../shared/Toast";
 import {
   useAddCourseMutation,
   useGetSchoolCoursesQuery,
@@ -15,9 +14,10 @@ import CoursesSchoolAdd from "./CoursesSchoolAdd";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 import { useGetSubjectsWithoutPageQuery } from "../../redux/subjects/subjectsApiSlice";
 import { useGetTeachersQuery } from "../../redux/users/usersApiSlice";
-import { useGetSchoolGroupsQuery } from "../../redux/groups/groupsApiSlice";
+import { useGetGroupsQuery } from "../../redux/groups/groupsApiSlice";
 import CoursesSchoolUpdate from "./CoursesSchoolUpdate";
 import { Link, useNavigate } from "react-router-dom";
+import { toastify } from "../shared/Toast/Toast";
 
 const CoursesSchoolContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -43,10 +43,9 @@ const CoursesSchoolContainer = () => {
   const [createCourse] = useAddCourseMutation();
   const [updateCourse] = useUpdateCourseMutation();
 
-  const { data: dataGroups, isLoading: isLoadingGroups } =
-    useGetSchoolGroupsQuery({
-      school_id: user?.school_id,
-    });
+  const { data: dataGroups, isLoading: isLoadingGroups } = useGetGroupsQuery({
+    school_id: user?.school_id,
+  });
 
   const { data: dataYears, isLoading: isLoadingYears } =
     useGetYearsWithoutPageQuery({
@@ -110,11 +109,12 @@ const CoursesSchoolContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Course Created" });
+            toastify("success", "Course Created");
           });
       } catch (err) {
         console.log(err);
-        toasty();
+        let message = err.data.detail?.non_field_errors[0] ?? "Error";
+        toastify("error", message);
       }
     }
   };
@@ -130,38 +130,39 @@ const CoursesSchoolContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Course Updated" });
+            toastify("success", "Course Updated");
           });
       } catch (err) {
         console.log(err);
-        toasty();
+        let message = err.data.detail?.non_field_errors[0] ?? "Error";
+        toastify("error", message);
       }
     }
     setShowUpdateCourse(false);
   };
 
   const columns = [
-    {
-      width: "1%",
-      render: (item) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={
-              item?.is_active
-                ? require("../../assets/icons/active.png")
-                : require("../../assets/icons/inactive.png")
-            }
-            style={{ width: 16, height: 16 }}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   width: "1%",
+    //   render: (item) => (
+    //     <div
+    //       style={{
+    //         display: "flex",
+    //         alignItems: "center",
+    //         justifyContent: "center",
+    //       }}
+    //     >
+    //       <img
+    //         src={
+    //           item?.is_active
+    //             ? require("../../assets/icons/active.png")
+    //             : require("../../assets/icons/inactive.png")
+    //         }
+    //         style={{ width: 16, height: 16 }}
+    //       />
+    //     </div>
+    //   ),
+    // },
     {
       title: () => {
         return <>Subject</>;
@@ -203,6 +204,18 @@ const CoursesSchoolContainer = () => {
         <div>
           {item?.group?.grade?.name} ({item?.group?.code})
         </div>
+      ),
+    },
+    {
+      title: "Status",
+      width: "15%",
+      render: (item) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={item.is_active ? "green" : "volcano"}
+        >
+          {item.is_active ? "Active" : "Inactive"}
+        </Tag>
       ),
     },
     {

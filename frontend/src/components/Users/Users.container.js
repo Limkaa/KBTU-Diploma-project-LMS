@@ -6,13 +6,13 @@ import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import AddingUserModal from "./AddingUserModal";
 import UpdateUserModal from "./UpdateUserModal";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   useUpdateUserMutation,
   useLazyGetUsersQuery,
 } from "../../redux/users/usersApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import { toastify } from "../shared/Toast/Toast";
 
 const UsersContainer = () => {
   const [users, setUsers] = React.useState();
@@ -33,6 +33,7 @@ const UsersContainer = () => {
       getUsers({ school_id: user?.school_id, page, search });
     }
   }, [user, page, search]);
+
   const roleColor = {
     manager: "orange",
     teacher: "purple",
@@ -54,7 +55,7 @@ const UsersContainer = () => {
     setShowUpdateUser(false);
     const phoneFormat = `${removeSpecSymbols(values.phone)}`;
     try {
-      const updateUsers = await updateUser({
+      await updateUser({
         id: selectedUser.id,
         email: values.email,
         first_name: values.first_name,
@@ -70,26 +71,11 @@ const UsersContainer = () => {
         .then((payload) => {
           getUsers({ school_id: user?.school_id, page, search });
           refetchUser();
-          toast.success("User Updated", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: false,
-            theme: "colored",
-          });
+          toastify("success", "User Updated");
         });
     } catch (err) {
-      toast.error("Error", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: false,
-        theme: "colored",
-      });
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
     }
   };
 
@@ -235,7 +221,6 @@ const UsersContainer = () => {
 const styles = {
   container: {
     flex: 1,
-    height: "100%",
     backgroundColor: "#FAFAFA",
     padding: 16,
   },
@@ -246,7 +231,6 @@ const styles = {
     marginTop: 20,
     borderRadius: 8,
     border: "1px solid #0000000D",
-    borderBottom: "none",
   },
   filter: {
     padding: 8,

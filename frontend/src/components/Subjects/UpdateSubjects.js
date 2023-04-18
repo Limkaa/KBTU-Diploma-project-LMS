@@ -58,6 +58,8 @@ const UpdateSubjects = ({
     }
   }, [subject]);
 
+  console.log("val", values);
+
   const handleInputChange = (e) => {
     let { name, value, checked } = e.target;
     if (name === "is_active") {

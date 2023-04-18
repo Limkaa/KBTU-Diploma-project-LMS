@@ -1,15 +1,12 @@
 import React, { useContext } from "react";
 import Cancel from "../../assets/icons/close.svg";
 import { Formik, Form, Field } from "formik";
-import InputMask from "react-input-mask";
 import "../modals/Modals.css";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { toast } from "react-toastify";
-import { useAddUserMutation } from "../../redux/users/usersApiSlice";
 import { styled } from "@mui/material/styles";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

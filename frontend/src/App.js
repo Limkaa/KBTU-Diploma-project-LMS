@@ -51,6 +51,7 @@ function App() {
           <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
+          <Route exact path="/school" element={<SchoolPage />} />
           <Route
             exact
             path="/courses/:id/syllabus"
@@ -58,7 +59,7 @@ function App() {
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher"]} />}>
-          <Route exact path="/groups" element={<TeacherGroupsPage />} />
+          {/* <Route exact path="/groups" element={<TeacherGroupsPage />} /> */}
           <Route
             exact
             path="/groups/:groupId/students"

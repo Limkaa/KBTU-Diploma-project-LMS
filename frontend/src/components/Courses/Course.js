@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import CourseLogo from "../shared/CourseLogo";
 import { Spin } from "antd";
 import { styled } from "@mui/material/styles";
@@ -11,13 +11,11 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import {
   useGetCourseSyllabusWithoutQuery,
-  useLazyGetCourseSyllabusQuery,
 } from "../../redux/syllabus/syllabusApiSlice";
 import { Button } from "antd";
 import CourseSyllabus from "./CourseSyllabus";
 import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
 import CourseAssignments from "./CourseAssignments";
-import { Col, Divider, Row } from "antd";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -189,7 +187,6 @@ const Course = () => {
 const styles = {
   container: {
     flex: 1,
-    height: "100%",
     backgroundColor: "#FAFAFA",
     padding: 16,
   },

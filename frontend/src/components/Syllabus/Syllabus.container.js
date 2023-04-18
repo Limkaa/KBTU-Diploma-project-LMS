@@ -1,11 +1,10 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import { Table, Input, Button, Space } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
-import { toasty } from "../shared/Toast";
 import { useLocation, useParams } from "react-router-dom";
 import {
   useAddSyllabusPointMutation,
@@ -16,6 +15,7 @@ import {
 import SyllabusCreate from "./SyllabusCreate";
 import SyllabusUpdate from "./SyllabusUpdate";
 import SyllabusDelete from "./SyllabusDelete";
+import { toastify } from "../shared/Toast/Toast";
 
 const SyllabusContainer = () => {
   const location = useLocation();
@@ -60,11 +60,12 @@ const SyllabusContainer = () => {
         .unwrap()
         .then((payload) => {
           getSyllabus({ course_id: courseId, search });
-          toasty({ type: "success", text: "Syllabus Point Created" });
+          toastify("success", "Syllabus Point Created");
         });
     } catch (err) {
       console.log(err);
-      toasty();
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
     }
   };
 
@@ -81,11 +82,12 @@ const SyllabusContainer = () => {
         .unwrap()
         .then((payload) => {
           getSyllabus({ course_id: courseId, search });
-          toasty({ type: "success", text: "Syllabus Point Updated" });
+          toastify("success", "Syllabus Point Updated");
         });
     } catch (err) {
       console.log(err);
-      toasty();
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
     }
   };
 
@@ -98,11 +100,12 @@ const SyllabusContainer = () => {
         .unwrap()
         .then((payload) => {
           getSyllabus({ course_id: courseId, search });
-          toasty({ type: "success", text: "Syllabus Point Deleted" });
+          toastify("success", "Syllabus Point Deleted");
         });
     } catch (err) {
       console.log(err);
-      toasty();
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
     }
   };
 

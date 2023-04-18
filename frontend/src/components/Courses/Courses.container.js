@@ -1,6 +1,6 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
-import Header from "../shared/Header";
+import Header from "../shared/Header/Header";
 import {
   useLazyGetGroupCoursesQuery,
   useLazyGetTeacherCoursesQuery,
@@ -61,9 +61,9 @@ const CoursesContainer = () => {
 
   React.useEffect(() => {
     if (dataYears && !isLoadingYears) {
-      setYears(dataYears.filter((el) => el.is_active));
+      setYears(dataYears);
       setSelectedYear(
-        dataYears.filter((el) => el.is_active)[dataYears.length - 1].id
+        dataYears[dataYears.length - 1].id
       );
     }
   }, [dataYears, isLoadingYears]);
@@ -190,7 +190,6 @@ const CoursesContainer = () => {
 const styles = {
   container: {
     flex: 1,
-    height: "100%",
     backgroundColor: "#FAFAFA",
     padding: 16,
   },

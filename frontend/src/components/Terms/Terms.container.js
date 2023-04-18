@@ -1,7 +1,7 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
-import { Table, Input, Button, Space } from "antd";
+import { Table, Input, Button, Space, Tag } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 // import { useGetAcademicYearsQuery } from "../../redux/academicYears/academicYearsApiSlice";
@@ -17,7 +17,7 @@ import {
   useUpdateTermMutation,
 } from "../../redux/terms/termsApiSlice";
 import moment from "moment-timezone";
-import { toasty } from "../shared/Toast/Toast";
+import { toastify } from "../shared/Toast/Toast";
 import AddTerm from "./AddTerm";
 import UpdateTerm from "./UpdateTerm";
 import dayjs from "dayjs";
@@ -59,12 +59,9 @@ const TermsContainer = () => {
 
   React.useEffect(() => {
     if (dataYears && !isLoadingYears) {
-      setYears(dataYears.filter((el) => el.is_active));
+      setYears(dataYears);
       setSelectedYear(
-        dataYears.filter((el) => el.is_active)[dataYears.length - 1].id
-      );
-      console.log(
-        dataYears.filter((el) => el.is_active)[dataYears.length - 1].id
+        dataYears[dataYears?.length - 1]?.id
       );
     }
   }, [dataYears, isLoadingYears]);
@@ -82,11 +79,12 @@ const TermsContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Term Created" });
+            toastify("success", "Term Created");
           });
       } catch (err) {
         console.log(err);
-        toasty();
+        let message = err.data.detail?.non_field_errors[0] ?? "Error";
+        toastify("error", message);
       }
     }
   };
@@ -105,40 +103,17 @@ const TermsContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Term Updated" });
+            toastify("success", "Term Updated");
           });
       } catch (err) {
         console.log(err);
-        toasty();
+        let message = err.data.detail?.non_field_errors[0] ?? "Error";
+        toastify("error", message);
       }
     }
   };
 
   const columns = [
-    {
-      title: () => {
-        return <>Closed</>;
-      },
-      width: "1%",
-      render: (item) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={
-              item?.is_closed
-                ? require("../../assets/icons/active.png")
-                : require("../../assets/icons/inactive.png")
-            }
-            style={{ width: 16, height: 16 }}
-          />
-        </div>
-      ),
-    },
     {
       title: () => {
         return <>Name</>;
@@ -162,6 +137,18 @@ const TermsContainer = () => {
       width: "20%",
       render: (item) => (
         <div>{moment(item.to_date).format("DD MMMM YYYY")}</div>
+      ),
+    },
+    {
+      title: "Status",
+      width: "15%",
+      render: (item) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={item?.is_closed ? "volcano" : "green"}
+        >
+          {item?.is_closed ? "Closed" : "Active"}
+        </Tag>
       ),
     },
     {
@@ -285,7 +272,6 @@ const TermsContainer = () => {
 const styles = {
   container: {
     flex: 1,
-    height: "100%",
     backgroundColor: "#FAFAFA",
     padding: 16,
   },

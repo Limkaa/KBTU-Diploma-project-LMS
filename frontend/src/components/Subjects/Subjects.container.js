@@ -1,10 +1,9 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
-import { Table, Input, Button, Space } from "antd";
+import { Table, Input, Button, Space, Tag } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
-import { toast } from "react-toastify";
 import {
   useAddSubjectMutation,
   useGetSubjectsQuery,
@@ -14,7 +13,7 @@ import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import UpdateSubjects from "./UpdateSubjects";
 import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import AddSubject from "./AddSubject";
-import { toasty } from "../shared/Toast/Toast";
+import { toastify } from "../shared/Toast/Toast";
 
 const SubjectsContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -38,7 +37,7 @@ const SubjectsContainer = () => {
 
   const { data: dataGrades, isLoading: isLoadingGrades } =
     useGetSchoolGradesWithoutPageQuery({
-      school_id: user?.school_id
+      school_id: user?.school_id,
     });
 
   React.useEffect(() => {
@@ -70,11 +69,12 @@ const SubjectsContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Subject Created" });
+            toastify("success", "Subject Created");
           });
       } catch (err) {
         console.log(err);
-        toasty();
+        let message = err.data.detail?.non_field_errors[0] ?? "Error";
+        toastify("error", message);
       }
     }
   };
@@ -95,36 +95,16 @@ const SubjectsContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Subject Updated" });
+            toastify("success", "Subject Updated");
           });
       } catch (err) {
-        toasty();
+        let message = err.data.detail?.non_field_errors[0] ?? "Error";
+        toastify("error", message);
       }
     }
   };
 
   const columns = [
-    {
-      width: "1%",
-      render: (item) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={
-              item?.is_active
-                ? require("../../assets/icons/active.png")
-                : require("../../assets/icons/inactive.png")
-            }
-            style={{ width: 16, height: 16 }}
-          />
-        </div>
-      ),
-    },
     {
       title: () => {
         return <>Name</>;
@@ -145,6 +125,18 @@ const SubjectsContainer = () => {
       },
       width: "20%",
       render: (item) => <div>{item.grade.name}</div>,
+    },
+    {
+      title: "Status",
+      width: "15%",
+      render: (item) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={item.is_active ? "green" : "volcano"}
+        >
+          {item.is_active ? "Active" : "Inactive"}
+        </Tag>
+      ),
     },
     {
       title: "Action",

@@ -1,7 +1,7 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
-import { Table, Input, Button, Space } from "antd";
+import { Table, Input, Button, Space, Tag } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../../redux/academicYears/academicYearsApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import CreateYear from "./CreateYear";
-import { toasty } from "../shared/Toast/Toast";
+import { toastify } from "../shared/Toast/Toast";
 import UpdateYear from "./UpdateYear";
 
 const AcademicYearsContainer = () => {
@@ -31,7 +31,6 @@ const AcademicYearsContainer = () => {
 
   const [addYear] = useAddYearMutation();
   const [updateYear] = useUpdateYearMutation();
-
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -53,11 +52,12 @@ const AcademicYearsContainer = () => {
           .unwrap()
           .then((payload) => {
             refetch();
-            toasty({ type: "success", text: "Academic Year Created" });
+            toastify("success", "Academic Year Created");
           });
       } catch (err) {
         console.log(err);
-        toasty();
+        let message = err.data.detail?.non_field_errors[0] ?? "Error";
+        toastify("error", message);
       }
     }
   };
@@ -74,41 +74,33 @@ const AcademicYearsContainer = () => {
         .unwrap()
         .then((payload) => {
           refetch();
-          toasty({ type: "success", text: "Year Updated" });
+          toastify("success", "Academic Year Updated");
         });
     } catch (err) {
-      toasty();
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
     }
   };
 
   const columns = [
-    {
-      width: "1%",
-      render: (item) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={
-              item?.is_active
-                ? require("../../assets/icons/active.png")
-                : require("../../assets/icons/inactive.png")
-            }
-            style={{ width: 16, height: 16 }}
-          />
-        </div>
-      ),
-    },
     {
       title: () => {
         return <>Name</>;
       },
       width: "70%",
       render: (item) => <div>{item.name}</div>,
+    },
+    {
+      title: "Status",
+      width: "15%",
+      render: (item) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={item.is_active ? "green" : "volcano"}
+        >
+          {item.is_active ? "Active" : "Inactive"}
+        </Tag>
+      ),
     },
     {
       title: "Action",
@@ -190,7 +182,6 @@ const AcademicYearsContainer = () => {
 const styles = {
   container: {
     flex: 1,
-    height: "100%",
     backgroundColor: "#FAFAFA",
     padding: 16,
   },

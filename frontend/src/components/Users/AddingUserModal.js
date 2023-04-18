@@ -11,6 +11,7 @@ import Select from "@mui/material/Select";
 import { toast } from "react-toastify";
 import { useAddUserMutation } from "../../redux/users/usersApiSlice";
 import { styled } from "@mui/material/styles";
+import { toastify } from "../shared/Toast/Toast";
 
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
   props,
@@ -82,27 +83,12 @@ const AddingUserModal = ({
         .then((payload) => {
           refetch();
           refetchUser();
-          toast.success("User Added", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: false,
-            theme: "colored",
-          });
+          toastify("success", "User Created");
         });
     } catch (err) {
       console.log(err);
-      toast.error("Error", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: false,
-        theme: "colored",
-      });
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
     }
   };
 

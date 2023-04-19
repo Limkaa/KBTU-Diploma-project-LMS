@@ -125,7 +125,7 @@ const GroupsPage = () => {
           style={{ minWidth: 70, textAlign: "center" }}
           color={group.is_active ? "green" : "volcano"}
         >
-          {group.is_active ? "Active" : "Inactive"}
+          {group.is_active ? "active" : "inactive"}
         </Tag>
       ),
     },
@@ -135,7 +135,8 @@ const GroupsPage = () => {
       width: "15%",
       render: (_, record) => (
         <Space size="middle">
-          <Button
+          <a
+            className="action"
             style={{ color: "#00899E", fontWeight: 500, padding: 0 }}
             type={"link"}
             onClick={() => {
@@ -144,7 +145,7 @@ const GroupsPage = () => {
             }}
           >
             Change
-          </Button>
+          </a>
         </Space>
       ),
     },
@@ -155,6 +156,7 @@ const GroupsPage = () => {
       render: (_, record) => (
         <Space size="middle">
           <Link
+            className="action"
             style={{ color: "#45B764", fontWeight: 500, padding: 0 }}
             to={`${record.id}/students`}
           >
@@ -263,7 +265,6 @@ const GroupsPage = () => {
               total: total,
               current: page,
               onChange: (page) => {
-                console.log(page);
                 setPage(page);
                 window.scrollTo(0, 0);
               },

@@ -27,3 +27,7 @@
 .modal .hidden {
     opacity: 0;
 }
+
+.action:hover {
+    text-decoration: underline;
+}

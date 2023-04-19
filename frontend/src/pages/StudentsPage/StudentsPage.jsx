@@ -50,17 +50,6 @@ const StudentsPage = () => {
                     {student.user.first_name} {student.user.last_name}
                 </span>
             ),
-            sorter: (a, b) => {
-                const nameA = a.user.first_name.toUpperCase();
-                const nameB = b.user.first_name.toUpperCase();
-                if (nameA < nameB) {
-                    return -1;
-                }
-                if (nameA > nameB) {
-                    return 1;
-                }
-                return 0;
-            },
         },
         {
             title: 'Email',
@@ -92,13 +81,13 @@ const StudentsPage = () => {
                     <div className="students">
                         <Spin spinning={isStudentsLoading}>
                             <Table className="table"
+                                   rowKey={(record) => record.id}
                                    columns={columns}
                                    dataSource={students}
                                    pagination={{
                                        total: total,
                                        current: page,
                                        onChange: (page) => {
-                                           console.log(page);
                                            setPage(page);
                                            window.scrollTo(0,0);
                                        },

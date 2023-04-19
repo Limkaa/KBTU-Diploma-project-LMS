@@ -8,7 +8,7 @@ export const usersApiSlice = authApi.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     getTeachers: builder.query({
-      query: ({ school_id }) => `/api/schools/${school_id}/teachers`,
+      query: (school_id) => `/api/schools/${school_id}/teachers`,
       keepUnusedDataFor: 5,
     }),
     addUser: builder.mutation({
@@ -27,9 +27,6 @@ export const usersApiSlice = authApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-    }),
-    getTeachers: builder.query({
-      query: (school_id) => `/api/schools/${school_id}/teachers`,
     }),
   }),
 });

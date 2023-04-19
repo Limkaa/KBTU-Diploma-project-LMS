@@ -13,6 +13,9 @@ export const groupsApiSlice = authApi.injectEndpoints({
         }
       },
     }),
+    getAllActiveGroups: builder.query({
+      query: (schoolId) => `api/schools/${schoolId}/groups?is_active=true`
+    }),
     getOneGroup: builder.query({
       query: (groupId) => `api/groups/${groupId}`,
     }),
@@ -24,8 +27,8 @@ export const groupsApiSlice = authApi.injectEndpoints({
       }),
     }),
     updateGroup: builder.mutation({
-      query: ({ school_id, ...data }) => ({
-        url: `/api/groups/${school_id}`,
+      query: ({ groupId, ...data }) => ({
+        url: `/api/groups/${groupId}`,
         method: "PUT",
         body: data,
       }),
@@ -38,4 +41,5 @@ export const {
   useGetOneGroupQuery,
   useCreateGroupMutation,
   useUpdateGroupMutation,
+  useGetAllActiveGroupsQuery
 } = groupsApiSlice;

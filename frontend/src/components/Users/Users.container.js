@@ -13,6 +13,8 @@ import {
 } from "../../redux/users/usersApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import { toastify } from "../shared/Toast/Toast";
+import "../../pages/GroupsPage/GroupsPage.css";
+
 
 const UsersContainer = () => {
   const [users, setUsers] = React.useState();
@@ -125,8 +127,9 @@ const UsersContainer = () => {
       width: "15%",
       render: (_, record) => (
         <Space size="middle">
-          <Button
-            style={{ color: "#00899E", fontWeight: 500, padding: 0 }}
+          <a
+            style={styles.action}
+            className="action"
             type={"link"}
             onClick={() => {
               setSelectedUser(record);
@@ -134,7 +137,7 @@ const UsersContainer = () => {
             }}
           >
             Change
-          </Button>
+          </a>
         </Space>
       ),
     },
@@ -237,5 +240,10 @@ const styles = {
     justifyContent: "flex-end",
     display: "flex",
   },
+  action: {
+    color: "#00899E",
+    fontWeight: 500,
+    padding: 0,
+  }
 };
 export default UsersContainer;

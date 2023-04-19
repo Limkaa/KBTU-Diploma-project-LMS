@@ -134,8 +134,9 @@ class CourseAllMarksListAPI(OptionalPaginationListAPIView):
             'teacher',
         ), pk=self.kwargs['course_id'])
         self.check_object_permissions(request, self.course)
+        self.term = get_object_or_404(Term.objects.all(), pk=self.kwargs['term_id'])
     
     def get_queryset(self):
         return Student.objects.filter(group=self.course.group).prefetch_related(
-            Prefetch('marks', queryset=Mark.objects.filter(assignment__course=self.course, assignment__term=self.kwargs['term_id']))
-            ).select_related('user').annotate(average_mark=Avg('marks__number', filter=Q(marks__assignment__term=self.kwargs['term_id'])))
+            Prefetch('marks', queryset=Mark.objects.filter(assignment__course=self.course, assignment__term=self.term))
+            ).select_related('user').annotate(average_mark=Avg('marks__number', filter=Q(marks__assignment__term=self.term)))

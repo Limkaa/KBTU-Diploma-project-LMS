@@ -1380,7 +1380,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/students?page=1",
+							"raw": "{{BASE_URL}}/schools/1/students?page=1&no_group=True",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1426,6 +1426,10 @@
 									"key": "group__grade",
 									"value": "",
 									"disabled": true
+								},
+								{
+									"key": "no_group",
+									"value": "True"
 								}
 							]
 						}

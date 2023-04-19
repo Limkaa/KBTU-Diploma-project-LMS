@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user10@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user25@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -886,55 +886,6 @@
 					"response": []
 				},
 				{
-					"name": "Get school students",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/schools/1/students?page=1",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"schools",
-								"1",
-								"students"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "search",
-									"value": "",
-									"description": "first_name, last_name, email",
-									"disabled": true
-								},
-								{
-									"key": "ordering",
-									"value": "first_name",
-									"description": "first_name, last_name, rating, updated_at",
-									"disabled": true
-								},
-								{
-									"key": "gender",
-									"value": "male",
-									"description": "male, female",
-									"disabled": true
-								},
-								{
-									"key": "is_active",
-									"value": "true",
-									"description": "true, false",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get school managers",
 					"request": {
 						"method": "GET",
@@ -1446,7 +1397,7 @@
 								{
 									"key": "ordering",
 									"value": null,
-									"description": "created_at, updated_at",
+									"description": "rating, created_at, updated_at",
 									"disabled": true
 								},
 								{
@@ -1487,13 +1438,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/groups/19/students?page=1&user__gender=female",
+							"raw": "{{BASE_URL}}/groups/1/students?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"groups",
-								"19",
+								"1",
 								"students"
 							],
 							"query": [
@@ -1516,7 +1467,8 @@
 								{
 									"key": "user__gender",
 									"value": "female",
-									"description": "male, female, unknown"
+									"description": "male, female, unknown",
+									"disabled": true
 								}
 							]
 						}

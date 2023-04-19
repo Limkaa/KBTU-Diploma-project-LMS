@@ -40,7 +40,7 @@ const Course = () => {
     useGetCourseSyllabusWithoutQuery({ course_id: courseId });
 
   const { data: dataAssignments, isLoading: isLoadingAssignments } =
-    useGetCourseAssignmentsQuery({ course_id: courseId });
+    useGetCourseAssignmentsQuery({ course_id: courseId, search: "" });
 
   React.useEffect(() => {
     if (data && !isLoading) {

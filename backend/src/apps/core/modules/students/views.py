@@ -52,7 +52,7 @@ class SchoolStudentsListAPI(OptionalPaginationListAPIView):
     ]
     serializer_class = StudentModelNestedSerializer
     filterset_fields = ['user__gender', 'group__grade', 'group__teacher', 'group']
-    ordering_fields = ['created_at', 'updated_at']
+    ordering_fields = ['user__rating', 'created_at', 'updated_at']
     search_fields = ['user__first_name', 'user__last_name', 'user__email', 'group__code']
     
     def get_queryset(self):

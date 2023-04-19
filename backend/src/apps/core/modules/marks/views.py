@@ -2,6 +2,7 @@ from django.db.models import Prefetch, Avg, Q
 
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
+from rest_framework.exceptions import NotFound
 
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 
@@ -131,10 +132,16 @@ class CourseAllMarksListAPI(OptionalPaginationListAPIView):
         self.course = get_object_or_404(Course.objects.select_related(
             'group',
             'group__school',
+            'year',
             'teacher',
         ), pk=self.kwargs['course_id'])
         self.check_object_permissions(request, self.course)
-        self.term = get_object_or_404(Term.objects.all(), pk=self.kwargs['term_id'])
+        self.check_term()
+    
+    def check_term(self):
+        self.term = Term.objects.filter(pk=self.kwargs['term_id'], year=self.course.year).first()
+        if self.term is None:
+            raise NotFound('Term with this id does not exist or does not belong to course year')
     
     def get_queryset(self):
         return Student.objects.filter(group=self.course.group).prefetch_related(

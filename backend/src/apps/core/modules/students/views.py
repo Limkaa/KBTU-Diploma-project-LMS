@@ -42,7 +42,14 @@ class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 
 
 class SchoolStudentsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [OnlyOwnSchool, IsManager]
+    permission_classes = [
+        OnlyOwnSchool, 
+        CustomOperandHolder(
+            operand=CustomOR,   
+            permissions=[IsManager, IsStudent],
+            message="This view can be accessed only by school manager or teacher"
+        )
+    ]
     serializer_class = StudentModelNestedSerializer
     filterset_fields = ['user__gender', 'group__grade', 'group__teacher', 'group']
     ordering_fields = ['created_at', 'updated_at']

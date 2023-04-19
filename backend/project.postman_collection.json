@@ -1429,13 +1429,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/students?page=1&gender=female",
+							"raw": "{{BASE_URL}}/schools/1/students?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"2",
+								"1",
 								"students"
 							],
 							"query": [
@@ -1451,14 +1451,30 @@
 								},
 								{
 									"key": "search",
-									"value": "",
+									"value": "OIHR",
 									"description": "user first name, user last name, user email, group code",
 									"disabled": true
 								},
 								{
-									"key": "gender",
+									"key": "user__gender",
 									"value": "female",
-									"description": "male, female, unknown"
+									"description": "male, female, unknown",
+									"disabled": true
+								},
+								{
+									"key": "group",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "group__teacher",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "group__grade",
+									"value": "",
+									"disabled": true
 								}
 							]
 						}

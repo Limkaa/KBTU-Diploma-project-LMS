@@ -61,17 +61,5 @@ class SchoolTeachersList(OptionalPaginationListAPIView):
     def get_queryset(self):
         return self.queryset.filter(school=self.school, role=self.role)
 
-
-class SchoolStudentsList(SchoolTeachersList):
-    permission_classes = [
-        OnlyOwnSchool, 
-        CustomOperandHolder(
-            operand=CustomOR,
-            permissions=[IsManager, IsStudent],
-            message="Only school manager or student can perform this action"
-        )
-    ]
-    role = User.Role.STUDENT
-
 class SchoolManagersList(SchoolTeachersList):
     role = User.Role.MANAGER

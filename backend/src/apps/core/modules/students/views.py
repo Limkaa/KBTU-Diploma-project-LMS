@@ -44,14 +44,19 @@ class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
 class SchoolStudentsListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsManager]
     serializer_class = StudentModelNestedSerializer
-    filterset_fields = ['user__gender']
+    filterset_fields = ['user__gender', 'group__grade', 'group__teacher', 'group']
     ordering_fields = ['created_at', 'updated_at']
     search_fields = ['user__first_name', 'user__last_name', 'user__email', 'group__code']
     
     def get_queryset(self):
         school = get_object_or_404(School, pk = self.kwargs['school_id'])
         self.check_object_permissions(self.request, school)
-        return Student.objects.filter(group__school = school).select_related('group', 'user')
+        return Student.objects.filter(group__school = school).select_related(
+            'group',
+            'group__grade',
+            'group__teacher',
+            'user'
+        )
 
 
 
@@ -72,5 +77,10 @@ class GroupStudentsListAPI(OptionalPaginationListAPIView):
     def get_queryset(self):
         group = get_object_or_404(Group, pk = self.kwargs['group_id'])
         self.check_object_permissions(self.request, group)
-        return Student.objects.filter(group = group).select_related('group', 'user')
+        return Student.objects.filter(group = group).select_related(
+            'group',
+            'group__grade',
+            'group__teacher',
+            'user'
+        )
   

@@ -5,7 +5,7 @@ import Profile from "../../components/Dashboard/Profile";
 import {useParams} from "react-router-dom";
 import {useGetOneGroupQuery} from "../../redux/groups/groupsApiSlice";
 import {useGetGroupStudentsQuery} from "../../redux/students/studentsApiSlice";
-import {Spin, Table, Alert} from "antd";
+import {Spin, Table, Alert, Tag} from "antd";
 
 const GroupStudentsPage = () => {
     const {groupId} = useParams();
@@ -57,6 +57,27 @@ const GroupStudentsPage = () => {
             render: (student) => (
                 <span>
                     {student.user.email}
+                </span>
+            ),
+        },
+        {
+            title: 'Gender',
+            key: 'gender',
+            render: (student) => (
+                <Tag
+                    style={{ minWidth: 50, textAlign: "center" }}
+                    color={student.user.gender === "male" ? "blue" : "pink"}>
+                    {student.user.gender}
+                </Tag>
+            ),
+        },
+        {
+            title: 'Rating',
+            key: 'rating',
+            width: "15%",
+            render: (student) => (
+                <span>
+                    {student.user.rating}
                 </span>
             ),
         },

@@ -4,6 +4,8 @@ from rest_framework import generics
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ..permissions import *
 
+from ..users.models import User
+
 from .models import Course, Assignment
 from .serializers import *
 
@@ -69,3 +71,17 @@ class AssignmentRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
 
         return super().get_permissions()
 
+
+class TeacherAllAssignmentsListAPI(OptionalPaginationListAPIView):
+    serializer_class = AssignmentModelNestedSerializer
+    permission_classes = [OnlyOwnSchool, IsTeacher, IsUserItself]
+    queryset = Assignment.objects.select_related('course', 'term', 'course__school')
+    filterset_fields = ['course', 'term', 'is_active', 'course__subject', 'course__year', 'course__group']
+    ordering = ['datetime']
+    search_fields = ['name']
+    
+    def get_queryset(self):
+        teacher = get_object_or_404(User.objects.select_related('school'), pk=self.kwargs['teacher_id'], role=User.Role.TEACHER)
+        self.check_object_permissions(self.request, teacher)
+        return self.queryset.filter(course__teacher=teacher)
+    

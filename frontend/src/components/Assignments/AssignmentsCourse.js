@@ -4,7 +4,9 @@ import Profile from "../Dashboard/Profile";
 import { Link, useLocation } from "react-router-dom";
 import {
   useAddAssignmentMutation,
+  useDeleteAssignmentMutation,
   useGetCourseAssignmentsQuery,
+  useUpdateAssignmentMutation,
 } from "../../redux/assignments/assignmentsApiSlice";
 import moment from "moment-timezone";
 import { Button, Input, Spin } from "antd";
@@ -42,6 +44,8 @@ const AssignmentsCourse = () => {
   });
 
   const [createAssignment] = useAddAssignmentMutation();
+  const [updateAssignment] = useUpdateAssignmentMutation();
+  const [deleteAssignment] = useDeleteAssignmentMutation();
 
   React.useEffect(() => {
     if (dataTerm && !isLoading) {

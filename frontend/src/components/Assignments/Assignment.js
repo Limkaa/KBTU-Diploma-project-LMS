@@ -6,11 +6,15 @@ import Profile from "../Dashboard/Profile";
 import { Button, Spin, Input, DatePicker, Checkbox } from "antd";
 import moment from "moment-timezone";
 import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import Cancel from "../../assets/icons/close.svg";
+import { toastify } from "../shared/Toast/Toast";
+import {
+  useDeleteAssignmentMutation,
+  useUpdateAssignmentMutation,
+} from "../../redux/assignments/assignmentsApiSlice";
+
 const Picker = styled(DatePicker)`
   &.ant-picker .ant-picker-input > input::placeholder {
     color: #666666;
@@ -38,6 +42,9 @@ const Assignment = () => {
   const [edit, setEdit] = React.useState(false);
   const [datetime, setDatetime] = React.useState("");
 
+  const [updateAssignment] = useUpdateAssignmentMutation();
+  const [deleteAssignment] = useDeleteAssignmentMutation();
+
   const [values, setValues] = React.useState({
     name: "",
     description: "",
@@ -45,12 +52,14 @@ const Assignment = () => {
   });
   const { name, description, is_active } = values;
 
-  const { data, isLoading } = useGetAssignmentQuery({
+  const { data, isLoading, refetch } = useGetAssignmentQuery({
     assignment_id,
   });
   const { data: courseData, isLoading: isLoadingCourse } = useGetCourseQuery({
     id: assignment?.course,
   });
+
+  console.log(courseData);
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -64,6 +73,33 @@ const Assignment = () => {
       setDatetime(assignment?.datetime);
     }
   }, [assignment]);
+
+  const handleUpdateAssignment = async () => {
+    try {
+      await updateAssignment({
+        assignment_id: assignment.id,
+        name: values.name,
+        description: values.description,
+        datetime:
+          assignment.datetime === datetime ? datetime : datetime.toISOString(),
+        is_active: values.is_active,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Assignment Updated");
+          refetch();
+          setEdit(false);
+        });
+    } catch (err) {
+      if (err?.data?.detail?.term[0]) {
+        toastify("error", err?.data?.detail?.term[0]);
+      } else if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
 
   const handleInputChange = (e) => {
     let { name, value, checked } = e.target;
@@ -85,8 +121,6 @@ const Assignment = () => {
       return moment(date).format("HH:mm MMM DD, YYYY");
     }
   };
-
-  console.log(datetime);
 
   return (
     <div style={styles.container}>
@@ -160,7 +194,6 @@ const Assignment = () => {
                   <Input.TextArea
                     rows={4}
                     placeholder="Description"
-                    maxLength={6}
                     value={description}
                     style={{ width: "80%" }}
                     name="description"
@@ -199,7 +232,9 @@ const Assignment = () => {
                 justifyContent: "flex-end",
               }}
             >
-              <Button style={styles.btn1}>Save</Button>
+              <Button style={styles.btn1} onClick={handleUpdateAssignment}>
+                Save
+              </Button>
               <Button style={styles.btn2}>Delete</Button>
             </div>
           )}

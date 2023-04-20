@@ -21,6 +21,8 @@ from apps.core.modules.assignments.models import Assignment
 from apps.core.modules.posts.models import CoursePost, SchoolPost
 from apps.core.modules.timetables.models import Room, Timebound, Timetable
 from apps.core.modules.comments.models import CoursePostComment, SchoolPostComment
+from apps.core.modules.marks.models import Mark
+
 
 lorems = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -365,6 +367,29 @@ class Command(BaseCommand):
         CoursePostComment.objects.bulk_create(comments)
         self.stdout.write(self.style.SUCCESS(f'Course posts comments created ({len(comments)} objects)'))
     
+    def _create_assignment_marks(self):
+        courses = Course.objects.all()
+        marks = []
+        
+        for course in courses:
+            students = Student.objects.filter(group=course.group)
+            assignments = Assignment.objects.filter(course=course)
+            
+            for assignment in assignments:
+                for student in students:
+                    marks_number = random.randint(0, 2)
+                    for mark in range(marks_number):
+                        marks.append(Mark(
+                            assignment=assignment,
+                            student=student,
+                            number=random.randint(1, 5),
+                            comment=self._get_lorem(random.randint(0, 1))
+                        ))
+        
+        Mark.objects.bulk_create(marks)
+        self.stdout.write(self.style.SUCCESS(f'Assignments marks created ({len(marks)} objects)'))
+     
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
@@ -382,6 +407,7 @@ class Command(BaseCommand):
         self._create_schools_comments()
         self._create_rooms()
         self._create_timebounds()
+        self._create_assignment_marks()
         
         self._create_superuser()
         

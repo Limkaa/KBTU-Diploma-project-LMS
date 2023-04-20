@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import Assignment
 
 from ..terms.serializers import TermModelSerializer
+from ..courses.serializers import CourseModelSerializer
 
 
 class AssignmentModelSerializer(serializers.ModelSerializer):  
@@ -14,6 +15,7 @@ class AssignmentModelSerializer(serializers.ModelSerializer):
 
 class AssignmentModelNestedSerializer(AssignmentModelSerializer):
     term = TermModelSerializer(read_only=True)
+    course = CourseModelSerializer(read_only=True)
 
 
 class UpdateAssignmentSerializer(AssignmentModelSerializer):

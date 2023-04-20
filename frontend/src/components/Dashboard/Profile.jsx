@@ -15,10 +15,10 @@ const Profile = () => {
   return (
     <div onClick={() => navigate("/profile")} style={styles.container}>
       <div style={styles.left}>
-        <p style={styles.title}>
+        <div style={styles.title}>
           {user?.first_name} {user?.last_name}
-        </p>
-        <p style={styles.subtitle}>{returnRole()}</p>
+        </div>
+        <div style={styles.subtitle}>{returnRole()}</div>
       </div>
       <img style={styles.img} />
     </div>
@@ -46,14 +46,12 @@ const styles = {
   title: {
     fontWeight: 600,
     color: "#4A4D58",
-    lineHeight: 0.5,
     fontSize: 14,
   },
   subtitle: {
     fontWeight: 600,
     color: "#00000091",
     fontSize: 14,
-    lineHeight: 0.5,
     textAlign: "end",
   },
 };

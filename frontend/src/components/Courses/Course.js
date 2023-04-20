@@ -14,6 +14,7 @@ import { Button } from "antd";
 import CourseSyllabus from "./CourseSyllabus";
 import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
 import CourseAssignments from "./CourseAssignments";
+import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -30,6 +31,7 @@ const Course = () => {
   const [course, setCourse] = React.useState();
   const [syllabus, setSyllabus] = React.useState();
   const [assignments, setAssignments] = React.useState();
+  const { data: user } = useGetAuthUserQuery();
 
   const [showMore, setShowMore] = React.useState(false);
   const navigate = useNavigate();
@@ -133,25 +135,27 @@ const Course = () => {
               </Item>
             </Grid>
             <Grid item xs={1} sm={9} md={4}>
-              <Item style={{ marginBottom: 10 }}>
-                <div style={styles.cont}>
-                  <div style={styles.titleForCont}>Assignments</div>
-                  <Button
-                    type="link"
-                    onClick={() =>
-                      navigate(`/courses/${course?.id}/assignments`, {
-                        state: { courseId: course?.id },
-                      })
-                    }
-                    style={styles.seeAll}
-                  >
-                    See all
-                  </Button>
-                </div>
-                {assignments?.slice(0, 3).map((item) => (
-                  <CourseAssignments key={item.id} item={item} />
-                ))}
-              </Item>
+              {user?.role !== "manager" && (
+                <Item style={{ marginBottom: 10 }}>
+                  <div style={styles.cont}>
+                    <div style={styles.titleForCont}>Assignments</div>
+                    <Button
+                      type="link"
+                      onClick={() =>
+                        navigate(`/courses/${course?.id}/assignments`, {
+                          state: { courseId: course?.id },
+                        })
+                      }
+                      style={styles.seeAll}
+                    >
+                      See all
+                    </Button>
+                  </div>
+                  {assignments?.slice(0, 3).map((item) => (
+                    <CourseAssignments key={item.id} item={item} />
+                  ))}
+                </Item>
+              )}
               <Item>
                 <div style={styles.cont}>
                   <div style={styles.titleForCont}>Syllabus</div>

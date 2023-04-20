@@ -37,7 +37,7 @@ const styles = {
   },
   hours: {
     color: "#00889D",
-    fontWeight: 400,
+    fontWeight: 600,
     fontSize: 13,
     marginTop: 3,
   },

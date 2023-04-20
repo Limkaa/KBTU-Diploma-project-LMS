@@ -17,7 +17,7 @@ const CourseAssignments = ({ item }) => {
 
   const returnColor = () => {
     if (moment(item.datetime) < moment()) {
-      return "#45B764";
+      return "#00889D";
     } else {
       return "#F18D58";
     }

@@ -80,32 +80,36 @@ const AssignmentsCourse = () => {
 
   const returnColor = (item) => {
     if (moment(item.datetime) < moment()) {
-      return "#45B764";
+      return "#00889D";
     } else {
       return "#F18D58";
     }
   };
 
   const handleAddAssignment = async (values, isActive, datetime) => {
-    console.log(values, isActive, datetime);
     try {
       await createAssignment({
         course_id: courseId,
         term: values.term,
         name: values.name,
         description: values.description,
-        datetime: datetime,
+        datetime: datetime.toISOString(),
         is_active: isActive,
       })
         .unwrap()
         .then((payload) => {
           refetch();
           toastify("success", "Assignment Created");
+          setShowAddAssignment(false);
         });
     } catch (err) {
-      console.log("ass", err);
-      let message = err.data.detail?.non_field_errors[0] ?? "Error";
-      toastify("error", message);
+      if (err?.data?.detail?.term[0]) {
+        toastify("error", err?.data?.detail?.term[0]);
+      } else if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
     }
   };
 
@@ -137,66 +141,68 @@ const AssignmentsCourse = () => {
         </div>
       </div>
       <Spin spinning={loading} size="large">
-        {assignments &&
-          Object?.keys(assignments).map((time, index) => (
-            <div key={index}>
-              <div style={styles.timeCont}>
-                <div style={styles.dateTitle}>{time}</div>
-                <div style={styles.week}>{moment(time).format("dddd")}</div>
-              </div>
-              {assignments[time].map((item) => (
-                <Link
-                  to={`/assignments/${item.id}`}
-                  style={{ textDecoration: "none" }}
-                  key={item.id}
-                >
-                  <div style={styles.assItem}>
-                    <div
-                      style={{
-                        ...styles.statusLine,
-                        backgroundColor: returnColor(item),
-                      }}
-                    />
-                    <div style={styles.assCont}>
-                      <div style={{ display: "flex", flex: 1 }}>
-                        <div>
-                          <div style={styles.title}>{item?.name}</div>
-                          {moment(item.datetime) < moment() ? (
-                            <div style={styles.timeContainer}>
-                              <div
-                                style={{
-                                  ...styles.time,
-                                  color: returnColor(item),
-                                }}
-                              >
-                                Finished
-                              </div>
-                            </div>
-                          ) : (
-                            <div style={styles.timeContainer}>
-                              <div style={styles.due}>Due</div>
-                              <div
-                                style={{
-                                  ...styles.time,
-                                  color: returnColor(item),
-                                }}
-                              >
-                                {returnDate(item.datetime)}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <img
-                        src={require("../../assets/icons/arrowcirlce.png")}
-                        style={{ width: 20, height: 20 }}
+        <div style={{ minHeight: "70vh" }}>
+          {assignments &&
+            Object?.keys(assignments).map((time, index) => (
+              <div key={index}>
+                <div style={styles.timeCont}>
+                  <div style={styles.dateTitle}>{time}</div>
+                  <div style={styles.week}>{moment(time).format("dddd")}</div>
+                </div>
+                {assignments[time].map((item) => (
+                  <Link
+                    to={`/assignments/${item.id}`}
+                    style={{ textDecoration: "none" }}
+                    key={item.id}
+                  >
+                    <div style={styles.assItem}>
+                      <div
+                        style={{
+                          ...styles.statusLine,
+                          backgroundColor: returnColor(item),
+                        }}
                       />
+                      <div style={styles.assCont}>
+                        <div style={{ display: "flex", flex: 1 }}>
+                          <div>
+                            <div style={styles.title}>{item?.name}</div>
+                            {moment(item.datetime) < moment() ? (
+                              <div style={styles.timeContainer}>
+                                <div
+                                  style={{
+                                    ...styles.time,
+                                    color: returnColor(item),
+                                  }}
+                                >
+                                  Finished
+                                </div>
+                              </div>
+                            ) : (
+                              <div style={styles.timeContainer}>
+                                <div style={styles.due}>Due</div>
+                                <div
+                                  style={{
+                                    ...styles.time,
+                                    color: returnColor(item),
+                                  }}
+                                >
+                                  {returnDate(item.datetime)}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <img
+                          src={require("../../assets/icons/arrowcirlce.png")}
+                          style={{ width: 20, height: 20 }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ))}
+                  </Link>
+                ))}
+              </div>
+            ))}
+        </div>
       </Spin>
       <AssignmentCreate
         show={showAddAssignment}

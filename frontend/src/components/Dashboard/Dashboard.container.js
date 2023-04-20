@@ -12,9 +12,7 @@ import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 
 const DashboardContainer = () => {
   const { data: user, refetch } = useGetAuthUserQuery();
-  React.useEffect(() => {
-    refetch();
-  }, []);
+
   return (
     <div className="dashboard container">
       <div className="left-container">

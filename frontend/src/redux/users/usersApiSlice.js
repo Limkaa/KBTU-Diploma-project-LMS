@@ -28,9 +28,6 @@ export const usersApiSlice = authApi.injectEndpoints({
         body: data,
       }),
     }),
-    getTeachers: builder.query({
-      query: (school_id) => `/api/schools/${school_id}/teachers`,
-    }),
   }),
 });
 

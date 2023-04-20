@@ -14,7 +14,7 @@ import CoursesSchoolAdd from "./CoursesSchoolAdd";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 import { useGetSubjectsWithoutPageQuery } from "../../redux/subjects/subjectsApiSlice";
 import { useGetTeachersQuery } from "../../redux/users/usersApiSlice";
-import { useGetGroupsQuery } from "../../redux/groups/groupsApiSlice";
+import { useGetSchoolGroupsQuery } from "../../redux/groups/groupsApiSlice";
 import CoursesSchoolUpdate from "./CoursesSchoolUpdate";
 import { Link, useNavigate } from "react-router-dom";
 import { toastify } from "../shared/Toast/Toast";
@@ -43,9 +43,10 @@ const CoursesSchoolContainer = () => {
   const [createCourse] = useAddCourseMutation();
   const [updateCourse] = useUpdateCourseMutation();
 
-  const { data: dataGroups, isLoading: isLoadingGroups } = useGetGroupsQuery({
-    school_id: user?.school_id,
-  });
+  const { data: dataGroups, isLoading: isLoadingGroups } =
+    useGetSchoolGroupsQuery({
+      school_id: user?.school_id,
+    });
 
   const { data: dataYears, isLoading: isLoadingYears } =
     useGetYearsWithoutPageQuery({
@@ -64,6 +65,7 @@ const CoursesSchoolContainer = () => {
 
   React.useEffect(() => {
     if (dataGroups && !isLoadingGroups) {
+      console.log("dataGroups", dataGroups);
       setGroups(dataGroups.filter((el) => el.is_active));
     }
   }, [dataGroups, isLoadingGroups]);
@@ -85,6 +87,8 @@ const CoursesSchoolContainer = () => {
       setTeachers(dataTeachers);
     }
   }, [dataTeachers, isLoadingTeachers]);
+
+  console.log(teachers);
 
   React.useEffect(() => {
     if (data && !isLoading) {

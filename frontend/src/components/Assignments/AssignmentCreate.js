@@ -7,24 +7,25 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-// import { styled } from "@mui/material/styles";
 import { Checkbox, TimePicker, DatePicker } from "antd";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import styled from "styled-components";
 
-const InputStyled = styled(TextField)(({ theme }) => ({
-  "& fieldset": {
-    borderRadius: "10px",
-  },
-  "& input": {
-    fontFamily: "Open Sans",
-    fontSize: 14,
-    fontWeight: 500,
-  },
-}));
+const InputStyled = styled(TextField)`
+  .MuiInputBase-root {
+    border-radius: 8px;
+  }
+  .MuiFormLabel-root {
+    font-family: "Open Sans";
+    font-weight: 400px;
+    font-size: 15px;
+  }
+  .MuiInputBase-input {
+    font-family: "Open Sans";
+    font-weight: 400px;
+    font-size: 15px;
+  }
+`;
 
 const Picker = styled(DatePicker)`
   &.ant-picker .ant-picker-input > input::placeholder {
@@ -38,12 +39,15 @@ const Picker = styled(DatePicker)`
     border: 1px solid #cbcbcb;
     border-radius: 8px;
     padding: 8px 12px;
+    font-family: "Open Sans";
+    font-weight: 400px;
   }
   &.ant-picker-focused {
     border: 1px solid #277ed4;
     box-shadow: none;
   }
 `;
+
 
 const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
   const [isActive, setIsActive] = React.useState(true);
@@ -87,7 +91,6 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
             },
           });
           setIsActive(true);
-          setShow(false);
         }}
       >
         {({ isSubmitting }) => (
@@ -97,7 +100,11 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
               {({ field, form: { touched, errors } }) => (
                 <>
                   <FormControl
-                    sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+                    sx={{
+                      width: "100%",
+                      fontSize: 15,
+                      fieldset: { borderRadius: "10px" },
+                    }}
                     size="small"
                   >
                     <InputLabel id="term">Term</InputLabel>
@@ -158,7 +165,7 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
             </Field>
             <div style={{ margin: 6 }} />
             <Picker
-              onChange={(value) => setDatetime(value?.toISOString())}
+              onChange={(value) => setDatetime(value)}
               showTime
               defaultValue={datetime}
             />
@@ -194,6 +201,7 @@ const styles = {
     height: "100%",
     zIndex: 1,
     borderTopLeftRadius: 20,
+    boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.2)",
   },
   header: {
     display: "flex",

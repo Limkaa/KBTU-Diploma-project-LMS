@@ -11,13 +11,13 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
       query: ({ assignment_id }) => `api/assignments/${assignment_id}`,
       keepUnusedDataFor: 5,
     }),
-    // addTerm: builder.mutation({
-    //   query: ({ ...data }) => ({
-    //     url: `/api/terms`,
-    //     method: "POST",
-    //     body: data,
-    //   }),
-    // }),
+    addAssignment: builder.mutation({
+      query: ({ course_id, ...data }) => ({
+        url: `/api/courses/${course_id}/assignments`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     // updateTerm: builder.mutation({
     //   query: ({ term_id, ...data }) => ({
     //     url: `/api/terms/${term_id}`,
@@ -28,5 +28,8 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
   }),
 });
 
-export const { useGetCourseAssignmentsQuery, useGetAssignmentQuery } =
-  assignmentsApiSlice;
+export const {
+  useGetCourseAssignmentsQuery,
+  useGetAssignmentQuery,
+  useAddAssignmentMutation,
+} = assignmentsApiSlice;

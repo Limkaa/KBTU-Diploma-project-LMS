@@ -6,6 +6,7 @@ import { selectCurrentUser } from "../redux/auth/authSlice";
 const PrivateRoute = ({ allowedRoles }) => {
   const user = useSelector(selectCurrentUser);
   const location = useLocation();
+  console.log("user", user);
   if (user !== null) {
     return allowedRoles?.includes(user?.role) ? (
       <div className="body-container">

@@ -2,21 +2,52 @@ import React from "react";
 import Header from "../shared/Header/Header";
 import Profile from "../Dashboard/Profile";
 import { Link, useLocation } from "react-router-dom";
-import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
+import {
+  useAddAssignmentMutation,
+  useGetCourseAssignmentsQuery,
+} from "../../redux/assignments/assignmentsApiSlice";
 import moment from "moment-timezone";
-import { Input, Spin } from "antd";
+import { Button, Input, Spin } from "antd";
 import Search from "../../assets/icons/search.svg";
 import CourseAssignments from "../Courses/CourseAssignments";
+import { useGetTermsWithoutPageQuery } from "../../redux/terms/termsApiSlice";
+import Plus from "../../assets/icons/plus.svg";
+import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
+import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import AssignmentCreate from "./AssignmentCreate";
+import { toastify } from "../shared/Toast/Toast";
 
 const AssignmentsCourse = () => {
   const location = useLocation();
   let courseId = location?.state?.courseId;
+  const { data: user } = useGetAuthUserQuery();
   const [assignments, setAssignments] = React.useState();
   const [loading, setLoading] = React.useState(true);
+  const [terms, setTerms] = React.useState([]);
   const [search, setSearch] = React.useState("");
+  const [showAddAssignment, setShowAddAssignment] = React.useState();
 
-  const { data: dataAssignments, isLoading: isLoadingAssignments } =
-    useGetCourseAssignmentsQuery({ course_id: courseId, search: search });
+  const {
+    data: dataAssignments,
+    isLoading: isLoadingAssignments,
+    refetch,
+  } = useGetCourseAssignmentsQuery({ course_id: courseId, search: search });
+
+  const { data: course } = useGetCourseQuery({
+    id: courseId,
+  });
+
+  const { data: dataTerm, isLoading } = useGetTermsWithoutPageQuery({
+    year_id: course?.year?.id,
+  });
+
+  const [createAssignment] = useAddAssignmentMutation();
+
+  React.useEffect(() => {
+    if (dataTerm && !isLoading) {
+      setTerms(dataTerm);
+    }
+  }, [dataTerm, isLoading]);
 
   React.useEffect(() => {
     let sortedAssignmentss = {};
@@ -55,6 +86,29 @@ const AssignmentsCourse = () => {
     }
   };
 
+  const handleAddAssignment = async (values, isActive, datetime) => {
+    console.log(values, isActive, datetime);
+    try {
+      await createAssignment({
+        course_id: courseId,
+        term: values.term,
+        name: values.name,
+        description: values.description,
+        datetime: datetime,
+        is_active: isActive,
+      })
+        .unwrap()
+        .then((payload) => {
+          refetch();
+          toastify("success", "Assignment Created");
+        });
+    } catch (err) {
+      console.log("ass", err);
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -70,6 +124,16 @@ const AssignmentsCourse = () => {
             style={styles.search}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
+          {user?.role === "teacher" && (
+            <Button
+              type="primary"
+              style={styles.btnAdd}
+              icon={<img src={Plus} style={{ paddingRight: 5 }} />}
+              onClick={() => setShowAddAssignment(true)}
+            >
+              Create assignment
+            </Button>
+          )}
         </div>
       </div>
       <Spin spinning={loading} size="large">
@@ -134,6 +198,12 @@ const AssignmentsCourse = () => {
             </div>
           ))}
       </Spin>
+      <AssignmentCreate
+        show={showAddAssignment}
+        setShow={setShowAddAssignment}
+        handleAdd={handleAddAssignment}
+        terms={terms}
+      />
     </div>
   );
 };
@@ -151,6 +221,15 @@ const styles = {
     marginTop: 20,
     borderRadius: 8,
     border: "1px solid #0000000D",
+  },
+  btnAdd: {
+    backgroundColor: "#163A61",
+    height: 40,
+    borderRadius: 8,
+    alignItems: "center",
+    display: "flex",
+    fontWeight: 500,
+    marginLeft: 16,
   },
   filter: {
     padding: 8,
@@ -209,7 +288,7 @@ const styles = {
     fontWeight: 500,
     fontSize: 16,
     color: "#4A4D58",
-    marginBottom: 8
+    marginBottom: 8,
   },
   subtitle: {
     color: "#4A4D58A6",

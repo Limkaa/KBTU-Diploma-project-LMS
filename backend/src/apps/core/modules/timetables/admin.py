@@ -106,17 +106,12 @@ class TimetableAdmin(CustomModelAdmin):
         "room",
         "timebound"
     )
-    autocomplete_fields = (
-        "school",
-        "course",
-        "room",
-        "timebound"    
-    )
     
     list_display = (
         "__str__",
         "school",
-        "weekday"
+        "weekday",
+        "course"
     )
 
     search_fields = (

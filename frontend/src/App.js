@@ -20,13 +20,13 @@ import AcademicYearsContainer from "./components/AcademicYears/AcademicYears.con
 import SchoolPage from "./pages/SchoolsPage/SchoolPage";
 import GroupsPage from "./pages/GroupsPage/GroupsPage";
 import TeacherGroupsPage from "./pages/GroupsPage/TeacherGroupsPage";
-import StudentsPage from "./pages/StudentsPage/StudentsPage";
+import GroupStudentsPage from "./pages/StudentsPage/GroupStudentsPage";
 import NotFound from "./components/NotFound/NotFound";
 import "./App.css";
 import CoursesSchoolContainer from "./components/Courses/CoursesSchool.container";
-import Course from "./components/Courses/Course";
+// import Course from "./components/Courses/Course";
 import SyllabusContainer from "./components/Syllabus/Syllabus.container";
-import StudentsAddPage from "./pages/StudentsPage/StudentsAddPage";
+import StudentsPage from "./pages/StudentsPage/StudentsPage";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -44,7 +44,7 @@ function App() {
           <Route exact path="/" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
-          <Route exact path="/courses/:id" element={<Course />} />
+          {/*<Route exact path="/courses/:id" element={<Course />} />*/}
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />
           <Route exact path="/materials" element={<MaterialsContainer />} />
@@ -64,7 +64,7 @@ function App() {
           <Route
             exact
             path="/my-groups/:groupId/students"
-            element={<StudentsPage />}
+            element={<GroupStudentsPage />}
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
@@ -89,9 +89,9 @@ function App() {
           <Route
             exact
             path="/groups/:groupId/students"
-            element={<StudentsPage />}
+            element={<GroupStudentsPage />}
           />
-          <Route exact path="/students" element={<StudentsAddPage />} />
+          <Route exact path="/students" element={<StudentsPage />} />
           <Route
             exact
             path="/school/subjects"

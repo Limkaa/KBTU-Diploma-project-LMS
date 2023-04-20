@@ -1,4 +1,4 @@
-from django.db.models import Prefetch, Avg, Q
+from django.db.models import Prefetch, Avg, Q, Count, F
 
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
@@ -124,7 +124,7 @@ class StudentAllMarksListAPI(OptionalPaginationListAPIView):
 class CourseAllMarksListAPI(OptionalPaginationListAPIView):
     permission_classes = [OnlyOwnSchool, IsCourseTeacher]
     serializer_class = StudentMarksOverviewSerializer
-    ordering = ['average_mark']
+    ordering = ['average_mark', 'marks_number']
     search_fields = ['user__last_name', 'user__first_name']
     
     def initial(self, request, *args, **kwargs):
@@ -144,6 +144,9 @@ class CourseAllMarksListAPI(OptionalPaginationListAPIView):
             raise NotFound('Term with this id does not exist or does not belong to course year')
     
     def get_queryset(self):
-        return Student.objects.filter(group=self.course.group).prefetch_related(
-            Prefetch('marks', queryset=Mark.objects.filter(assignment__course=self.course, assignment__term=self.term))
-            ).select_related('user').annotate(average_mark=Avg('marks__number', filter=Q(marks__assignment__term=self.term)))
+        filters = Q(marks__assignment__term=self.term) & Q(marks__assignment__course=self.course)
+        marks = Prefetch('marks', queryset=Mark.objects.filter(assignment__course=self.course, assignment__term=self.term))
+        return Student.objects.filter(group=self.course.group).prefetch_related(marks).select_related('user').annotate(
+            average_mark=Avg('marks__number', filter=filters),
+            marks_number=Count('marks', filter=filters)
+        )

@@ -32,7 +32,7 @@ class StudentMarksSerializer(StudentModelNestedSerializer):
     
 class StudentMarksOverviewSerializer(StudentMarksSerializer):
     average_mark = serializers.DecimalField(read_only=True, max_digits=3, decimal_places=2)
-
+    marks_number = serializers.IntegerField(read_only=True)
 
 class StudentAssignmentMarks(AssignmentModelNestedSerializer):
     class CourseSerializer(CourseModelNestedSerializer):

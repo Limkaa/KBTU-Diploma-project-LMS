@@ -50,6 +50,7 @@ class Timebound(CustomModel):
     
     class Meta:
         unique_together = ['school', 'from_time', 'to_time']
+        ordering = ['from_time', 'to_time']
 
     def __str__(self) -> str:
         return f"{self.from_time} - {self.to_time}"
@@ -63,13 +64,6 @@ class Timebound(CustomModel):
         
         if errors:
             raise ValidationError(errors.map)
-
-
-class TimeboundsQuerySet(models.QuerySet): 
-    def today(self):
-        ''' According to frontend JS getDay(): 0 - Sunday, 6 - Saturday'''
-        weekday_number = (datetime.datetime.today().weekday() + 1) % 7
-        return self.filter(weekday=weekday_number)
 
 
 class Timetable(CustomModel):
@@ -119,9 +113,10 @@ class Timetable(CustomModel):
     
     class Meta:
         unique_together = ['timebound', 'room', 'weekday']
+        ordering = ['weekday', 'timebound']
 
     def __str__(self) -> str:
-        return f"{self.course} (day {self.weekday}, room {self.room}, {self.timebound})"
+        return f"weekday {self.weekday}, {self.timebound}, room {self.room}"
     
     def clean(self):
         errors = ResponseDetails()
@@ -134,6 +129,9 @@ class Timetable(CustomModel):
         
         if self.course:
             check_same_school(self.course, 'course')
+            
+            if Timetable.objects.filter(timebound=self.timebound, weekday=self.weekday, course=self.course).exists():
+                errors.add_field_message('course', 'This course already has lesson at that time and weekday')
         
         check_same_school(self.room, 'room')
         check_same_school(self.timebound, 'timebound')

@@ -9,7 +9,7 @@ import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
+import { styled as styledmui } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import CourseLogo from "../shared/CourseLogo";
 import { useGetStudentCardQuery } from "../../redux/studentsCards/studentsCardsApiSlice";
@@ -20,8 +20,9 @@ import Select from "@mui/material/Select";
 import { Input, Empty, Spin } from "antd";
 import Search from "../../assets/icons/search.svg";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
+import styled from "styled-components";
 
-const Item = styled(Paper)(({ theme }) => ({
+const Item = styledmui(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
   fontFamily: "Open Sans",
   fontSize: 18,
@@ -34,6 +35,22 @@ const Item = styled(Paper)(({ theme }) => ({
   color: "black",
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.12)",
 }));
+
+const InputStyled = styled(Input)`
+  &.ant-input-affix-wrapper .ant-input {
+    background-color: #fafafa;
+    border-radius: 10px;
+  }
+  &.ant-input-affix-wrapper {
+    background-color: #fafafa;
+    height: 40px;
+    width: 280px;
+    border: 1px solid #c0c0c0;
+    border-radius: 10px;
+    background-color: #fafafa;
+    margin-right: 15px;
+  }
+`;
 
 const CoursesContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -105,11 +122,10 @@ const CoursesContainer = () => {
       </div>
       <Box sx={{ flexGrow: 1, marginTop: 3 }}>
         <div>
-          <Input
+          <InputStyled
             size="default size"
             placeholder="Search..."
             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
-            style={styles.search}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
           <FormControl
@@ -201,14 +217,6 @@ const styles = {
     padding: 8,
     justifyContent: "flex-end",
     display: "flex",
-  },
-  search: {
-    height: 40,
-    width: 280,
-    border: "1px solid #C0C0C0",
-    borderRadius: 10,
-    backgroundColor: "#FAFAFA",
-    marginRight: 15,
   },
   courseCont: {
     backgroundColor: "white",

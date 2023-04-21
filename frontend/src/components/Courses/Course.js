@@ -4,7 +4,7 @@ import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
 import CourseLogo from "../shared/CourseLogo";
-import { Spin } from "antd";
+import { Input, Space, Spin } from "antd";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -15,6 +15,7 @@ import CourseSyllabus from "./CourseSyllabus";
 import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
 import CourseAssignments from "./CourseAssignments";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import EditSvg from "../../assets/icons/Edit";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -32,6 +33,7 @@ const Course = () => {
   const [syllabus, setSyllabus] = React.useState();
   const [assignments, setAssignments] = React.useState();
   const { data: user } = useGetAuthUserQuery();
+  const [isPost, setIsPost] = React.useState();
 
   const [showMore, setShowMore] = React.useState(false);
   const navigate = useNavigate();
@@ -176,11 +178,25 @@ const Course = () => {
                 ))}
               </Item>
             </Grid>
-
-            {/* <Grid item xs={10} sm={9} md={5}></Grid> */}
           </Grid>
         </Box>
       </Spin>
+      <div style={styles.bottom}>
+        {isPost ? (
+          <Space.Compact style={{ width: "100%" }}>
+            <Input defaultValue="Combine input and button" />
+            <Button type="primary">Submit</Button>
+          </Space.Compact>
+        ) : (
+          <Button
+            style={styles.bottomBtn}
+            icon={<EditSvg />}
+            onClick={() => setIsPost(true)}
+          >
+            New post
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
@@ -271,6 +287,22 @@ const styles = {
     color: "#163A61",
     fontWeight: 600,
     fontSize: 14,
+  },
+  bottom: {
+    position: "absolute",
+    bottom: 30,
+    marginLeft: 20,
+  },
+  bottomBtn: {
+    backgroundColor: "#163A61",
+    fontSize: 16,
+    fontWeight: 500,
+    color: "white",
+    borderRadius: 12,
+    alignItems: "center",
+    gap: 10,
+    display: "flex",
+    padding: 20,
   },
 };
 

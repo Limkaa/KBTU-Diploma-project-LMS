@@ -28,6 +28,7 @@ import Course from "./components/Courses/Course";
 import SyllabusContainer from "./components/Syllabus/Syllabus.container";
 import AssignmentsCourse from "./components/Assignments/AssignmentsCourse";
 import Assignment from "./components/Assignments/Assignment";
+import AssignmentContainer from "./components/Assignments/AssignmentContainer";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -66,7 +67,11 @@ function App() {
             path="/courses/:id/assignments"
             element={<AssignmentsCourse />}
           />
-          <Route exact path="assignments/:id" element={<Assignment />} />
+          <Route
+            exact
+            path="assignments/:id"
+            element={<AssignmentContainer />}
+          />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher"]} />}>
           {/* <Route exact path="/groups" element={<TeacherGroupsPage />} /> */}

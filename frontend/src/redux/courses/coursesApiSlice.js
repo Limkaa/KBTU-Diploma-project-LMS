@@ -17,6 +17,10 @@ export const coursesApiSlice = authApi.injectEndpoints({
         `/api/groups/${group_id}/courses?year=${year_id}&search=${search}`,
       keepUnusedDataFor: 5,
     }),
+    getCourseStudents: builder.query({
+      query: ({ course_id }) => `/api/courses/${course_id}/students`,
+      keepUnusedDataFor: 5,
+    }),
     getCourse: builder.query({
       query: ({ id }) => `/api/courses/${id}`,
       keepUnusedDataFor: 5,
@@ -43,6 +47,7 @@ export const {
   useGetCourseQuery,
   useLazyGetGroupCoursesQuery,
   useLazyGetTeacherCoursesQuery,
+  useGetCourseStudentsQuery,
   useAddCourseMutation,
   useUpdateCourseMutation,
 } = coursesApiSlice;

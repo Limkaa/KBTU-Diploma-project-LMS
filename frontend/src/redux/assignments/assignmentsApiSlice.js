@@ -5,11 +5,12 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
     getCourseAssignments: builder.query({
       query: ({ course_id, search }) =>
         `api/courses/${course_id}/assignments?ordering=-datetime&search=${search}`,
-      keepUnusedDataFor: 5,
     }),
     getAssignment: builder.query({
       query: ({ assignment_id }) => `api/assignments/${assignment_id}`,
-      keepUnusedDataFor: 5,
+    }),
+    getAssignmentMarks: builder.query({
+      query: ({ assignment_id }) => `api/assignments/${assignment_id}/marks`,
     }),
     addAssignment: builder.mutation({
       query: ({ course_id, ...data }) => ({
@@ -26,10 +27,9 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
       }),
     }),
     deleteAssignment: builder.mutation({
-      query: ({ assignment_id, ...data }) => ({
+      query: ({ assignment_id }) => ({
         url: `/api/assignments/${assignment_id}`,
         method: "DELETE",
-        body: data,
       }),
     }),
   }),
@@ -38,6 +38,7 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
 export const {
   useGetCourseAssignmentsQuery,
   useGetAssignmentQuery,
+  useGetAssignmentMarksQuery,
   useAddAssignmentMutation,
   useUpdateAssignmentMutation,
   useDeleteAssignmentMutation,

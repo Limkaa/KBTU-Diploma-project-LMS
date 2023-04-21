@@ -44,14 +44,16 @@ const AssignmentsCourse = () => {
   });
 
   const [createAssignment] = useAddAssignmentMutation();
-  const [updateAssignment] = useUpdateAssignmentMutation();
-  const [deleteAssignment] = useDeleteAssignmentMutation();
 
   React.useEffect(() => {
     if (dataTerm && !isLoading) {
       setTerms(dataTerm);
     }
   }, [dataTerm, isLoading]);
+
+  React.useEffect(() => {
+    refetch();
+  }, []);
 
   React.useEffect(() => {
     let sortedAssignmentss = {};

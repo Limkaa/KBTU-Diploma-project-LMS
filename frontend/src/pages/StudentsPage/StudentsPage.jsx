@@ -204,18 +204,6 @@ const StudentsPage = () => {
             </header>
             <section id="students">
                 <div className="students">
-                    <div style={{padding: 8, display: "flex", backgroundColor: '#FAFAFA'}}>
-                        <div style={{ alignItems: "center", display: "flex" }}>
-                            <Input
-                                placeholder="Search..."
-                                prefix={
-                                    <img alt="" src={Search} style={{ height: 15, width: 15 }} />
-                                }
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value.toLowerCase())}
-                            />
-                        </div>
-                    </div>
                     <Spin spinning={isLoading}>
                         <Table className="table"
                                rowKey={(record) => record.id}
@@ -236,8 +224,18 @@ const StudentsPage = () => {
                     </Spin>
                 </div>
                 <aside>
+                    <div className="search">
+                        <Input
+                            placeholder="Search code"
+                            prefix={
+                                <img alt="" src={Search} style={{ height: 15, width: 15 }} />
+                            }
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value.toLowerCase())}
+                        />
+                    </div>
                     <div className="form add">
-                        <h2>Add selected students to group</h2>
+                        <h2>Add students to selected group</h2>
                         <FormControl
                             sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
                             size={"small"}

@@ -1,7 +1,6 @@
 #students .students {
     width: 64%;
     padding: 0;
-    /*border: 1px solid rgba(0, 0, 0, 0.1);*/
 }
 
 #students aside {
@@ -69,6 +68,20 @@
 }
 
 #students .add {
+    margin-top: 0;
+    padding: 20px 30px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+#students .search {
+    padding: 12px;
+    display: flex;
+    background-color: #FAFAFA;
+    height: 56px;
+    border: 1px solid #f0f0f0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     margin-top: 20px;
 }
 

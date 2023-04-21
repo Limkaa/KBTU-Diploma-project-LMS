@@ -292,7 +292,7 @@ class Command(BaseCommand):
         rooms = []
         
         for school in schools:
-            room_quantity = random.randint(30, 50)
+            room_quantity = random.randint(5, 15)
             rooms_numbers = random.sample(range(1, 1000), room_quantity)
             
             for room in rooms_numbers:
@@ -377,8 +377,7 @@ class Command(BaseCommand):
             
             for assignment in assignments:
                 for student in students:
-                    marks_number = random.randint(0, 2)
-                    for mark in range(marks_number):
+                    if random.choice([True, False]):
                         marks.append(Mark(
                             assignment=assignment,
                             student=student,
@@ -388,7 +387,62 @@ class Command(BaseCommand):
         
         Mark.objects.bulk_create(marks)
         self.stdout.write(self.style.SUCCESS(f'Assignments marks created ({len(marks)} objects)'))
-     
+    
+    def _create_timetables(self):
+        schools = School.objects.all()
+        timetables = []
+
+        class CourseHours:
+            def __init__(self, course, hours) -> None:
+                self.course: Course = course
+                self.hours = hours
+                self.lessons = []
+            
+            def add_lesson(self, weekday, timebound):
+                self.lessons.append([weekday, timebound])
+            
+            def is_valid_lesson(self, weekday, timebound) -> bool:
+                for lesson in self.lessons:
+                    if lesson[0] == weekday and lesson[1] == timebound:
+                        return False
+                return True
+        
+        def get_random_course(courses: list[CourseHours], weekday, timebound):
+            avaliable_courses = [course for course in courses if course.hours > 0]
+            
+            if not avaliable_courses:
+                return None
+            
+            random_course = random.choice([None, None, None, random.choice(avaliable_courses)])
+            
+            if random_course:
+                if not random_course.is_valid_lesson(weekday, timebound):
+                    return get_random_course(courses, weekday, timebound)
+            
+                random_course.hours -= 1
+                random_course.add_lesson(weekday, timebound)
+                return random_course.course
+            
+            return None
+        
+        for school in schools:
+            courses =  [CourseHours(course, random.randint(5, 10)) for course in Course.objects.filter(school=school)]
+            rooms = Room.objects.filter(school=school)
+            timebounds = Timebound.objects.filter(school=school)
+            
+            for weekday in Timetable.Weekday.values:
+                for room in rooms:
+                    for timebound in timebounds:
+                        timetables.append(Timetable(
+                            school=school,
+                            course=get_random_course(courses, weekday, timebound),
+                            room=room,
+                            timebound=timebound,
+                            weekday=weekday
+                        ))
+                        
+        Timetable.objects.bulk_create(timetables)
+        self.stdout.write(self.style.SUCCESS(f'Timetables created ({len(timetables)} objects)'))
     
     def handle(self, *args, **options):
         self.schools = self._create_schools()
@@ -407,6 +461,7 @@ class Command(BaseCommand):
         self._create_schools_comments()
         self._create_rooms()
         self._create_timebounds()
+        self._create_timetables()
         self._create_assignment_marks()
         
         self._create_superuser()

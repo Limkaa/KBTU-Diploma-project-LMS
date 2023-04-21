@@ -35,7 +35,7 @@ class Mark(CustomModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    non_updatable_fields = ["id", "assignment", "student", "number", "created_at"]
+    non_updatable_fields = ["id", "assignment", "student", "created_at"]
     
     class Meta:
         unique_together = ['student', 'assignment']

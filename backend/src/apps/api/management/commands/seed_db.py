@@ -377,8 +377,7 @@ class Command(BaseCommand):
             
             for assignment in assignments:
                 for student in students:
-                    marks_number = random.randint(0, 2)
-                    for mark in range(marks_number):
+                    if random.choice([True, False]):
                         marks.append(Mark(
                             assignment=assignment,
                             student=student,

@@ -1,10 +1,15 @@
+#students {
+    display: flex;
+    gap: 10px;
+}
+
 #students .students {
-    width: 64%;
+    width: 100%;
     padding: 0;
 }
 
 #students aside {
-    width: 35%;
+    width: 530px;
 }
 
 #students .form {
@@ -75,7 +80,7 @@
 }
 
 #students .search {
-    padding: 12px;
+    padding: 14px;
     display: flex;
     background-color: #FAFAFA;
     height: 56px;

@@ -3,13 +3,13 @@ import { authApi } from "../api/apiService";
 export const groupsApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getGroups: builder.query({
-      query: ({ groupType, school_id, grade_id, teacher_id, page }) => {
+      query: ({ groupType, school_id, grade_id, teacher_id, page, search, isActive }) => {
         if (groupType === "school") {
-          return `/api/schools/${school_id}/groups?page=${page}`;
+          return `/api/schools/${school_id}/groups?page=${page}&is_active=${isActive}&search=${search}`;
         } else if (groupType === "teacher") {
-          return `/api/teachers/${teacher_id}/groups?page=${page}`;
+          return `/api/teachers/${teacher_id}/groups?page=${page}&is_active=${isActive}&search=${search}`;
         } else if (groupType === "grade") {
-          return `/api/grades/${grade_id}/groups?page=${page}`;
+          return `/api/grades/${grade_id}/groups?page=${page}&is_active=${isActive}&search=${search}`;
         }
       },
     }),

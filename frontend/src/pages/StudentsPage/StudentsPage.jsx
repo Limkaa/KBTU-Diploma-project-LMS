@@ -4,7 +4,7 @@ import Profile from "../../components/Dashboard/Profile";
 import {useGetSchoolStudentsQuery, useUpdateStudentGroupMutation} from "../../redux/students/studentsApiSlice";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
-import {Spin, Table, Tag, Button, Radio, Divider, Select} from "antd";
+import {Spin, Table, Tag, Button, Radio, Divider, Select, Input} from "antd";
 import "./StudentsPage.css";
 import {useGetAllActiveGroupsQuery} from "../../redux/groups/groupsApiSlice";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,6 +14,8 @@ import {Select as Select2} from "@mui/material";
 import {toastify} from "../../components/shared/Toast/Toast";
 import {useGetSchoolGradesWithoutPageQuery} from "../../redux/schoolGrades/schoolGradesApiSlice";
 import {useGetTeachersQuery} from "../../redux/users/usersApiSlice";
+import Search from "../../assets/icons/search.svg";
+import Plus from "../../assets/icons/plus.svg";
 
 const StudentsPage = () => {
     const user = useSelector(selectCurrentUser);
@@ -202,6 +204,18 @@ const StudentsPage = () => {
             </header>
             <section id="students">
                 <div className="students">
+                    <div style={{padding: 8, display: "flex", backgroundColor: '#FAFAFA'}}>
+                        <div style={{ alignItems: "center", display: "flex" }}>
+                            <Input
+                                placeholder="Search..."
+                                prefix={
+                                    <img alt="" src={Search} style={{ height: 15, width: 15 }} />
+                                }
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value.toLowerCase())}
+                            />
+                        </div>
+                    </div>
                     <Spin spinning={isLoading}>
                         <Table className="table"
                                rowKey={(record) => record.id}
@@ -223,7 +237,7 @@ const StudentsPage = () => {
                 </div>
                 <aside>
                     <div className="form add">
-                        <h2>Add students to selected group</h2>
+                        <h2>Add selected students to group</h2>
                         <FormControl
                             sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
                             size={"small"}

@@ -12,10 +12,15 @@ import {Link} from "react-router-dom";
 const TeacherGroupsPage = () => {
     const user = useSelector(selectCurrentUser);
     const [page, setPage] = useState(1);
+    const [search, setSearch] = useState("");
+    const [isActive, setIsActive] = useState("");
     const {data: teacherGroupsData, isLoading} = useGetGroupsQuery(
-        {groupType: "teacher", school_id: user.school_id, grade_id: null, teacher_id: user.user_id, page});
+        {groupType: "teacher",
+            school_id: user.school_id,
+            grade_id: null,
+            teacher_id: user.user_id,
+            page, search, isActive});
     const [groups, setGroups] = useState();
-    const [isActive, setIsActive] = useState("all");
     const [total, setTotal] = useState();
 
     useEffect(() => {
@@ -24,23 +29,6 @@ const TeacherGroupsPage = () => {
             setGroups(teacherGroupsData?.results);
         }
     }, [teacherGroupsData, isLoading, page]);
-
-    const handleStatusChange = (e) => {
-        let value = e.target.value;
-        setIsActive(value);
-        console.log(value);
-        if (value === 'all') {
-            setGroups(teacherGroupsData?.results);
-        }
-        else if (value === 'active') {
-            console.log(teacherGroupsData?.results.filter(group => group.is_active === true));
-            setGroups(teacherGroupsData?.results.filter(group => group.is_active === true));
-        }
-        else if (value === 'inactive') {
-            console.log(teacherGroupsData?.results.filter(group => group.is_active === false));
-            setGroups(teacherGroupsData?.results.filter(group => group.is_active === false));
-        }
-    };
 
     const columns = [
         {
@@ -92,24 +80,21 @@ const TeacherGroupsPage = () => {
             <div style={styles.tableCont}>
                 <div style={styles.filter}>
                     <div style={{marginRight: "auto"}}>
-                        <Radio.Group style={{marginRight: 10}} value={isActive} onChange={handleStatusChange}>
-                            <Radio.Button value="all">All</Radio.Button>
-                            <Radio.Button value="active">Active</Radio.Button>
-                            <Radio.Button value="inactive">Not active</Radio.Button>
+                        <Radio.Group style={{marginRight: 10}} value={isActive}
+                                     onChange={(e) => setIsActive(e.target.value)}>
+                            <Radio.Button value="">All</Radio.Button>
+                            <Radio.Button value="true">Active</Radio.Button>
+                            <Radio.Button value="false">Not active</Radio.Button>
                         </Radio.Group>
                     </div>
                     <div style={{ alignItems: "center", display: "flex" }}>
                         <Input
-                            size="default size"
                             placeholder="Search..."
-                            prefix={<img alt='' src={Search} style={{ height: 20, width: 20 }} />}
-                            style={{
-                                height: 40,
-                                width: 280,
-                                border: "none",
-                                borderRadius: 8,
-                            }}
-                            // onChange={(e) => setSearch(e.target.value.toLowerCase())}
+                            prefix={
+                                <img alt="" src={Search} style={{ height: 15, width: 15 }} />
+                            }
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value.toLowerCase())}
                         />
                     </div>
                 </div>

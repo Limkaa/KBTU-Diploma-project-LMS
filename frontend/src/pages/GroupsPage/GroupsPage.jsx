@@ -20,6 +20,7 @@ const GroupsPage = () => {
   const [grade, setGrade] = useState();
   const [teacher, setTeacher] = useState();
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const {
     data: groupsData,
     isLoading,
@@ -30,6 +31,7 @@ const GroupsPage = () => {
     grade_id: grade,
     teacher_id: teacher,
     page,
+    search
   });
   const { data: grades, isSuccess: isGradesLoaded } =
     useGetSchoolGradesWithoutPageQuery({ school_id: user.school_id });
@@ -175,7 +177,7 @@ const GroupsPage = () => {
       </header>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          <div style={{ marginRight: "auto" }}>
+          <div style={{ marginRight: "auto", display: "flex", alignItems: "center" }}>
             <Radio.Group
               style={{ marginRight: 10 }}
               value={groupType}
@@ -225,25 +227,16 @@ const GroupsPage = () => {
           </div>
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
-              size="default size"
-              placeholder="Search..."
+              placeholder="Search code"
               prefix={
-                <img alt="" src={Search} style={{ height: 20, width: 20 }} />
+                <img alt="" src={Search} style={{ height: 15, width: 15 }} />
               }
-              style={{
-                height: 40,
-                width: 280,
-                border: "none",
-                borderRadius: 8,
-              }}
-              // onChange={(e) => setSearch(e.target.value.toLowerCase())}
+              value={search}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
             />
             <Button
               type="primary"
               style={{
-                backgroundColor: "#163A61",
-                height: 40,
-                borderRadius: 8,
                 alignItems: "center",
                 display: "flex",
                 fontWeight: 500,

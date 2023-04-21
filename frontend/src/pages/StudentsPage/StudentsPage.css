@@ -73,8 +73,9 @@
 }
 
 #students .radio {
-    font-size: 12px;
+    font-size: 14px;
     display: flex;
+    margin: 2px 0;
 }
 
 .ant-radio-inner {

@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user25@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user4@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2014,13 +2014,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/9/courses?page=1&search=&ordering&is_active&subject__grade=&year=",
+							"raw": "{{BASE_URL}}/teachers/14/courses?page=1&search=&ordering&is_active&subject__grade=&year=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"9",
+								"14",
 								"courses"
 							],
 							"query": [
@@ -2405,13 +2405,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/assignments/2/marks?page=1&search=",
+									"raw": "{{BASE_URL}}/assignments/55/marks?page=1&search=",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"assignments",
-										"2",
+										"55",
 										"marks"
 									],
 									"query": [
@@ -2526,13 +2526,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/students/25/marks?page=1&is_active&term=&course&course__teacher&course__subject=&course__subject__grade=&course__year&no_marks=&ordering=datetime&search",
+									"raw": "{{BASE_URL}}/students/19/marks?page=1&is_active&term=7&course=14&course__teacher&course__subject=&course__subject__grade=&course__year&no_marks=&ordering=datetime&search",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"students",
-										"25",
+										"19",
 										"marks"
 									],
 									"query": [
@@ -2546,11 +2546,11 @@
 										},
 										{
 											"key": "term",
-											"value": ""
+											"value": "7"
 										},
 										{
 											"key": "course",
-											"value": null
+											"value": "14"
 										},
 										{
 											"key": "course__teacher",
@@ -2594,15 +2594,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/courses/1/terms/1/marks?page=1&ordering=&search=",
+									"raw": "{{BASE_URL}}/courses/23/terms/7/marks?page=1&ordering=&search=",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"courses",
-										"1",
+										"23",
 										"terms",
-										"1",
+										"7",
 										"marks"
 									],
 									"query": [
@@ -3627,6 +3627,344 @@
 									"key": "ordering",
 									"value": "-to_time",
 									"description": "from_time, to_time, created_at, updated_at",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Timetables",
+			"item": [
+				{
+					"name": "Get one timetable slot",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/timetables-slots/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"timetables-slots",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update one timetable slot",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"course\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/timetables-slots/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"timetables-slots",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school timetable",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/timetable?page=1&search=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"timetable"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "weekday",
+									"value": "",
+									"description": "In Javascript 0 -Sunday, 6 - Saturday",
+									"disabled": true
+								},
+								{
+									"key": "timebound",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "course",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "room",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "no_course",
+									"value": "True",
+									"description": "True, False",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "room name, subject name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get course timetable",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/1/timetable?weekday=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"1",
+								"timetable"
+							],
+							"query": [
+								{
+									"key": "weekday",
+									"value": "",
+									"description": "In Javascript 0 -Sunday, 6 - Saturday"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get room timetable",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/rooms/1/timetable?page=1&weekday=&timebound&course=&no_course=&search=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"rooms",
+								"1",
+								"timetable"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "weekday",
+									"value": "",
+									"description": "In Javascript 0 -Sunday, 6 - Saturday"
+								},
+								{
+									"key": "timebound",
+									"value": null
+								},
+								{
+									"key": "course",
+									"value": ""
+								},
+								{
+									"key": "no_course",
+									"value": "",
+									"description": "True, False"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "subject name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get group timetable",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/groups/1/timetable?search",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"groups",
+								"1",
+								"timetable"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "weekday",
+									"value": "",
+									"description": "In Javascript 0 -Sunday, 6 - Saturday",
+									"disabled": true
+								},
+								{
+									"key": "timebound",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "course",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "room",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "room name, subject name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get teacher timetable",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/teachers/4/timetable?page=1&search=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"teachers",
+								"4",
+								"timetable"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "weekday",
+									"value": "",
+									"description": "In Javascript 0 -Sunday, 6 - Saturday",
+									"disabled": true
+								},
+								{
+									"key": "timebound",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "course",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "room",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "room name, subject name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get timebound timetable",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/timebounds/2/timetable",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"timebounds",
+								"2",
+								"timetable"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "weekday",
+									"value": "",
+									"description": "In Javascript 0 -Sunday, 6 - Saturday",
+									"disabled": true
+								},
+								{
+									"key": "course",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "no_course",
+									"value": "False",
+									"description": "True, False",
+									"disabled": true
+								},
+								{
+									"key": "room",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "room name, subject name",
 									"disabled": true
 								}
 							]

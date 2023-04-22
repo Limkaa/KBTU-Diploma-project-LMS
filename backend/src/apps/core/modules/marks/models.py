@@ -35,7 +35,10 @@ class Mark(CustomModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    non_updatable_fields = ["id", "assignment", "student", "number", "created_at"]
+    non_updatable_fields = ["id", "assignment", "student", "created_at"]
+    
+    class Meta:
+        unique_together = ['student', 'assignment']
     
     def __str__(self) -> str:
         return f"{self.number} - {self.student}"
@@ -43,6 +46,9 @@ class Mark(CustomModel):
     def clean(self) -> None:
         errors = ResponseDetails()
         errors.clear()
+        
+        if self.assignment.term.is_closed:
+            errors.add_field_message('term', "Term is closed, so you can't create or update assignment mark")
         
         if self.student.group != self.assignment.course.group:
             errors.add_field_message('assignment', "This assignment belongs to course, which is not learned by specified student")

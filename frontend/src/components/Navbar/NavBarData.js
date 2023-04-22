@@ -12,7 +12,6 @@ import SubjectsSvg from "../../assets/icons/SubjectsIcon";
 import YearSvg from "../../assets/icons/YearIcon";
 import TermsSvg from "../../assets/icons/TermsIcon";
 import TermSvg from "../../assets/icons/TermIcon";
-import SchoolIcon from "../../assets/icons/SchoolIcon";
 import SchoolSvg from "../../assets/icons/SchoolIcon";
 import GroupSvg from "../../assets/icons/GroupIcon";
 import StudentSvg from "../../assets/icons/StudentIcon";

@@ -24,7 +24,7 @@ import GroupStudentsPage from "./pages/StudentsPage/GroupStudentsPage";
 import NotFound from "./components/NotFound/NotFound";
 import "./App.css";
 import CoursesSchoolContainer from "./components/Courses/CoursesSchool.container";
-// import Course from "./components/Courses/Course";
+import Course from "./components/Courses/Course";
 import SyllabusContainer from "./components/Syllabus/Syllabus.container";
 import StudentsPage from "./pages/StudentsPage/StudentsPage";
 function App() {
@@ -44,7 +44,7 @@ function App() {
           <Route exact path="/" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
-          {/*<Route exact path="/courses/:id" element={<Course />} />*/}
+          <Route exact path="/courses/:id" element={<Course />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />
           <Route exact path="/materials" element={<MaterialsContainer />} />

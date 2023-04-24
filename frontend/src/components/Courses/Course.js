@@ -234,8 +234,8 @@ const Course = () => {
             onClick={() => setIsPost(true)}
           >
             New post
-          </Button> */}
-      {/* )}
+          </Button>
+        )}
       </div> */}
     </div>
   );

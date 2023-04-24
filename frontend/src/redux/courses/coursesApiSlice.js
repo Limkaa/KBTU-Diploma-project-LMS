@@ -3,8 +3,8 @@ import { authApi } from "../api/apiService";
 export const coursesApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getSchoolCourses: builder.query({
-      query: ({ school_id, page }) =>
-        `/api/schools/${school_id}/courses?page=${page}`,
+      query: ({ school_id, page, search }) =>
+        `/api/schools/${school_id}/courses?page=${page}&search=${search}`,
       keepUnusedDataFor: 5,
     }),
     getTeacherCourses: builder.query({

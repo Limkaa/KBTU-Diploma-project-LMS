@@ -4,8 +4,8 @@ import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
 import CourseLogo from "../shared/CourseLogo";
-import { Input, Space, Spin } from "antd";
-import { styled } from "@mui/material/styles";
+import { FloatButton, Input, Space, Spin } from "antd";
+import { styled as muistyled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -16,8 +16,21 @@ import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignment
 import CourseAssignments from "./CourseAssignments";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import EditSvg from "../../assets/icons/Edit";
+import Fab from "@mui/material/Fab";
+import CoursePost from "./CoursePost";
+import styled from "styled-components";
+import { useGetCoursePostsQuery } from "../../redux/coursePosts/coursePostsApiSlice";
 
-const Item = styled(Paper)(({ theme }) => ({
+const Float = styled(FloatButton)`
+  &.ant-float-btn-default {
+    background-color: #163A61;
+  }
+  &.ant-float-btn-default .ant-float-btn-body {
+    background-color: #163A61;
+  }
+`;
+
+const Item = muistyled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
   fontFamily: "Open Sans",
   flexDirection: "column",
@@ -32,6 +45,7 @@ const Course = () => {
   const [course, setCourse] = React.useState();
   const [syllabus, setSyllabus] = React.useState();
   const [assignments, setAssignments] = React.useState();
+  const [posts, setPosts] = React.useState();
   const { data: user } = useGetAuthUserQuery();
   const [isPost, setIsPost] = React.useState();
 
@@ -42,6 +56,10 @@ const Course = () => {
 
   const { data: dataSyllabus, isLoading: isLoadingSyllabus } =
     useGetCourseSyllabusWithoutQuery({ course_id: courseId });
+
+  const { data: dataPosts, isLoading: isLoadingPosts } = useGetCoursePostsQuery(
+    { course_id: courseId }
+  );
 
   const { data: dataAssignments, isLoading: isLoadingAssignments } =
     useGetCourseAssignmentsQuery({ course_id: courseId, search: "" });
@@ -57,6 +75,13 @@ const Course = () => {
       setSyllabus(dataSyllabus);
     }
   }, [dataSyllabus, isLoadingSyllabus]);
+
+  React.useEffect(() => {
+    if (dataPosts && !isLoadingPosts) {
+      setPosts(dataPosts);
+      console.log(dataPosts);
+    }
+  }, [dataPosts, isLoadingPosts]);
 
   React.useEffect(() => {
     if (dataAssignments && !isLoadingAssignments) {
@@ -130,11 +155,26 @@ const Course = () => {
                   )}
                 </div>
               </Item>
-              <Item>
-                <div>
-                  <div>Course Posts</div>
+              {/* <Item> */}
+              <div style={{ padding: 8 }}>
+                <div style={styles.cont}>
+                  <div style={styles.titleForCont}>Posts</div>
+                  <Float
+                    style={{ left: 266 }}
+                    tooltip={<div>New post</div>}
+                    icon={<EditSvg />}
+                  />
                 </div>
-              </Item>
+                {posts?.map((item) => (
+                  <CoursePost
+                    setIsPost={setIsPost}
+                    isPost={isPost}
+                    item={item}
+                  />
+                ))}
+              </div>
+
+              {/* </Item> */}
             </Grid>
             <Grid item xs={1} sm={9} md={4}>
               {user?.role !== "manager" && (
@@ -181,7 +221,7 @@ const Course = () => {
           </Grid>
         </Box>
       </Spin>
-      <div style={styles.bottom}>
+      {/* <div style={styles.bottom}>
         {isPost ? (
           <Space.Compact style={{ width: "100%" }}>
             <Input defaultValue="Combine input and button" />
@@ -194,9 +234,9 @@ const Course = () => {
             onClick={() => setIsPost(true)}
           >
             New post
-          </Button>
-        )}
-      </div>
+          </Button> */}
+      {/* )}
+      </div> */}
     </div>
   );
 };
@@ -217,12 +257,6 @@ const styles = {
   },
   wrapper: {
     display: "flex",
-  },
-  search: {
-    height: 40,
-    width: 280,
-    border: "none",
-    borderRadius: 8,
   },
   cont: {
     display: "flex",
@@ -294,15 +328,12 @@ const styles = {
     marginLeft: 20,
   },
   bottomBtn: {
-    backgroundColor: "#163A61",
     fontSize: 16,
     fontWeight: 500,
-    color: "white",
-    borderRadius: 12,
+    color: "#163A61",
     alignItems: "center",
     gap: 10,
     display: "flex",
-    padding: 20,
   },
 };
 

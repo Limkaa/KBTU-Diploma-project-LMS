@@ -1,7 +1,7 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
-import { Table, Input, Button, Space, Tag } from "antd";
+import { Table, Input, Button, Space, Tag, Spin } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
@@ -38,6 +38,7 @@ const CoursesSchoolContainer = () => {
   const { data, isLoading, refetch } = useGetSchoolCoursesQuery({
     school_id: user?.school_id,
     page,
+    search,
   });
 
   const [createCourse] = useAddCourseMutation();
@@ -269,19 +270,21 @@ const CoursesSchoolContainer = () => {
             </Button>
           </div>
         </div>
-        <Table
-          dataSource={courses}
-          columns={columns}
-          rowKey={(item) => item?.id}
-          pagination={{
-            total: total,
-            current: page,
-            onChange: (page) => {
-              setPage(page);
-            },
-            showSizeChanger: false,
-          }}
-        />
+        <Spin spinning={isLoading} size="large">
+          <Table
+            dataSource={courses}
+            columns={columns}
+            rowKey={(item) => item?.id}
+            pagination={{
+              total: total,
+              current: page,
+              onChange: (page) => {
+                setPage(page);
+              },
+              showSizeChanger: false,
+            }}
+          />
+        </Spin>
       </div>
       <CoursesSchoolUpdate
         course={selectedCourse}

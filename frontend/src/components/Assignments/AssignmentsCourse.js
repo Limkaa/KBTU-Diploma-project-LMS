@@ -338,7 +338,6 @@ const styles = {
     width: 280,
     border: "1px solid #DADADA",
     borderRadius: 8,
-    // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.07)",
   },
 };
 export default AssignmentsCourse;

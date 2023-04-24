@@ -20,7 +20,7 @@ import AcademicYearsContainer from "./components/AcademicYears/AcademicYears.con
 import SchoolPage from "./pages/SchoolsPage/SchoolPage";
 import GroupsPage from "./pages/GroupsPage/GroupsPage";
 import TeacherGroupsPage from "./pages/GroupsPage/TeacherGroupsPage";
-import StudentsPage from "./pages/StudentsPage/StudentsPage";
+import GroupStudentsPage from "./pages/StudentsPage/GroupStudentsPage";
 import NotFound from "./components/NotFound/NotFound";
 import "./App.css";
 import CoursesSchoolContainer from "./components/Courses/CoursesSchool.container";
@@ -29,6 +29,7 @@ import SyllabusContainer from "./components/Syllabus/Syllabus.container";
 import AssignmentsCourse from "./components/Assignments/AssignmentsCourse";
 import Assignment from "./components/Assignments/Assignment";
 import AssignmentContainer from "./components/Assignments/AssignmentContainer";
+import StudentsPage from "./pages/StudentsPage/StudentsPage";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -80,6 +81,12 @@ function App() {
             path="/groups/:groupId/students"
             element={<StudentsPage />}
           /> */}
+           <Route exact path="/my-groups" element={<TeacherGroupsPage />} />
+          <Route
+            exact
+            path="/my-groups/:groupId/students"
+            element={<GroupStudentsPage />}
+          />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
           <Route exact path="/users" element={<UsersContainer />} />
@@ -103,8 +110,9 @@ function App() {
           <Route
             exact
             path="/groups/:groupId/students"
-            element={<StudentsPage />}
+            element={<GroupStudentsPage />}
           />
+          <Route exact path="/students" element={<StudentsPage />} />
           <Route
             exact
             path="/school/subjects"

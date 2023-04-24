@@ -1,77 +1,200 @@
 import React, {useEffect, useState} from 'react';
-import "./StudentsPage.css";
 import Header from "../../components/shared/Header/Header";
 import Profile from "../../components/Dashboard/Profile";
-import {useParams} from "react-router-dom";
-import {useGetOneGroupQuery} from "../../redux/groups/groupsApiSlice";
-import {useGetGroupStudentsQuery} from "../../redux/students/studentsApiSlice";
-import {Spin, Table, Alert} from "antd";
+import {useGetSchoolStudentsQuery, useUpdateStudentGroupMutation} from "../../redux/students/studentsApiSlice";
+import {useSelector} from "react-redux";
+import {selectCurrentUser} from "../../redux/auth/authSlice";
+import {Spin, Table, Tag, Button, Radio, Divider, Select, Input} from "antd";
+import "./StudentsPage.css";
+import {useGetAllActiveGroupsQuery} from "../../redux/groups/groupsApiSlice";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import {Select as Select2} from "@mui/material";
+import {toastify} from "../../components/shared/Toast/Toast";
+import {useGetSchoolGradesWithoutPageQuery} from "../../redux/schoolGrades/schoolGradesApiSlice";
+import {useGetTeachersQuery} from "../../redux/users/usersApiSlice";
+import Search from "../../assets/icons/search.svg";
+import Plus from "../../assets/icons/plus.svg";
 
 const StudentsPage = () => {
-    const {groupId} = useParams();
+    const user = useSelector(selectCurrentUser);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState();
-    const {data: groupData, isLoading: isGroupLoading, isSuccess: isGroupSuccess, error} = useGetOneGroupQuery(groupId);
-    const {data: studentsData, isLoading: isStudentsLoading, isSuccess: isStudentsSuccess} =
-        useGetGroupStudentsQuery({groupId, page});
-    const [err, setErr] = useState(false);
-    const [group, setGroup] = useState();
-    const [students, setStudents] = useState();
+    const [order, setOrder] = useState("created_at");
+    const [search, setSearch] = useState("");
+    const [gender, setGender] = useState("");
+    const [groupId, setGroupId] = useState("");
+    const [teacherId, setTeacherId] = useState("");
+    const [gradeId, setGradeId] = useState("");
+    const [noGroup, setNoGroup] = useState("");
+    const [students, setStudents] = useState([]);
+    const {data: studentsData, isLoading, isSuccess, refetch} = useGetSchoolStudentsQuery({
+        schoolId: user.school_id,
+        page, order, search, gender, groupId, teacherId, gradeId, noGroup
+    });
+    const [groups, setGroups] = useState([]);
+    const [gradesOptions, setGradesOptions] = useState([]);
+    const [teacherOptions, setTeacherOptions] = useState([]);
+    const [groupsOptions, setGroupsOptions] = useState([]);
+    const [selectedGroup, setSelectedGroup] = useState("");
+    const { data: grades, isSuccess: isGradesLoaded } =
+        useGetSchoolGradesWithoutPageQuery({ school_id: user.school_id });
+    const { data: teachers, isSuccess: isTeachersLoaded } = useGetTeachersQuery(
+        user.school_id
+    );
+    const {data: groupsData, isLoading: isGroupsLoading ,isSuccess: isGroupsSuccess} = useGetAllActiveGroupsQuery(user.school_id);
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [updateGroup] = useUpdateStudentGroupMutation();
 
     useEffect(() => {
-        console.log(error);
-        if (error?.status === 403) {
-            setErr(true);
-        }
-        else {
-            setErr(false);
-        }
-    }, [error]);
-
-    useEffect(() => {
-        if (isGroupSuccess) {
-            setGroup(groupData);
-        }
-    }, [isGroupSuccess, groupData]);
-
-    useEffect(() => {
-        if (isStudentsSuccess) {
-            if (page === 1) setTotal(studentsData?.count);
+        if (isSuccess) {
             setStudents(studentsData?.results);
+            if (page === 1) setTotal(studentsData?.count);
         }
-    }, [isStudentsSuccess, page, studentsData]);
+    }, [studentsData, isSuccess]);
+
+    useEffect(() => {
+        let arr = [{ value: "", label: "All grades" }];
+        if (isGradesLoaded) {
+            grades.forEach((grade) => {
+                arr.push({ value: grade.id, label: grade.name });
+            });
+            setGradesOptions(arr);
+            // setGradeId(arr[0].value);
+        }
+    }, [isGradesLoaded, grades]);
+
+    useEffect(() => {
+        let arr = [{ value: "", label: "All teachers" }];
+        if (isTeachersLoaded) {
+            teachers.forEach((user) => {
+                arr.push({
+                    value: user.id,
+                    label: `${user.first_name} ${user.last_name}`,
+                });
+            });
+            setTeacherOptions(arr);
+        }
+    }, [isTeachersLoaded, teachers]);
+
+    useEffect(() => {
+        if (isGroupsSuccess) {
+            setGroups(groupsData);
+        }
+    }, [groupsData, isGroupsSuccess]);
+
+    useEffect(() => {
+        let arr = [{ value: "", label: "All groups" }];
+        if (groups) {
+            groups.forEach((group) => {
+                arr.push({
+                    value: group.id,
+                    label: group.code,
+                });
+            });
+            setGroupsOptions(arr);
+        }
+    }, [groups]);
 
     const columns = [
         {
-            title: 'Name',
-            key: 'name',
+            title: 'Student',
+            key: 'student',
+            width: "35%",
+            render: (student) => (
+                <div className="rating">
+                        <span className="name">
+                            {student.user.first_name} {student.user.last_name}
+                        </span>
+                        <span className="email">
+                            {student.user.email}
+                        </span>
+                </div>
+            ),
+        },
+        {
+            title: 'Grade',
+            key: 'grade',
+            width: "15%",
             render: (student) => (
                 <span>
-                    {student.user.first_name} {student.user.last_name}
+                    {student.group.grade.name}
                 </span>
             ),
-            sorter: (a, b) => {
-                const nameA = a.user.first_name.toUpperCase();
-                const nameB = b.user.first_name.toUpperCase();
-                if (nameA < nameB) {
-                    return -1;
+        },
+        {
+            title: 'Gender',
+            key: 'gender',
+            width: "15%",
+            render: (student) => (
+                <Tag
+                    style={{ minWidth: 50, textAlign: "center" }}
+                    color={student.user.gender === "male" ? "blue" : "pink"}>
+                    {student.user.gender}
+                </Tag>
+            ),
+        },
+        {
+            title: 'Group',
+            key: 'group',
+            width: "15%",
+            render: (student) => {
+                if (student.group === null) {
+                    return "-";
                 }
-                if (nameA > nameB) {
-                    return 1;
+                else {
+                    return (
+                        <Tag
+                            style={{ minWidth: 53, textAlign: "center" }}
+                        >
+                            {student.group.code??"-"}
+                        </Tag>)
                 }
-                return 0;
+
             },
         },
         {
-            title: 'Email',
-            key: 'email',
+            title: 'Rating',
+            key: 'rating',
+            width: "15%",
             render: (student) => (
                 <span>
-                    {student.user.email}
+                    {student.user.rating}
                 </span>
             ),
         },
     ];
+
+    const handleRowSelectionChange = (selectedRowKeys, selectedRows) => {
+        console.log(selectedRows);
+        setSelectedRows(selectedRows);
+    };
+
+    const rowSelection = {
+        selectedRows,
+        onChange: handleRowSelectionChange,
+        getCheckboxProps: (record) => ({
+            disabled: record.group === null,
+        }),
+    };
+
+    const handleGroupChange = async () => {
+        console.log(selectedRows);
+        let success = true;
+        for (let row of selectedRows) {
+            await updateGroup({studentId: row.user.id, group: selectedGroup,})
+                .then(() => success = true)
+                .catch(() => {
+                    success = false;
+                    toastify("error", `Failed to update group for ${row.user.first_name} ${row.user.last_name}`);
+            })
+        }
+        if (success) {
+            refetch();
+            toastify("success", "Groups updated");
+        }
+    }
 
     return (
         <main>
@@ -79,76 +202,156 @@ const StudentsPage = () => {
                 <Header text={"Group students"} />
                 <Profile />
             </header>
-            {err ?
-                <Alert
-                    style={{marginTop: 20, width: "50%"}}
-                    message="Error"
-                    description="Invalid group. You cannot interact with other schools and all related to them objects"
-                    type="error"
-                    showIcon
-                />
-                :
-                <section id="students">
-                    <div className="students">
-                        <Spin spinning={isStudentsLoading}>
-                            <Table className="table"
-                                   columns={columns}
-                                   dataSource={students}
-                                   pagination={{
-                                       total: total,
-                                       current: page,
-                                       onChange: (page) => {
-                                           console.log(page);
-                                           setPage(page);
-                                           window.scrollTo(0,0);
-                                       },
-                                       showSizeChanger: false,
-                                   }}
+            <section id="students">
+                <div className="students">
+                    <Spin spinning={isLoading}>
+                        <Table className="table"
+                               rowKey={(record) => record.id}
+                               columns={columns}
+                               dataSource={students}
+                               rowSelection={rowSelection}
+                               pagination={{
+                                   total: total,
+                                   current: page,
+                                   onChange: (page) => {
+                                       setPage(page);
+                                       window.scrollTo(0,0);
+                                   },
+                                   showSizeChanger: false,
+                               }}
+                        >
+                        </Table>
+                    </Spin>
+                </div>
+                <aside>
+                    <div className="search">
+                        <Input
+                            placeholder="Search code"
+                            prefix={
+                                <img alt="" src={Search} style={{ height: 15, width: 15 }} />
+                            }
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value.toLowerCase())}
+                        />
+                    </div>
+                    <div className="form add">
+                        <h2>Add students to selected group</h2>
+                        <FormControl
+                            sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+                            size={"small"}
+                        >
+                            <InputLabel id="group">Group</InputLabel>
+                            <Select2
+                                labelId="group"
+                                id="group"
+                                value={selectedGroup}
+                                label="Group"
+                                onChange={(e) => {
+                                    setSelectedGroup(e.target.value);
+                                }}
                             >
-                            </Table>
-                        </Spin>
+                                {
+                                    groups.map(group =>
+                                        <MenuItem key={group.id} value={group.id}>
+                                            <Tag style={{minWidth: "20%", textAlign: 'center'}}>{group.code}</Tag>
+                                            {group.grade.name} | {group.teacher.first_name} {group.teacher.last_name}
+                                        </MenuItem>
+                                    )
+                                }
+                            </Select2>
+                            <div style={{height: 10}}></div>
+                        </FormControl>
+                        <Button type={"primary"} className="btn"
+                                onClick={handleGroupChange}
+                        >Update group</Button>
                     </div>
-                    <div className="group-info">
-                        <Spin spinning={isGroupLoading}>
-                            <h2>Group information</h2>
-                            <div className="card">
-                                <div className={group?.is_active ? "flex green" : "flex red"}>
-                                    <div className="head">
-                                        <h4>Group</h4>
-                                    </div>
-                                    <hr/>
-                                    <div className="info">
-                                        <p>{group?.code}</p>
-                                        {group?.is_active ? 'active' : 'inactive'}
-                                    </div>
-                                </div>
-                                <div className={group?.grade.is_active ? "flex green" : "flex red"}>
-                                    <div className="head">
-                                        <h4>Grade</h4>
-                                    </div>
-                                    <hr/>
-                                    <div className="info">
-                                        <p>{group?.grade.name}</p>
-                                        <p>
-                                            {group?.grade.is_active ? 'active' : 'inactive'}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex green">
-                                    <div className="head">
-                                        <h4>Teacher</h4>
-                                    </div>
-                                    <hr/>
-                                    <div className="info">
-                                        <p>{group?.teacher.first_name} {group?.teacher.last_name}</p>
-                                        <p>{group?.teacher.email}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Spin>
+                    <div className="form filters">
+                        <div className="group">
+                            <Divider orientation={"left"} className="divider">Sort</Divider>
+                            <Radio.Group name="order"
+                                         value={order}
+                                         onChange={(e) => setOrder(e.target.value)}
+                            >
+                                <Radio className="radio" value={"created_at"}>Creation</Radio>
+                                <Radio className="radio" value={"updated_at"}>Update</Radio>
+                                <Radio className="radio" value={"rating"}>Rating</Radio>
+                            </Radio.Group>
+                        </div>
+                        <div className="group">
+                            <Divider orientation={"left"} className="divider">Gender</Divider>
+                            <Radio.Group name="gender"
+                                         value={gender}
+                                         onChange={(e) => setGender(e.target.value)}
+                            >
+                                    <Radio className="radio" value={""}>All</Radio>
+                                    <Radio className="radio" value={"female"}>Female</Radio>
+                                    <Radio className="radio" value={"male"}>Male</Radio>
+                            </Radio.Group>
+                        </div>
+                        <div className="group">
+                            <Divider orientation={"left"} className="divider">Group</Divider>
+                            <Radio.Group name="noGroup"
+                                         value={noGroup}
+                                         onChange={(e) => setNoGroup(e.target.value)}
+                            >
+                                <Radio className="radio" value={""}>All</Radio>
+                                <Radio className="radio" value={"False"}>With</Radio>
+                                <Radio className="radio" value={"True"}>Without</Radio>
+                            </Radio.Group>
+                        </div>
                     </div>
-                </section>
-            }
+                    <div className="form">
+                        <div className="select">
+                            <h3>Teacher:</h3>
+                            <Select
+                                size={"small"}
+                                style={{width: '100%'}}
+                                showSearch
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    (option?.label ?? "").includes(input)
+                                }
+                                onChange={(val) => setTeacherId(val)}
+                                options={teacherOptions}
+                                defaultValue={teacherOptions[0]}
+                                value={teacherId}
+                            />
+                        </div>
+                        <div className="select">
+                            <h3>Grade:</h3>
+                            <Select
+                                size={"small"}
+                                style={{width: '100%'}}
+                                showSearch
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    (option?.label ?? "").includes(input)
+                                }
+                                onChange={(val) => setGradeId(val)}
+                                options={gradesOptions}
+                                defaultValue={gradesOptions[0]}
+                                value={gradeId}
+                            />
+                        </div>
+                        <div className="select">
+                            <h3>Group:</h3>
+                            <Select
+                                size={"small"}
+                                style={{width: '100%'}}
+                                showSearch
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    (option?.label ?? "").includes(input)
+                                }
+                                onChange={(val) => setGroupId(val)}
+                                options={groupsOptions}
+                                value={groupId}
+                            />
+                        </div>
+                    </div>
+                </aside>
+
+            </section>
         </main>
     );
 };

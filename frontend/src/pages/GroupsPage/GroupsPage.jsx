@@ -20,6 +20,7 @@ const GroupsPage = () => {
   const [grade, setGrade] = useState();
   const [teacher, setTeacher] = useState();
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const {
     data: groupsData,
     isLoading,
@@ -30,6 +31,7 @@ const GroupsPage = () => {
     grade_id: grade,
     teacher_id: teacher,
     page,
+    search
   });
   const { data: grades, isSuccess: isGradesLoaded } =
     useGetSchoolGradesWithoutPageQuery({ school_id: user.school_id });
@@ -125,7 +127,7 @@ const GroupsPage = () => {
           style={{ minWidth: 70, textAlign: "center" }}
           color={group.is_active ? "green" : "volcano"}
         >
-          {group.is_active ? "Active" : "Inactive"}
+          {group.is_active ? "active" : "inactive"}
         </Tag>
       ),
     },
@@ -135,7 +137,8 @@ const GroupsPage = () => {
       width: "15%",
       render: (_, record) => (
         <Space size="middle">
-          <Button
+          <a
+            className="action"
             style={{ color: "#00899E", fontWeight: 500, padding: 0 }}
             type={"link"}
             onClick={() => {
@@ -144,7 +147,7 @@ const GroupsPage = () => {
             }}
           >
             Change
-          </Button>
+          </a>
         </Space>
       ),
     },
@@ -155,6 +158,7 @@ const GroupsPage = () => {
       render: (_, record) => (
         <Space size="middle">
           <Link
+            className="action"
             style={{ color: "#45B764", fontWeight: 500, padding: 0 }}
             to={`${record.id}/students`}
           >
@@ -173,7 +177,7 @@ const GroupsPage = () => {
       </header>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          <div style={{ marginRight: "auto" }}>
+          <div style={{ marginRight: "auto", display: "flex", alignItems: "center" }}>
             <Radio.Group
               style={{ marginRight: 10 }}
               value={groupType}
@@ -223,25 +227,16 @@ const GroupsPage = () => {
           </div>
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
-              size="default size"
-              placeholder="Search..."
+              placeholder="Search code"
               prefix={
-                <img alt="" src={Search} style={{ height: 20, width: 20 }} />
+                <img alt="" src={Search} style={{ height: 15, width: 15 }} />
               }
-              style={{
-                height: 40,
-                width: 280,
-                border: "none",
-                borderRadius: 8,
-              }}
-              // onChange={(e) => setSearch(e.target.value.toLowerCase())}
+              value={search}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
             />
             <Button
               type="primary"
               style={{
-                backgroundColor: "#163A61",
-                height: 40,
-                borderRadius: 8,
                 alignItems: "center",
                 display: "flex",
                 fontWeight: 500,
@@ -263,7 +258,6 @@ const GroupsPage = () => {
               total: total,
               current: page,
               onChange: (page) => {
-                console.log(page);
                 setPage(page);
                 window.scrollTo(0, 0);
               },

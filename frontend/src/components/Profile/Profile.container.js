@@ -123,6 +123,7 @@ const styles = {
     fontWeight: 600,
     fontSize: 16,
     color: "#163A61",
+    marginTop: 0,
   },
   inputTitle: {
     paddingTop: 13,
@@ -143,7 +144,7 @@ const styles = {
     backgroundColor: "white",
     justifyContent: "center",
     color: "#5A617A",
-    padding: "15px 0px 15px 15px",
+    padding: "7px 10px",
   },
   imgCont: {
     flex: 2,

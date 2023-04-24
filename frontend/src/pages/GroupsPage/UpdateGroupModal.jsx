@@ -52,7 +52,7 @@ const UpdateGroupModal = ({show, setShow, selectedGroup, setSelectedGroup, refet
 
     const handleUpdateGroup = async () => {
         console.log({
-            school_id: user.school_id,
+            groupId: group.id,
             school: user.school_id,
             grade: grade,
             teacher: teacher,
@@ -61,7 +61,7 @@ const UpdateGroupModal = ({show, setShow, selectedGroup, setSelectedGroup, refet
         });
         try {
             updateGroup({
-                school_id: user.school_id,
+                groupId: group.id,
                 school: user.school_id,
                 grade: grade,
                 teacher: teacher,
@@ -70,6 +70,7 @@ const UpdateGroupModal = ({show, setShow, selectedGroup, setSelectedGroup, refet
             }).unwrap()
                 .then(() => {
                     refetch();
+                    setShow(false);
                     toastify("success", "Group successfully updated");
                 }
             );

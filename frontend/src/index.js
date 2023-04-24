@@ -8,7 +8,7 @@ import store from "./redux/store";
 import { Provider } from "react-redux";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import OpenSans from "./assets/fonts/OpenSans-Regular.ttf";
-import OpenSansSemiBold from "./assets/fonts/OpenSans-SemiBold.ttf";
+import {ConfigProvider} from "antd";
 
 const THEME = createTheme({
   typography: {
@@ -33,14 +33,24 @@ const THEME = createTheme({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-  <BrowserRouter>
-    <ThemeProvider theme={THEME}>
-      <Provider store={store}>
-        {/*<AuthProvider>*/}
-        <App />
-        {/*</AuthProvider>*/}
-      </Provider>
-    </ThemeProvider>
-  </BrowserRouter>
+    <ConfigProvider
+        theme={{
+            token: {
+                colorPrimaryBgHover: '#d7e9ff',
+                colorPrimary: '#163A61',
+                colorPrimaryBg: '#F0F7FF',
+            },
+        }}
+    >
+        <BrowserRouter>
+            <ThemeProvider theme={THEME}>
+                <Provider store={store}>
+                    <App />
+                </Provider>
+            </ThemeProvider>
+        </BrowserRouter>
+    </ConfigProvider>
+
+
   // </React.StrictMode>
 );

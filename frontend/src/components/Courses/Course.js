@@ -181,7 +181,7 @@ const Course = () => {
           </Grid>
         </Box>
       </Spin>
-      <div style={styles.bottom}>
+      {/* <div style={styles.bottom}>
         {isPost ? (
           <Space.Compact style={{ width: "100%" }}>
             <Input defaultValue="Combine input and button" />
@@ -196,7 +196,7 @@ const Course = () => {
             New post
           </Button>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

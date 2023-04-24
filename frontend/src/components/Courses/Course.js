@@ -20,13 +20,14 @@ import Fab from "@mui/material/Fab";
 import CoursePost from "./CoursePost";
 import styled from "styled-components";
 import { useGetCoursePostsQuery } from "../../redux/coursePosts/coursePostsApiSlice";
+import moment from "moment-timezone";
 
 const Float = styled(FloatButton)`
   &.ant-float-btn-default {
-    background-color: #163A61;
+    background-color: #163a61;
   }
   &.ant-float-btn-default .ant-float-btn-body {
-    background-color: #163A61;
+    background-color: #163a61;
   }
 `;
 
@@ -76,10 +77,28 @@ const Course = () => {
     }
   }, [dataSyllabus, isLoadingSyllabus]);
 
+  // React.useEffect(() => {
+  //   if (dataPosts && !isLoadingPosts) {
+  //     setPosts(dataPosts);
+  //     console.log(dataPosts);
+  //   }
+  // }, [dataPosts, isLoadingPosts]);
+
   React.useEffect(() => {
+    let sortedPosts = {};
     if (dataPosts && !isLoadingPosts) {
-      setPosts(dataPosts);
       console.log(dataPosts);
+      dataPosts?.forEach((item) => {
+        const time = moment(item?.created_at).format("dddd, DD MMM YYYY");
+        if (!sortedPosts[time]) {
+          sortedPosts[time] = [];
+          sortedPosts[time].push(item);
+        } else {
+          sortedPosts[time].push(item);
+        }
+      });
+      setPosts(sortedPosts);
+      // setLoading(false);
     }
   }, [dataPosts, isLoadingPosts]);
 
@@ -88,6 +107,8 @@ const Course = () => {
       setAssignments(dataAssignments);
     }
   }, [dataAssignments, isLoadingAssignments]);
+
+  console.log(course);
 
   return (
     <div style={styles.container}>
@@ -100,6 +121,7 @@ const Course = () => {
           sx={{
             flexGrow: 1,
             marginTop: 3,
+            marginBottom: 8,
           }}
         >
           <Grid
@@ -118,7 +140,12 @@ const Course = () => {
                         height={50}
                         fontSize={20}
                       />
-                      <div style={styles.title}>{course?.subject?.name}</div>
+                      <div style={{ marginLeft: 8 }}>
+                        <div style={styles.title}>{course?.subject?.name}</div>
+                        <div style={styles.podtext}>
+                          {course?.subject?.grade?.name}
+                        </div>
+                      </div>
                     </div>
                     {course?.teacher && (
                       <div style={styles.teachCont}>
@@ -156,24 +183,37 @@ const Course = () => {
                 </div>
               </Item>
               {/* <Item> */}
-              <div style={{ padding: 8 }}>
+              <div>
                 <div style={styles.cont}>
-                  <div style={styles.titleForCont}>Posts</div>
-                  <Float
-                    style={{ left: 266 }}
-                    tooltip={<div>New post</div>}
-                    icon={<EditSvg />}
-                  />
+                  <div
+                    style={{
+                      ...styles.titleForCont,
+                      marginTop: 7,
+                      marginLeft: 5,
+                    }}
+                  >
+                    Posts
+                  </div>
                 </div>
-                {posts?.map((item) => (
-                  <CoursePost
-                    setIsPost={setIsPost}
-                    isPost={isPost}
-                    item={item}
-                  />
-                ))}
+                {posts &&
+                  Object?.keys(posts).map((time, index) => (
+                    <div key={index}>
+                      <div style={styles.timeCont}>
+                        <div style={styles.line} />
+                        <div style={styles.dateTitle}>{time}</div>
+                        <div style={styles.line} />
+                      </div>
+                      {posts[time].map((item) => (
+                        <CoursePost
+                          key={item.id}
+                          setIsPost={setIsPost}
+                          isPost={isPost}
+                          item={item}
+                        />
+                      ))}
+                    </div>
+                  ))}
               </div>
-
               {/* </Item> */}
             </Grid>
             <Grid item xs={1} sm={9} md={4}>
@@ -221,22 +261,56 @@ const Course = () => {
           </Grid>
         </Box>
       </Spin>
-      {/* <div style={styles.bottom}>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          position: "fixed",
+          left: 250,
+          bottom: 0,
+          minHeight: 60,
+          backgroundColor: "rgba(248, 249, 250, 1)",
+          borderTop: "1px solid rgba(92, 92, 92, 0.1)",
+        }}
+      >
         {isPost ? (
-          <Space.Compact style={{ width: "100%" }}>
-            <Input defaultValue="Combine input and button" />
+          <Space.Compact
+            style={{
+              display: "flex",
+              width: "50%",
+              position: "fixed",
+              left: 266,
+              bottom: 2,
+              minHeight: 30,
+            }}
+            size="large"
+          >
+            <Input defaultValue="Combine input and button" size="large" />
             <Button type="primary">Submit</Button>
           </Space.Compact>
         ) : (
+          // <Float
+          //   style={{ left: 266, width: 50, height: 50 }}
+          //   tooltip={<div>New post</div>}
+          //   icon={<EditSvg />}
+          //   onClick={() => setIsPost(true)}
+          // />
           <Button
-            style={styles.bottomBtn}
+            style={{
+              display: "flex",
+              position: "fixed",
+              left: 266,
+              bottom: 2,
+              minHeight: 30,
+            }}
+            // style={styles.bottomBtn}
             icon={<EditSvg />}
             onClick={() => setIsPost(true)}
           >
             New post
           </Button>
         )}
-      </div> */}
+      </div>
     </div>
   );
 };
@@ -273,7 +347,6 @@ const styles = {
   title: {
     fontSize: 18,
     fontWeight: 600,
-    marginLeft: 8,
   },
   titleCont: {
     display: "flex",
@@ -286,7 +359,7 @@ const styles = {
   },
   podtext: {
     fontSize: 14,
-    fontWeight: 400,
+    fontWeight: 500,
     color: "#4A4D5896",
   },
   des: {
@@ -313,7 +386,7 @@ const styles = {
     marginRight: 8,
   },
   titleForCont: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: 700,
     color: "#4A4D58",
   },
@@ -334,6 +407,27 @@ const styles = {
     alignItems: "center",
     gap: 10,
     display: "flex",
+  },
+  dateTitle: {
+    fontSize: 16,
+    fontWeight: 500,
+    color: "#163A61",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  timeCont: {
+    display: "flex",
+    flex: 1,
+    justifyContent: "center",
+    paddingTop: 10,
+    paddingBottom: 10,
+    alignItems: "center",
+  },
+  line: {
+    height: 1,
+    backgroundColor: "rgba(22, 58, 97, 0.1)",
+    flex: 1,
+    width: "100%",
   },
 };
 

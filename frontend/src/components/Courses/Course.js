@@ -4,7 +4,7 @@ import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
 import CourseLogo from "../shared/CourseLogo";
-import { FloatButton, Input, Space, Spin } from "antd";
+import { FloatButton, Form, Input, Space, Spin } from "antd";
 import { styled as muistyled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -19,15 +19,38 @@ import EditSvg from "../../assets/icons/Edit";
 import Fab from "@mui/material/Fab";
 import CoursePost from "./CoursePost";
 import styled from "styled-components";
-import { useGetCoursePostsQuery } from "../../redux/coursePosts/coursePostsApiSlice";
+import {
+  useAddCoursePostMutation,
+  useDeleteCoursePostMutation,
+  useGetCoursePostsQuery,
+  useUpdateCoursePostMutation,
+} from "../../redux/coursePosts/coursePostsApiSlice";
 import moment from "moment-timezone";
+import { toastify } from "../shared/Toast/Toast";
 
-const Float = styled(FloatButton)`
-  &.ant-float-btn-default {
-    background-color: #163a61;
+const FormItem = styled(Form.Item)`
+  &.ant-form-item .ant-form-item-label > label {
+    font-size: 15px;
+    font-weight: 600;
+    font-family: "Open Sans";
+    color: rgba(74, 77, 88, 1);
   }
-  &.ant-float-btn-default .ant-float-btn-body {
-    background-color: #163a61;
+`;
+
+const AntInput = styled(Input)`
+  &.ant-input {
+    font-size: 14px;
+    font-weight: 500;
+    font-family: "Open Sans";
+    color: rgba(74, 77, 88, 1);
+  }
+`;
+const AntInputTextArea = styled(Input.TextArea)`
+  &.ant-input {
+    font-size: 14px;
+    font-weight: 500;
+    font-family: "Open Sans";
+    color: rgba(74, 77, 88, 1);
   }
 `;
 
@@ -41,6 +64,7 @@ const Item = muistyled(Paper)(({ theme }) => ({
   boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.12)",
   padding: 16,
 }));
+
 const Course = () => {
   const { id: courseId } = useParams();
   const [course, setCourse] = React.useState();
@@ -49,7 +73,9 @@ const Course = () => {
   const [posts, setPosts] = React.useState();
   const { data: user } = useGetAuthUserQuery();
   const [isPost, setIsPost] = React.useState();
-
+  const [form] = Form.useForm();
+  const [title, setTitle] = React.useState("");
+  const [text, setText] = React.useState("");
   const [showMore, setShowMore] = React.useState(false);
   const navigate = useNavigate();
 
@@ -58,9 +84,15 @@ const Course = () => {
   const { data: dataSyllabus, isLoading: isLoadingSyllabus } =
     useGetCourseSyllabusWithoutQuery({ course_id: courseId });
 
-  const { data: dataPosts, isLoading: isLoadingPosts } = useGetCoursePostsQuery(
-    { course_id: courseId }
-  );
+  const {
+    data: dataPosts,
+    isLoading: isLoadingPosts,
+    refetch,
+  } = useGetCoursePostsQuery({ course_id: courseId });
+
+  const [createPost] = useAddCoursePostMutation();
+  const [updatePost] = useUpdateCoursePostMutation();
+  const [deletePost] = useDeleteCoursePostMutation();
 
   const { data: dataAssignments, isLoading: isLoadingAssignments } =
     useGetCourseAssignmentsQuery({ course_id: courseId, search: "" });
@@ -77,19 +109,11 @@ const Course = () => {
     }
   }, [dataSyllabus, isLoadingSyllabus]);
 
-  // React.useEffect(() => {
-  //   if (dataPosts && !isLoadingPosts) {
-  //     setPosts(dataPosts);
-  //     console.log(dataPosts);
-  //   }
-  // }, [dataPosts, isLoadingPosts]);
-
   React.useEffect(() => {
     let sortedPosts = {};
     if (dataPosts && !isLoadingPosts) {
-      console.log(dataPosts);
       dataPosts?.forEach((item) => {
-        const time = moment(item?.created_at).format("dddd, DD MMM YYYY");
+        const time = moment(item?.updated_at).format("dddd, DD MMM YYYY");
         if (!sortedPosts[time]) {
           sortedPosts[time] = [];
           sortedPosts[time].push(item);
@@ -98,7 +122,6 @@ const Course = () => {
         }
       });
       setPosts(sortedPosts);
-      // setLoading(false);
     }
   }, [dataPosts, isLoadingPosts]);
 
@@ -108,7 +131,69 @@ const Course = () => {
     }
   }, [dataAssignments, isLoadingAssignments]);
 
-  console.log(course);
+  const handleCreatePost = async () => {
+    try {
+      await createPost({
+        course_id: courseId,
+        title: title,
+        text: text,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Post Created");
+          refetch();
+          setIsPost(false);
+          setTitle("");
+          setText("");
+        });
+    } catch (err) {
+      if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
+
+  const handleUpdatePost = async ({ values }) => {
+    try {
+      await updatePost({
+        post_id: values.id,
+        title: values.title,
+        text: values.text,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Post Updated");
+          refetch();
+        });
+    } catch (err) {
+      if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
+
+  const handleDeletePost = async ({ id }) => {
+    try {
+      await deletePost({
+        post_id: id,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Post Deleted");
+          refetch();
+        });
+    } catch (err) {
+      if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -123,6 +208,7 @@ const Course = () => {
             marginTop: 3,
             marginBottom: 8,
           }}
+          onClick={() => setIsPost(false)}
         >
           <Grid
             container
@@ -203,12 +289,13 @@ const Course = () => {
                         <div style={styles.dateTitle}>{time}</div>
                         <div style={styles.line} />
                       </div>
-                      {posts[time].map((item) => (
+                      {posts[time]?.map((item) => (
                         <CoursePost
                           key={item.id}
-                          setIsPost={setIsPost}
-                          isPost={isPost}
                           item={item}
+                          handleUpdatePost={handleUpdatePost}
+                          handleDeletePost={handleDeletePost}
+                          user={user}
                         />
                       ))}
                     </div>
@@ -261,49 +348,76 @@ const Course = () => {
           </Grid>
         </Box>
       </Spin>
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          position: "fixed",
-          left: 250,
-          bottom: 0,
-          minHeight: 60,
-          backgroundColor: "rgba(248, 249, 250, 1)",
-          borderTop: "1px solid rgba(92, 92, 92, 0.1)",
-        }}
-      >
+      <div style={styles.newPostCont}>
         {isPost ? (
-          <Space.Compact
-            style={{
-              display: "flex",
-              width: "50%",
-              position: "fixed",
-              left: 266,
-              bottom: 2,
-              minHeight: 30,
-            }}
-            size="large"
-          >
-            <Input defaultValue="Combine input and button" size="large" />
-            <Button type="primary">Submit</Button>
-          </Space.Compact>
+          <div style={{ width: "55%", padding: 15, transition: "all 0.3s" }}>
+            <Form
+              form={form}
+              name="basic"
+              autoComplete="off"
+              onFinish={handleCreatePost}
+              requiredMark={false}
+            >
+              <FormItem
+                label="Title:"
+                name="title"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input title!",
+                  },
+                  {
+                    whitespace: true,
+                    message: "Title can not be empty!",
+                  },
+                ]}
+              >
+                <AntInput
+                  className="input"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="New post title"
+                />
+              </FormItem>
+              <FormItem
+                label="Text:"
+                name="text"
+                style={styles.formItems}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input text!",
+                  },
+                  {
+                    whitespace: true,
+                    message: "Text can not be empty!",
+                  },
+                ]}
+              >
+                <AntInputTextArea
+                  className="input"
+                  rows={4}
+                  style={{ resize: "none" }}
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="New post text"
+                />
+              </FormItem>
+              <Button
+                type="primary"
+                style={{
+                  fontWeight: 600,
+                  fontSize: 15,
+                }}
+                htmlType="submit"
+              >
+                Submit
+              </Button>
+            </Form>
+          </div>
         ) : (
-          // <Float
-          //   style={{ left: 266, width: 50, height: 50 }}
-          //   tooltip={<div>New post</div>}
-          //   icon={<EditSvg />}
-          //   onClick={() => setIsPost(true)}
-          // />
           <Button
-            style={{
-              display: "flex",
-              position: "fixed",
-              left: 266,
-              bottom: 2,
-              minHeight: 30,
-            }}
-            // style={styles.bottomBtn}
+            style={styles.newPostBtn}
             icon={<EditSvg />}
             onClick={() => setIsPost(true)}
           >
@@ -428,6 +542,34 @@ const styles = {
     backgroundColor: "rgba(22, 58, 97, 0.1)",
     flex: 1,
     width: "100%",
+  },
+  newPostCont: {
+    display: "flex",
+    width: "100%",
+    position: "fixed",
+    left: 250,
+    bottom: 0,
+    minHeight: 70,
+    backgroundColor: "rgba(248, 249, 250, 1)",
+    borderTop: "1px solid rgba(92, 92, 92, 0.1)",
+  },
+  newPostBtn: {
+    display: "flex",
+    position: "fixed",
+    left: 266,
+    bottom: 10,
+    minHeight: 30,
+    backgroundColor: "#163A61",
+    color: "white",
+    fontWeight: 500,
+    fontSize: 16,
+    alignItems: "center",
+    gap: 10,
+    padding: "20px",
+    transition: "all 0.3s",
+  },
+  formItems: {
+    fontWeight: 600,
   },
 };
 

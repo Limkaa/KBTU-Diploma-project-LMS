@@ -3,33 +3,36 @@ import { authApi } from "../api/apiService";
 export const coursePostsApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getCoursePosts: builder.query({
-      query: ({ course_id }) => `/api/courses/${course_id}/posts`,
+      query: ({ course_id }) =>
+        `/api/courses/${course_id}/posts?ordering=-updated_at`,
       keepUnusedDataFor: 5,
     }),
-    // getYearsWithoutPage: builder.query({
-    //   query: ({ school_id }) => `/api/schools/${school_id}/years`,
-    //   keepUnusedDataFor: 5,
-    // }),
-    // addYear: builder.mutation({
-    //   query: ({ ...data }) => ({
-    //     url: `/api/years`,
-    //     method: "POST",
-    //     body: data,
-    //   }),
-    // }),
-    // updateYear: builder.mutation({
-    //   query: ({ year_id, ...data }) => ({
-    //     url: `/api/years/${year_id}`,
-    //     method: "PUT",
-    //     body: data,
-    //   }),
-    // }),
+    addCoursePost: builder.mutation({
+      query: ({ course_id, ...data }) => ({
+        url: `/api/courses/${course_id}/posts`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateCoursePost: builder.mutation({
+      query: ({ post_id, ...data }) => ({
+        url: `/api/courses-posts/${post_id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    deleteCoursePost: builder.mutation({
+      query: ({ post_id }) => ({
+        url: `/api/courses-posts/${post_id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetCoursePostsQuery,
-  //   useGetYearsWithoutPageQuery,
-  //   useAddYearMutation,
-  //   useUpdateYearMutation,
+  useAddCoursePostMutation,
+  useUpdateCoursePostMutation,
+  useDeleteCoursePostMutation,
 } = coursePostsApiSlice;

@@ -1,9 +1,14 @@
 import { Button, Form, Input, Modal } from "antd";
 import React, { useRef } from "react";
-import { useGetCoursePostCommentsQuery } from "../../redux/coursePosts/comments/commentsApiSlice";
+import {
+  useAddCoursePostCommentMutation,
+  useGetCoursePostCommentsQuery,
+  useUpdateCoursePostCommentMutation,
+} from "../../redux/coursePosts/comments/commentsApiSlice";
 import moment from "moment-timezone";
 import { Dropdown, Space } from "antd";
 import styled from "styled-components";
+import { toastify } from "../shared/Toast/Toast";
 
 const AntInput = styled(Input)`
   &.ant-input {
@@ -65,13 +70,32 @@ const InputReply = styled(Input)`
     box-shadow: none;
   }
 `;
+
+const ReplyButton = styled(Button)`
+  &.ant-btn {
+    height: 40px;
+    font-size: 15px;
+    font-weight: 500;
+    width: 40px;
+    color: #163a61;
+    border: none;
+    border-bottom: 2px solid rgba(0, 136, 157, 1);
+    padding-right: 7px;
+  }
+  &.ant-input:focus {
+    box-shadow: none;
+  }
+`;
 const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
   const [comments, setComments] = React.useState([]);
   const [isEdit, setIsEdit] = React.useState(false);
+  const [isEditComment, setIsEditComment] = React.useState(false);
   const [isReply, setIsReply] = React.useState(false);
   const inputRef = useRef(null);
   const [showDeletePost, setShowDeletePost] = React.useState(false);
-  const [form] = Form.useForm();
+  const [showDeleteComment, setShowDeleteComment] = React.useState(false);
+  const [textComment, setTextComment] = React.useState();
+  const [editedComment, setEditedComment] = React.useState();
 
   const [values, setValues] = React.useState({
     title: "",
@@ -85,14 +109,62 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
     }
   }, [item]);
 
-  const { data: dataComments, isLoading: isLoadingComments } =
-    useGetCoursePostCommentsQuery({ post_id: item.id });
+  const {
+    data: dataComments,
+    isLoading: isLoadingComments,
+    refetch,
+  } = useGetCoursePostCommentsQuery({ post_id: item.id });
+
+  const [createPostComment] = useAddCoursePostCommentMutation();
+  const [updatePostComment] = useUpdateCoursePostCommentMutation();
 
   React.useEffect(() => {
     if (dataComments && !isLoadingComments) {
       setComments(dataComments);
     }
   }, [dataComments, isLoadingComments]);
+
+  const handleCreatePostComment = async () => {
+    try {
+      await createPostComment({
+        post_id: item.id,
+        text: textComment,
+      })
+        .unwrap()
+        .then((payload) => {
+          refetch();
+          setIsReply(false);
+          setTextComment("");
+        });
+    } catch (err) {
+      if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
+
+  const handleUpdatePostComment = async () => {
+    try {
+      await updatePostComment({
+        comment_id: item.id,
+        text: textComment,
+      })
+        .unwrap()
+        .then((payload) => {
+          refetch();
+          setIsReply(false);
+          setTextComment("");
+        });
+    } catch (err) {
+      if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
 
   const handleInputChange = (e) => {
     let { name, value } = e.target;
@@ -110,6 +182,19 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
       danger: true,
     },
   ];
+
+  const itemsComment = [
+    {
+      label: <a onClick={() => setIsEditComment(true)}>Edit comment</a>,
+      key: "0",
+    },
+    {
+      label: <a onClick={() => setShowDeleteComment(true)}>Delete comment</a>,
+      key: "1",
+      danger: true,
+    },
+  ];
+
   return (
     <div style={styles.container}>
       {isEdit ? (
@@ -209,17 +294,67 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
           <div style={styles.commentsTitle}>Comments</div>
           {comments.map((item) => (
             <div style={styles.comment}>
-              <img style={styles.avatar} />
-              <div style={styles.rightCont}>
-                <div style={styles.userInfo}>
-                  <div style={styles.name}>
-                    {item?.user?.first_name} {item?.user?.last_name}
+              {/* {isEditComment && (
+                <AntInput
+                  className="input"
+                  value={editedComment}
+                  defaultValue={item?.text}
+                  name="editedComment"
+                  onChange={(e) => setEditedComment(e.target.value)}
+                  placeholder="Comment text"
+                />
+              )} */}
+
+              <div
+                style={{
+                  width: 3,
+                  backgroundColor:
+                    user?.id === item?.user?.id
+                      ? "#163A61"
+                      : "rgba(248, 249, 250, 1)",
+                  height: 55,
+                  marginRight: 12,
+                }}
+              />
+
+              <div style={{ display: "flex", flex: 1 }}>
+                <img style={styles.avatar} />
+                <div style={styles.rightCont}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginRight: 15,
+                      alignItems: "center",
+                    }}
+                  >
+                    <div style={styles.userInfo}>
+                      <div style={styles.name}>
+                        {item?.user?.first_name} {item?.user?.last_name}
+                      </div>
+                      <div style={styles.day}>
+                        {moment(item?.updated_at).format("MMM DD, YYYY HH:mm")}
+                      </div>
+                    </div>
+                    {/* {user?.id === item?.user?.id && (
+                      <Dropdown
+                        menu={{
+                          itemsComment,
+                        }}
+                        trigger={["click"]}
+                        placement="bottomRight"
+                      >
+                        <a onClick={(e) => e.preventDefault()}>
+                          <img
+                            src={require("../../assets/icons/more.png")}
+                            style={styles.imgEdit}
+                          />
+                        </a>
+                      </Dropdown>
+                    )} */}
                   </div>
-                  <div style={styles.day}>
-                    {moment(item?.updated_at).format("MMM DD, YYYY HH:mm")}
-                  </div>
+                  <div key={item.id}>{item.text}</div>
                 </div>
-                <div key={item.id}>{item.text}</div>
               </div>
             </div>
           ))}
@@ -227,16 +362,21 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
       )}
       {isReply ? (
         <Space.Compact style={{ width: "100%" }}>
-          <InputReply placeholder="Comment..." size="large" ref={inputRef} />
-          <Button
-            style={{ border: "none" }}
+          <InputReply
+            placeholder="Comment..."
+            size="large"
+            onChange={(e) => setTextComment(e.target.value)}
+          />
+          <ReplyButton
+            type="link"
             icon={
               <img
-                src={require("../../assets/icons/reply.png")}
-                style={styles.reply}
+                src={require("../../assets/icons/send.png")}
+                style={styles.send}
               />
             }
-          ></Button>
+            onClick={handleCreatePostComment}
+          />
         </Space.Compact>
       ) : (
         <AntButton
@@ -249,15 +389,11 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
           }
           onClick={() => {
             setIsReply(true);
-            inputRef.current.focus({
-              cursor: "start",
-            });
           }}
         >
           Reply
         </AntButton>
       )}
-
       <Modal
         title="Are you sure about deleting this post?"
         open={showDeletePost}
@@ -286,8 +422,8 @@ const styles = {
     marginRight: 10,
   },
   imgEdit: {
-    width: 20,
-    height: 6,
+    width: 17,
+    height: 5.5,
     cursor: "pointer",
   },
   text: {
@@ -298,7 +434,7 @@ const styles = {
   },
   commentsCont: {
     backgroundColor: "rgba(248, 249, 250, 1)",
-    padding: "6px 12px 4px 12px",
+    // padding: "6px 12px 4px 12px",
     // borderRadius: 12,
   },
   avatar: {
@@ -309,8 +445,7 @@ const styles = {
   },
   comment: {
     display: "flex",
-    padding: "0px 0px 10px 0px",
-    marginBottom: 5,
+    alignItems: "center",
   },
   userInfo: {
     display: "flex",
@@ -323,7 +458,7 @@ const styles = {
   },
   name: {
     fontWeight: 500,
-    fontSize: 15,
+    fontSize: 14,
     color: "rgba(74, 77, 88, 1)",
   },
   day: {
@@ -340,6 +475,10 @@ const styles = {
     width: 15,
     height: 15,
   },
+  send: {
+    width: 22,
+    height: 22,
+  },
   replyCont: {
     display: "flex",
     alignItems: "center",
@@ -353,7 +492,7 @@ const styles = {
     fontWeight: 500,
     fontSize: 14,
     color: "#163A61",
-    paddingBottom: 8,
+    padding: "10px 15px",
   },
 };
 

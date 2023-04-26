@@ -19,6 +19,12 @@ export const coursePostCommentsApiSlice = authApi.injectEndpoints({
         body: data,
       }),
     }),
+    deleteCoursePostComment: builder.mutation({
+      query: ({ comment_id }) => ({
+        url: `/api/courses-posts-comments/${comment_id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -26,4 +32,5 @@ export const {
   useGetCoursePostCommentsQuery,
   useAddCoursePostCommentMutation,
   useUpdateCoursePostCommentMutation,
+  useDeleteCoursePostCommentMutation,
 } = coursePostCommentsApiSlice;

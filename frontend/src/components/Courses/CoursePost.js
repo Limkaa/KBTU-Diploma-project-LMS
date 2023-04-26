@@ -2,6 +2,7 @@ import { Button, Form, Input, Modal } from "antd";
 import React, { useRef } from "react";
 import {
   useAddCoursePostCommentMutation,
+  useDeleteCoursePostCommentMutation,
   useGetCoursePostCommentsQuery,
   useUpdateCoursePostCommentMutation,
 } from "../../redux/coursePosts/comments/commentsApiSlice";
@@ -9,6 +10,9 @@ import moment from "moment-timezone";
 import { Dropdown, Space } from "antd";
 import styled from "styled-components";
 import { toastify } from "../shared/Toast/Toast";
+import Cancel from "../../assets/icons/close.svg";
+import Tick from "../../assets/icons/tick.svg";
+import Delete from "../../assets/icons/delete.svg";
 
 const AntInput = styled(Input)`
   &.ant-input {
@@ -64,7 +68,23 @@ const InputReply = styled(Input)`
     font-weight: 500;
     color: #163a61;
     border: none;
-    border-bottom: 2px solid rgba(0, 136, 157, 1);
+    border-bottom: 3px solid rgba(0, 136, 157, 1);
+  }
+  &.ant-input:focus {
+    box-shadow: none;
+  }
+`;
+
+const InputComment = styled(Input)`
+  &.ant-input {
+    padding: 15px;
+    height: 40px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #163a61;
+    border: none;
+    border-left: 4px solid #163a61;
+    border-radius: 0px;
   }
   &.ant-input:focus {
     box-shadow: none;
@@ -79,7 +99,9 @@ const ReplyButton = styled(Button)`
     width: 40px;
     color: #163a61;
     border: none;
-    border-bottom: 2px solid rgba(0, 136, 157, 1);
+    align-items: center;
+    display: flex;
+    border-bottom: 3px solid rgba(0, 136, 157, 1);
     padding-right: 7px;
   }
   &.ant-input:focus {
@@ -117,6 +139,7 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
 
   const [createPostComment] = useAddCoursePostCommentMutation();
   const [updatePostComment] = useUpdateCoursePostCommentMutation();
+  const [deletePostComment] = useDeleteCoursePostCommentMutation();
 
   React.useEffect(() => {
     if (dataComments && !isLoadingComments) {
@@ -145,17 +168,37 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
     }
   };
 
-  const handleUpdatePostComment = async () => {
+  const handleUpdatePostComment = async (item) => {
     try {
       await updatePostComment({
         comment_id: item.id,
-        text: textComment,
+        text: editedComment,
       })
         .unwrap()
         .then((payload) => {
           refetch();
-          setIsReply(false);
-          setTextComment("");
+          setIsEditComment(false);
+          setEditedComment("");
+        });
+    } catch (err) {
+      if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
+
+  const handleDeletePostComment = async (item) => {
+    try {
+      await deletePostComment({
+        comment_id: item?.id,
+      })
+        .unwrap()
+        .then((payload) => {
+          refetch();
+          setIsEditComment(false);
+          setEditedComment("");
         });
     } catch (err) {
       if (err.data.detail?.non_field_errors[0]) {
@@ -178,18 +221,6 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
     },
     {
       label: <a onClick={() => setShowDeletePost(true)}>Delete post</a>,
-      key: "1",
-      danger: true,
-    },
-  ];
-
-  const itemsComment = [
-    {
-      label: <a onClick={() => setIsEditComment(true)}>Edit comment</a>,
-      key: "0",
-    },
-    {
-      label: <a onClick={() => setShowDeleteComment(true)}>Delete comment</a>,
       key: "1",
       danger: true,
     },
@@ -293,70 +324,103 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
         <div style={styles.commentsCont}>
           <div style={styles.commentsTitle}>Comments</div>
           {comments.map((item) => (
-            <div style={styles.comment}>
-              {/* {isEditComment && (
-                <AntInput
-                  className="input"
-                  value={editedComment}
-                  defaultValue={item?.text}
-                  name="editedComment"
-                  onChange={(e) => setEditedComment(e.target.value)}
-                  placeholder="Comment text"
+            <>
+              {isEditComment && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <InputComment
+                    className="input"
+                    value={editedComment}
+                    name="editedComment"
+                    onChange={(e) => setEditedComment(e.target.value)}
+                    placeholder="Comment text"
+                  />
+                  <Button
+                    type="link"
+                    style={{ marginRight: 15 }}
+                    icon={<img src={Delete} />}
+                    onClick={() => setShowDeleteComment(true)}
+                  />
+                  <Button
+                    type="link"
+                    style={{ marginRight: 10 }}
+                    icon={<img src={Cancel} />}
+                    onClick={() => setIsEditComment(false)}
+                  />
+                  <Button
+                    type="link"
+                    style={{ marginRight: 7, height: 26 }}
+                    icon={<img src={Tick} />}
+                    onClick={() => handleUpdatePostComment(item)}
+                  />
+                </div>
+              )}
+              <div style={styles.comment}>
+                <div
+                  style={{
+                    width: 3,
+                    backgroundColor:
+                      user?.id === item?.user?.id
+                        ? "#163A61"
+                        : "rgba(248, 249, 250, 1)",
+                    height: 55,
+                    marginRight: 12,
+                  }}
                 />
-              )} */}
 
-              <div
-                style={{
-                  width: 3,
-                  backgroundColor:
-                    user?.id === item?.user?.id
-                      ? "#163A61"
-                      : "rgba(248, 249, 250, 1)",
-                  height: 55,
-                  marginRight: 12,
-                }}
-              />
-
-              <div style={{ display: "flex", flex: 1 }}>
-                <img style={styles.avatar} />
-                <div style={styles.rightCont}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginRight: 15,
-                      alignItems: "center",
-                    }}
-                  >
-                    <div style={styles.userInfo}>
-                      <div style={styles.name}>
-                        {item?.user?.first_name} {item?.user?.last_name}
+                <div style={{ display: "flex", flex: 1 }}>
+                  <img style={styles.avatar} />
+                  <div style={styles.rightCont}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginRight: 15,
+                        alignItems: "center",
+                      }}
+                    >
+                      <div style={styles.userInfo}>
+                        <div style={styles.name}>
+                          {item?.user?.first_name} {item?.user?.last_name}
+                        </div>
+                        <div style={styles.day}>
+                          {moment(item?.updated_at).format(
+                            "MMM DD, YYYY HH:mm"
+                          )}
+                        </div>
                       </div>
-                      <div style={styles.day}>
-                        {moment(item?.updated_at).format("MMM DD, YYYY HH:mm")}
+                      <div>
+                        {user?.id === item?.user?.id && !isEditComment && (
+                          <img
+                            src={require("../../assets/icons/edit.png")}
+                            style={styles.editImg}
+                            onClick={() => {
+                              setIsEditComment(true);
+                              setEditedComment(item?.text);
+                              setIsReply(false);
+                            }}
+                          />
+                        )}
                       </div>
                     </div>
-                    {/* {user?.id === item?.user?.id && (
-                      <Dropdown
-                        menu={{
-                          itemsComment,
-                        }}
-                        trigger={["click"]}
-                        placement="bottomRight"
-                      >
-                        <a onClick={(e) => e.preventDefault()}>
-                          <img
-                            src={require("../../assets/icons/more.png")}
-                            style={styles.imgEdit}
-                          />
-                        </a>
-                      </Dropdown>
-                    )} */}
+                    <div key={item.id}>{item.text}</div>
                   </div>
-                  <div key={item.id}>{item.text}</div>
                 </div>
               </div>
-            </div>
+              <Modal
+                title="Are you sure about deleting this comment?"
+                open={showDeleteComment}
+                onOk={() => handleDeletePostComment(item)}
+                onCancel={() => setShowDeleteComment(false)}
+              >
+                <p>Data cannot be recovered</p>
+              </Modal>
+            </>
           ))}
         </div>
       )}
@@ -478,6 +542,11 @@ const styles = {
   send: {
     width: 22,
     height: 22,
+  },
+  editImg: {
+    width: 18,
+    height: 18,
+    cursor: "pointer",
   },
   replyCont: {
     display: "flex",

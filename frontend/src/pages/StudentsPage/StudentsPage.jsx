@@ -76,7 +76,7 @@ const StudentsPage = () => {
   useEffect(() => {
     let arr = [{ value: "", label: "All grades" }];
     if (isGradesLoaded) {
-      grades.forEach((grade) => {
+      grades?.forEach((grade) => {
         arr.push({ value: grade.id, label: grade.name });
       });
       setGradesOptions(arr);
@@ -134,7 +134,7 @@ const StudentsPage = () => {
       title: "Grade",
       key: "grade",
       width: "15%",
-      render: (student) => <span>{student.group.grade.name}</span>,
+      render: (student) => <span>{student?.group?.grade?.name}</span>,
     },
     {
       title: "Gender",
@@ -258,13 +258,13 @@ const StudentsPage = () => {
                   setSelectedGroup(e.target.value);
                 }}
               >
-                {groups.map((group) => (
-                  <MenuItem key={group.id} value={group.id}>
+                {groups?.map((group) => (
+                  <MenuItem key={group?.id} value={group?.id}>
                     <Tag style={{ minWidth: "20%", textAlign: "center" }}>
-                      {group.code}
+                      {group?.code}
                     </Tag>
-                    {group.grade.name} | {group.teacher.first_name}{" "}
-                    {group.teacher.last_name}
+                    {group?.grade?.name} | {group?.teacher?.first_name}{" "}
+                    {group?.teacher?.last_name}
                   </MenuItem>
                 ))}
               </Select2>

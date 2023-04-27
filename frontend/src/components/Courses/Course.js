@@ -348,83 +348,85 @@ const Course = () => {
           </Grid>
         </Box>
       </Spin>
-      <div style={styles.newPostCont}>
-        {isPost ? (
-          <div style={{ width: "55%", padding: 15, transition: "all 0.3s" }}>
-            <Form
-              form={form}
-              name="basic"
-              autoComplete="off"
-              onFinish={handleCreatePost}
-              requiredMark={false}
+      {user?.role === "teacher" && (
+        <div style={styles.newPostCont}>
+          {isPost ? (
+            <div style={{ width: "55%", padding: 15, transition: "all 0.3s" }}>
+              <Form
+                form={form}
+                name="basic"
+                autoComplete="off"
+                onFinish={handleCreatePost}
+                requiredMark={false}
+              >
+                <FormItem
+                  label="Title:"
+                  name="title"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input title!",
+                    },
+                    {
+                      whitespace: true,
+                      message: "Title can not be empty!",
+                    },
+                  ]}
+                >
+                  <AntInput
+                    className="input"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="New post title"
+                  />
+                </FormItem>
+                <FormItem
+                  label="Text:"
+                  name="text"
+                  style={styles.formItems}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input text!",
+                    },
+                    {
+                      whitespace: true,
+                      message: "Text can not be empty!",
+                    },
+                  ]}
+                >
+                  <AntInputTextArea
+                    className="input"
+                    rows={4}
+                    style={{ resize: "none" }}
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="New post text"
+                  />
+                </FormItem>
+                <Button
+                  type="primary"
+                  style={{
+                    fontWeight: 600,
+                    fontSize: 15,
+                  }}
+                  htmlType="submit"
+                >
+                  Submit
+                </Button>
+              </Form>
+            </div>
+          ) : (
+            <Button
+              style={styles.newPostBtn}
+              icon={<EditSvg />}
+              onClick={() => setIsPost(true)}
             >
-              <FormItem
-                label="Title:"
-                name="title"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input title!",
-                  },
-                  {
-                    whitespace: true,
-                    message: "Title can not be empty!",
-                  },
-                ]}
-              >
-                <AntInput
-                  className="input"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="New post title"
-                />
-              </FormItem>
-              <FormItem
-                label="Text:"
-                name="text"
-                style={styles.formItems}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input text!",
-                  },
-                  {
-                    whitespace: true,
-                    message: "Text can not be empty!",
-                  },
-                ]}
-              >
-                <AntInputTextArea
-                  className="input"
-                  rows={4}
-                  style={{ resize: "none" }}
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder="New post text"
-                />
-              </FormItem>
-              <Button
-                type="primary"
-                style={{
-                  fontWeight: 600,
-                  fontSize: 15,
-                }}
-                htmlType="submit"
-              >
-                Submit
-              </Button>
-            </Form>
-          </div>
-        ) : (
-          <Button
-            style={styles.newPostBtn}
-            icon={<EditSvg />}
-            onClick={() => setIsPost(true)}
-          >
-            New post
-          </Button>
-        )}
-      </div>
+              New post
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

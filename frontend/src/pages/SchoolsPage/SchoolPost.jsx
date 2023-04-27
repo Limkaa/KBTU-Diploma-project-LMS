@@ -1,18 +1,18 @@
 import { Button, Form, Input, Modal } from "antd";
 import React, { useRef } from "react";
-import {
-  useAddCoursePostCommentMutation,
-  useDeleteCoursePostCommentMutation,
-  useGetCoursePostCommentsQuery,
-  useUpdateCoursePostCommentMutation,
-} from "../../redux/coursePosts/comments/commentsApiSlice";
 import moment from "moment-timezone";
 import { Dropdown, Space } from "antd";
 import styled from "styled-components";
-import { toastify } from "../shared/Toast/Toast";
+import { toastify } from "../../components/shared/Toast/Toast";
 import Cancel from "../../assets/icons/close.svg";
 import Tick from "../../assets/icons/tick.svg";
 import Delete from "../../assets/icons/delete.svg";
+import {
+  useAddSchoolPostCommentMutation,
+  useDeleteSchoolPostCommentMutation,
+  useGetSchoolPostCommentsQuery,
+  useUpdateSchoolPostCommentMutation,
+} from "../../redux/schoolPosts/comments/schoolPostCommentsApiSlice";
 
 const AntInput = styled(Input)`
   &.ant-input {
@@ -89,11 +89,6 @@ const InputComment = styled(Input)`
   &.ant-input:focus {
     box-shadow: none;
   }
-  &.ant-input:hover {
-    box-shadow: none;
-    border: none;
-    border-left: 4px solid #163a61;
-  }
 `;
 
 const ReplyButton = styled(Button)`
@@ -113,7 +108,8 @@ const ReplyButton = styled(Button)`
     box-shadow: none;
   }
 `;
-const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
+
+const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
   const [comments, setComments] = React.useState([]);
   const [isEdit, setIsEdit] = React.useState(false);
   const [isEditComment, setIsEditComment] = React.useState(false);
@@ -140,11 +136,11 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
     data: dataComments,
     isLoading: isLoadingComments,
     refetch,
-  } = useGetCoursePostCommentsQuery({ post_id: item.id });
+  } = useGetSchoolPostCommentsQuery({ post_id: item.id });
 
-  const [createPostComment] = useAddCoursePostCommentMutation();
-  const [updatePostComment] = useUpdateCoursePostCommentMutation();
-  const [deletePostComment] = useDeleteCoursePostCommentMutation();
+  const [createPostComment] = useAddSchoolPostCommentMutation();
+  const [updatePostComment] = useUpdateSchoolPostCommentMutation();
+  const [deletePostComment] = useDeleteSchoolPostCommentMutation();
 
   React.useEffect(() => {
     if (dataComments && !isLoadingComments) {
@@ -306,7 +302,7 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
                 {moment(item?.updated_at).format("MMM DD, YYYY HH:mm")}
               </div>
             </div>
-            {user?.role === "teacher" && (
+            {user?.role === "manager" && (
               <Dropdown
                 menu={{
                   items,
@@ -331,7 +327,7 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
           <div style={styles.commentsTitle}>Comments</div>
           {comments.map((item) => (
             <div key={item?.id}>
-              {isEditComment && user?.id === item?.user?.id && (
+              {isEditComment && user?.user_id === item?.user?.id && (
                 <div
                   style={{
                     display: "flex",
@@ -362,8 +358,8 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
                     type="link"
                     style={{ marginRight: 7, height: 26 }}
                     icon={<img src={Tick} />}
-                    onClick={() => handleUpdatePostComment(item)}
                     disabled={editedComment?.length === 0}
+                    onClick={() => handleUpdatePostComment(item)}
                   />
                 </div>
               )}
@@ -372,7 +368,7 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
                   style={{
                     width: 3,
                     backgroundColor:
-                      user?.id === item?.user?.id
+                      user?.user_id === item?.user?.id
                         ? "#163A61"
                         : "rgba(248, 249, 250, 1)",
                     height: 55,
@@ -402,7 +398,7 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
                         </div>
                       </div>
                       <div>
-                        {user?.id === item?.user?.id && !isEditComment && (
+                        {user?.user_id === item?.user?.id && !isEditComment && (
                           <img
                             src={require("../../assets/icons/edit.png")}
                             style={styles.editImg}
@@ -572,4 +568,4 @@ const styles = {
   },
 };
 
-export default CoursePost;
+export default SchoolPost;

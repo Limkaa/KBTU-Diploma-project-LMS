@@ -25,32 +25,65 @@ class AwardAdmin(CustomModelAdmin):
 
     list_filter = (
         "is_active",
-        "issued_by_course_teacher",
-        "issued_by_group_teacher",
-        "issued_by_manager",
     )
 
     fieldsets = (
         (
-            "Assignment information",
+            "Award information",
             {
                 "fields": (
                     "school",
                     "name",
                     "description",
-                    "points"
-                    
+                    "points",
+                    "is_active"
                 )
             },
         ),
         (
-            "Switchable flags",
+            "Timestamps",
             {
                 "fields": (
-                    "issued_by_course_teacher",
-                    "issued_by_group_teacher",
-                    "issued_by_manager",
-                    "is_active"
+                    "created_at",
+                    "updated_at"
+                )
+            },
+        )
+    )
+    
+    base_read_only_fields = ["created_at", "updated_at"]
+
+
+@admin.register(Winner)
+class WinnerAdmin(CustomModelAdmin):
+    model = Winner
+    
+    raw_id_fields = (
+        "student",
+        "award",
+        "issued_by",
+        "course",
+    )
+    list_display = (
+        "student",
+        "award",
+    )
+    search_fields = (
+        "student__user__email",
+        "student__user__school__name",
+        "award__name",
+    )
+
+    fieldsets = (
+        (
+            "Winner information",
+            {
+                "fields": (
+                    "student",
+                    "award",
+                    "issued_by",
+                    "course",
+                    "comment",
                 )
             },
         ),

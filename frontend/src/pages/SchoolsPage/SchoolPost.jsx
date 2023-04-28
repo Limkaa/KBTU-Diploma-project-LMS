@@ -33,6 +33,21 @@ const AntInputTextArea = styled(Input.TextArea)`
   }
 `;
 
+const CommentInputTextArea = styled(Input.TextArea)`
+  &.ant-input[disabled] {
+    width: 95%;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: "Open Sans";
+    color: rgba(74, 77, 88, 1);
+    border: none;
+    background-color: rgba(248, 249, 250, 1);
+    padding: 0;
+    cursor: default;
+    border-radius: 0px;
+  }
+`;
+
 const AntButton = styled(Button)`
   &.ant-btn {
     border-radius: 0px 0px 12px 12px;
@@ -109,16 +124,24 @@ const ReplyButton = styled(Button)`
   }
 `;
 
-const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
+const SchoolPost = ({
+  item,
+  handleUpdatePost,
+  handleDeletePost,
+  user,
+  isReply,
+  setIsReply,
+}) => {
   const [comments, setComments] = React.useState([]);
   const [isEdit, setIsEdit] = React.useState(false);
   const [isEditComment, setIsEditComment] = React.useState(false);
-  const [isReply, setIsReply] = React.useState(false);
+  // const [isReply, setIsReply] = React.useState(false);
   const inputRef = useRef(null);
   const [showDeletePost, setShowDeletePost] = React.useState(false);
   const [showDeleteComment, setShowDeleteComment] = React.useState(false);
   const [textComment, setTextComment] = React.useState();
   const [editedComment, setEditedComment] = React.useState();
+  const [comment, setComment] = React.useState();
 
   const [values, setValues] = React.useState({
     title: "",
@@ -190,10 +213,10 @@ const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
     }
   };
 
-  const handleDeletePostComment = async (item) => {
+  const handleDeletePostComment = async () => {
     try {
       await deletePostComment({
-        comment_id: item?.id,
+        comment_id: comment?.id,
       })
         .unwrap()
         .then((payload) => {
@@ -281,9 +304,6 @@ const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
           <div
             style={{
               display: "flex",
-              // borderBottom: item?.text
-              //   ? "1px solid rgba(0, 0, 0, 0.1)"
-              //   : "none",
               alignItems: "center",
               justifyContent: "space-between",
               padding: item?.text
@@ -327,7 +347,7 @@ const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
           <div style={styles.commentsTitle}>Comments</div>
           {comments.map((item) => (
             <div key={item?.id}>
-              {isEditComment && user?.user_id === item?.user?.id && (
+              {isEditComment && comment?.id === item?.id && (
                 <div
                   style={{
                     display: "flex",
@@ -366,17 +386,17 @@ const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
               <div style={styles.comment}>
                 <div
                   style={{
-                    width: 3,
-                    backgroundColor:
+                    display: "flex",
+                    flex: 1,
+                    borderLeft:
                       user?.user_id === item?.user?.id
-                        ? "#163A61"
-                        : "rgba(248, 249, 250, 1)",
-                    height: 55,
-                    marginRight: 12,
+                        ? "4px solid #163A61"
+                        : "4px solid rgba(248, 249, 250, 1)",
+                    paddingLeft: 12,
+                    paddingTop: 5,
+                    paddingBottom: 5,
                   }}
-                />
-
-                <div style={{ display: "flex", flex: 1 }}>
+                >
                   <img style={styles.avatar} />
                   <div style={styles.rightCont}>
                     <div
@@ -406,19 +426,24 @@ const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
                               setIsEditComment(true);
                               setEditedComment(item?.text);
                               setIsReply(false);
+                              setComment(item);
                             }}
                           />
                         )}
                       </div>
                     </div>
-                    <div key={item.id}>{item.text}</div>
+                    <CommentInputTextArea
+                      value={item?.text}
+                      autoSize={{ minRows: 1, maxRows: 7 }}
+                      disabled
+                    />
                   </div>
                 </div>
               </div>
               <Modal
                 title="Are you sure about deleting this comment?"
                 open={showDeleteComment}
-                onOk={() => handleDeletePostComment(item)}
+                onOk={() => handleDeletePostComment()}
                 onCancel={() => setShowDeleteComment(false)}
               >
                 <p>Data cannot be recovered</p>
@@ -501,8 +526,10 @@ const styles = {
   },
   commentsCont: {
     backgroundColor: "rgba(248, 249, 250, 1)",
-    // padding: "6px 12px 4px 12px",
-    // borderRadius: 12,
+  },
+  commentText: {
+    fontWeight: 400,
+    fontSize: 14,
   },
   avatar: {
     width: 40,
@@ -513,6 +540,7 @@ const styles = {
   comment: {
     display: "flex",
     alignItems: "center",
+    height: "100%",
   },
   userInfo: {
     display: "flex",

@@ -60,13 +60,10 @@ const CoursesSchoolContainer = () => {
     });
 
   const { data: dataTeachers, isLoading: isLoadingTeachers } =
-    useGetTeachersQuery({
-      school_id: user?.school_id,
-    });
+    useGetTeachersQuery(user?.school_id);
 
   React.useEffect(() => {
     if (dataGroups && !isLoadingGroups) {
-      console.log("dataGroups", dataGroups);
       setGroups(dataGroups.filter((el) => el.is_active));
     }
   }, [dataGroups, isLoadingGroups]);
@@ -88,8 +85,6 @@ const CoursesSchoolContainer = () => {
       setTeachers(dataTeachers);
     }
   }, [dataTeachers, isLoadingTeachers]);
-
-  console.log(teachers);
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -147,27 +142,6 @@ const CoursesSchoolContainer = () => {
   };
 
   const columns = [
-    // {
-    //   width: "1%",
-    //   render: (item) => (
-    //     <div
-    //       style={{
-    //         display: "flex",
-    //         alignItems: "center",
-    //         justifyContent: "center",
-    //       }}
-    //     >
-    //       <img
-    //         src={
-    //           item?.is_active
-    //             ? require("../../assets/icons/active.png")
-    //             : require("../../assets/icons/inactive.png")
-    //         }
-    //         style={{ width: 16, height: 16 }}
-    //       />
-    //     </div>
-    //   ),
-    // },
     {
       title: () => {
         return <>Subject</>;

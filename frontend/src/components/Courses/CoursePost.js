@@ -113,6 +113,21 @@ const ReplyButton = styled(Button)`
     box-shadow: none;
   }
 `;
+const CommentInputTextArea = styled(Input.TextArea)`
+  &.ant-input[disabled] {
+    width: 95%;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: "Open Sans";
+    color: rgba(74, 77, 88, 1);
+    border: none;
+    background-color: rgba(248, 249, 250, 1);
+    padding: 0;
+    cursor: default;
+    border-radius: 0px;
+  }
+`;
+
 const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
   const [comments, setComments] = React.useState([]);
   const [isEdit, setIsEdit] = React.useState(false);
@@ -123,6 +138,7 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
   const [showDeleteComment, setShowDeleteComment] = React.useState(false);
   const [textComment, setTextComment] = React.useState();
   const [editedComment, setEditedComment] = React.useState();
+  const [comment, setComment] = React.useState();
 
   const [values, setValues] = React.useState({
     title: "",
@@ -194,10 +210,10 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
     }
   };
 
-  const handleDeletePostComment = async (item) => {
+  const handleDeletePostComment = async () => {
     try {
       await deletePostComment({
-        comment_id: item?.id,
+        comment_id: comment?.id,
       })
         .unwrap()
         .then((payload) => {
@@ -285,9 +301,6 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
           <div
             style={{
               display: "flex",
-              // borderBottom: item?.text
-              //   ? "1px solid rgba(0, 0, 0, 0.1)"
-              //   : "none",
               alignItems: "center",
               justifyContent: "space-between",
               padding: item?.text
@@ -326,144 +339,157 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
           {item?.text && <div style={styles.text}>{item?.text}</div>}
         </div>
       )}
-      {comments?.length > 0 && (
-        <div style={styles.commentsCont}>
-          <div style={styles.commentsTitle}>Comments</div>
-          {comments.map((item) => (
-            <div key={item?.id}>
-              {isEditComment && user?.id === item?.user?.id && (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: "white",
-                  }}
-                >
-                  <InputComment
-                    className="input"
-                    value={editedComment}
-                    name="editedComment"
-                    onChange={(e) => setEditedComment(e.target.value)}
-                    placeholder="Comment text"
-                  />
-                  <Button
-                    type="link"
-                    style={{ marginRight: 15 }}
-                    icon={<img src={Delete} />}
-                    onClick={() => setShowDeleteComment(true)}
-                  />
-                  <Button
-                    type="link"
-                    style={{ marginRight: 10 }}
-                    icon={<img src={Cancel} />}
-                    onClick={() => setIsEditComment(false)}
-                  />
-                  <Button
-                    type="link"
-                    style={{ marginRight: 7, height: 26 }}
-                    icon={<img src={Tick} />}
-                    onClick={() => handleUpdatePostComment(item)}
-                    disabled={editedComment?.length === 0}
-                  />
-                </div>
-              )}
-              <div style={styles.comment}>
-                <div
-                  style={{
-                    width: 3,
-                    backgroundColor:
-                      user?.id === item?.user?.id
-                        ? "#163A61"
-                        : "rgba(248, 249, 250, 1)",
-                    height: 55,
-                    marginRight: 12,
-                  }}
-                />
-
-                <div style={{ display: "flex", flex: 1 }}>
-                  <img style={styles.avatar} />
-                  <div style={styles.rightCont}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginRight: 15,
-                        alignItems: "center",
-                      }}
-                    >
-                      <div style={styles.userInfo}>
-                        <div style={styles.name}>
-                          {item?.user?.first_name} {item?.user?.last_name}
-                        </div>
-                        <div style={styles.day}>
-                          {moment(item?.updated_at).format(
-                            "MMM DD, YYYY HH:mm"
-                          )}
-                        </div>
+      {user?.role !== "manager" && (
+        <div>
+          {comments?.length > 0 && (
+            <div style={styles.commentsCont}>
+              <div style={styles.commentsTitle}>Comments</div>
+              <div>
+                {comments.map((item) => (
+                  <div key={item?.id}>
+                    {isEditComment && comment?.id === item?.id && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          backgroundColor: "white",
+                        }}
+                      >
+                        <InputComment
+                          className="input"
+                          value={editedComment}
+                          name="editedComment"
+                          onChange={(e) => setEditedComment(e.target.value)}
+                          placeholder="Comment text"
+                        />
+                        <Button
+                          type="link"
+                          style={{ marginRight: 15 }}
+                          icon={<img src={Delete} />}
+                          onClick={() => setShowDeleteComment(true)}
+                        />
+                        <Button
+                          type="link"
+                          style={{ marginRight: 10 }}
+                          icon={<img src={Cancel} />}
+                          onClick={() => setIsEditComment(false)}
+                        />
+                        <Button
+                          type="link"
+                          style={{ marginRight: 7, height: 26 }}
+                          icon={<img src={Tick} />}
+                          onClick={() => handleUpdatePostComment(item)}
+                          disabled={editedComment?.length === 0}
+                        />
                       </div>
-                      <div>
-                        {user?.id === item?.user?.id && !isEditComment && (
-                          <img
-                            src={require("../../assets/icons/edit.png")}
-                            style={styles.editImg}
-                            onClick={() => {
-                              setIsEditComment(true);
-                              setEditedComment(item?.text);
-                              setIsReply(false);
+                    )}
+                    <div style={styles.comment}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flex: 1,
+                          borderLeft:
+                            user?.id === item?.user?.id
+                              ? "4px solid #163A61"
+                              : "4px solid rgba(248, 249, 250, 1)",
+                          paddingLeft: 12,
+                          paddingTop: 5,
+                          paddingBottom: 5,
+                        }}
+                      >
+                        <img style={styles.avatar} />
+                        <div style={styles.rightCont}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginRight: 15,
+                              alignItems: "center",
                             }}
+                          >
+                            <div style={styles.userInfo}>
+                              <div style={styles.name}>
+                                {item?.user?.first_name} {item?.user?.last_name}
+                              </div>
+                              <div style={styles.day}>
+                                {moment(item?.updated_at).format(
+                                  "MMM DD, YYYY HH:mm"
+                                )}
+                              </div>
+                            </div>
+                            <div>
+                              {user?.id === item?.user?.id &&
+                                !isEditComment && (
+                                  <img
+                                    src={require("../../assets/icons/edit.png")}
+                                    style={styles.editImg}
+                                    onClick={() => {
+                                      setIsEditComment(true);
+                                      setEditedComment(item?.text);
+                                      setIsReply(false);
+                                      setComment(item);
+                                    }}
+                                  />
+                                )}
+                            </div>
+                          </div>
+                          <CommentInputTextArea
+                            value={item?.text}
+                            autoSize={{ minRows: 1, maxRows: 7 }}
+                            disabled
                           />
-                        )}
+                        </div>
                       </div>
                     </div>
-                    <div key={item.id}>{item.text}</div>
+                    <Modal
+                      title="Are you sure about deleting this comment?"
+                      open={showDeleteComment}
+                      onOk={() => handleDeletePostComment()}
+                      onCancel={() => setShowDeleteComment(false)}
+                    >
+                      <p>Data cannot be recovered</p>
+                    </Modal>
                   </div>
-                </div>
+                ))}
               </div>
-              <Modal
-                title="Are you sure about deleting this comment?"
-                open={showDeleteComment}
-                onOk={() => handleDeletePostComment(item)}
-                onCancel={() => setShowDeleteComment(false)}
-              >
-                <p>Data cannot be recovered</p>
-              </Modal>
             </div>
-          ))}
-        </div>
-      )}
-      {isReply ? (
-        <Space.Compact style={{ width: "100%" }}>
-          <InputReply
-            placeholder="Comment..."
-            size="large"
-            onChange={(e) => setTextComment(e.target.value)}
-          />
-          <ReplyButton
-            type="link"
-            icon={
-              <img
-                src={require("../../assets/icons/send.png")}
-                style={styles.send}
+          )}
+
+          {isReply ? (
+            <Space.Compact style={{ width: "100%" }}>
+              <InputReply
+                placeholder="Comment..."
+                size="large"
+                onChange={(e) => setTextComment(e.target.value)}
               />
-            }
-            onClick={handleCreatePostComment}
-          />
-        </Space.Compact>
-      ) : (
-        <AntButton
-          type="link"
-          icon={
-            <img
-              src={require("../../assets/icons/reply.png")}
-              style={styles.reply}
-            />
-          }
-          onClick={() => {
-            setIsReply(true);
-          }}
-        >
-          Reply
-        </AntButton>
+              <ReplyButton
+                type="link"
+                icon={
+                  <img
+                    src={require("../../assets/icons/send.png")}
+                    style={styles.send}
+                  />
+                }
+                onClick={handleCreatePostComment}
+              />
+            </Space.Compact>
+          ) : (
+            <AntButton
+              type="link"
+              icon={
+                <img
+                  src={require("../../assets/icons/reply.png")}
+                  style={styles.reply}
+                />
+              }
+              onClick={() => {
+                setIsReply(true);
+              }}
+            >
+              Reply
+            </AntButton>
+          )}
+        </div>
       )}
       <Modal
         title="Are you sure about deleting this post?"
@@ -505,8 +531,6 @@ const styles = {
   },
   commentsCont: {
     backgroundColor: "rgba(248, 249, 250, 1)",
-    // padding: "6px 12px 4px 12px",
-    // borderRadius: 12,
   },
   avatar: {
     width: 40,

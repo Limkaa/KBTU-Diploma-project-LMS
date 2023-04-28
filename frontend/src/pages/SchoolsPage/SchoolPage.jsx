@@ -69,6 +69,7 @@ const SchoolPage = () => {
   const [title, setTitle] = React.useState("");
   const [text, setText] = React.useState("");
   const [posts, setPosts] = React.useState();
+  const [isReply, setIsReply] = React.useState(false);
 
   const {
     data: dataPosts,
@@ -208,12 +209,7 @@ const SchoolPage = () => {
         <Header text={"School"} />
         <Profile />
       </header>
-      <div
-        onClick={() => setIsPost(false)}
-        style={{
-          minHeight: "100%",
-        }}
-      >
+      <div onClick={() => setIsPost(false)} style={{ paddingBottom: 60 }}>
         <Spin spinning={isLoading}>
           <div className="section">
             <div
@@ -330,7 +326,7 @@ const SchoolPage = () => {
               <div
                 style={{
                   ...styles.titleForCont,
-                  marginTop: 7,
+                  marginTop: 15,
                   marginLeft: 5,
                 }}
               >
@@ -352,6 +348,8 @@ const SchoolPage = () => {
                       handleUpdatePost={handleUpdatePost}
                       handleDeletePost={handleDeletePost}
                       user={user}
+                      isReply={isReply}
+                      setIsReply={setIsReply}
                     />
                   ))}
                 </div>

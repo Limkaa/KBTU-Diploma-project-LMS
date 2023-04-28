@@ -93,7 +93,6 @@ const CoursesContainer = () => {
         });
       }
     } else if (user?.role === "teacher") {
-      console.log(user?.id);
       getTeacherCourses({
         teacher_id: user?.id,
         year_id: selectedYear,

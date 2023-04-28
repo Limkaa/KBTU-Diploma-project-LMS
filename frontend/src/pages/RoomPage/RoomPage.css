@@ -1,0 +1,70 @@
+#room section {
+    margin-top: 15px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 200px;
+}
+
+#room .cards {
+    display: flex;
+    flex-wrap: wrap;
+    /*gap: 20px;*/
+    /*justify-content: space-between;*/
+    gap: 1.5%;
+    row-gap: 15px;
+}
+
+#room .card {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    width: 18.8%;
+    text-align: center;
+    position: relative;
+}
+
+#room .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#room .inputs {
+    display: flex;
+    justify-content: space-between;
+}
+
+#room .search {
+    width: 200px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+
+#room .card-input {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+}
+
+#room .card-input:focus {
+    border: none;
+    outline: none;
+}
+
+#room .hidden {
+    display: none;
+}
+
+#room .pagination {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 20px;
+}
+
+#room .delete:hover {
+    color: #d20000;
+}
+

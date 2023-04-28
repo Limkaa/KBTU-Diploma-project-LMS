@@ -24,9 +24,10 @@ import GroupStudentsPage from "./pages/StudentsPage/GroupStudentsPage";
 import NotFound from "./components/NotFound/NotFound";
 import "./App.css";
 import CoursesSchoolContainer from "./components/Courses/CoursesSchool.container";
-import Course from "./components/Courses/Course";
 import SyllabusContainer from "./components/Syllabus/Syllabus.container";
 import StudentsPage from "./pages/StudentsPage/StudentsPage";
+import RoomPage from "./pages/RoomPage/RoomPage";
+import TimeBoundsPage from "./pages/TimeBoundsPage/TimeBoundsPage";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -44,7 +45,7 @@ function App() {
           <Route exact path="/" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
-          <Route exact path="/courses/:id" element={<Course />} />
+          {/*<Route exact path="/courses/:id" element={<Course />} />*/}
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />
           <Route exact path="/materials" element={<MaterialsContainer />} />
@@ -107,6 +108,16 @@ function App() {
             exact
             path="/schools/courses"
             element={<CoursesSchoolContainer />}
+          />
+          <Route
+              exact
+              path="/timeline/rooms"
+              element={<RoomPage/>}
+          />
+          <Route
+              exact
+              path="/timeline/time-bounds"
+              element={<TimeBoundsPage/>}
           />
         </Route>
         <Route path="*" element={<NotFound />} />

@@ -3,7 +3,6 @@ import CoursesSvg from "../../assets/icons/CoursesIcon";
 import AssignmentsSvg from "../../assets/icons/AssignmentsIcon";
 import ScheduleSvg from "../../assets/icons/ScheduleIcon";
 import MaterialsSvg from "../../assets/icons/MaterialsIcon";
-import TimelineSvg from "../../assets/icons/TimelineIcon";
 import ClassroomSvg from "../../assets/icons/ClassroomIcon";
 import GradesSvg from "../../assets/icons/GradesIcon";
 import UsersSvg from "../../assets/icons/UsersIcon";
@@ -15,6 +14,8 @@ import TermSvg from "../../assets/icons/TermIcon";
 import SchoolSvg from "../../assets/icons/SchoolIcon";
 import GroupSvg from "../../assets/icons/GroupIcon";
 import StudentSvg from "../../assets/icons/StudentIcon";
+import TimelineSvg from "../../assets/icons/TimelineIcon";
+import RoomSvg from "../../assets/icons/RoomIcon";
 
 export const managerMenu = [
   {
@@ -73,6 +74,28 @@ export const managerMenu = [
     title: "Courses",
     path: `/schools/courses`,
     icon: CoursesSvg,
+  },
+  {
+    title: "Timeline",
+    path: `/timeline`,
+    icon: TimelineSvg,
+    submenu: [
+      {
+        title: "Timetable",
+        path: `/timeline/timetable`,
+        icon: TermSvg,
+      },
+      {
+        title: "Rooms",
+        path: `/timeline/rooms`,
+        icon: RoomSvg,
+      },
+      {
+        title: "Time bounds",
+        path: `/timeline/time-bounds`,
+        icon: YearSvg,
+      },
+    ],
   },
 ];
 

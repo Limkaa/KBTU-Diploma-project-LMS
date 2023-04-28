@@ -167,7 +167,6 @@ const StudentsPage = () => {
     ];
 
     const handleRowSelectionChange = (selectedRowKeys, selectedRows) => {
-        console.log(selectedRows);
         setSelectedRows(selectedRows);
     };
 

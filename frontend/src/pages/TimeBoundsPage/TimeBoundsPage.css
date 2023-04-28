@@ -1,0 +1,67 @@
+#timebounds section {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#timebounds .table {
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    width: 35%;
+}
+
+#timebounds .anticon-delete, #timebounds .anticon-edit {
+    text-align: center;
+    display: block;
+}
+
+#timebounds .anticon-delete:hover {
+    color: #d20000;
+}
+
+#timebounds .anticon-edit:hover {
+    color: #163A61;
+}
+
+#timebounds .add-form, #timebounds .sort, #timebounds .edit-form {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#timebounds h3 {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+#timebounds .sort {
+    width: 200px;
+}
+
+#timebounds .radio {
+    display: block;
+}
+
+#timebounds .forms {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#timebounds button {
+    display: block;
+    margin-left: auto;
+    width: 100px;
+}
+
+#timebounds .pickers {
+    display: flex;
+    gap: 5px;
+
+}

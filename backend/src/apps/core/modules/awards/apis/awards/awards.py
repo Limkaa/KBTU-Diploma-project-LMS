@@ -1,32 +1,23 @@
+from django.db.models import Prefetch
+
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
 
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ....permissions import *
 
-from ...models import School
-from ...serializers import AwardModelSerializer
-from ...services import AwardService
+from ...models import School, Award
+from ...serializers import *
 
 
 class SchoolAwardsListCreateAPI(
     generics.ListCreateAPIView, 
     OptionalPaginationListAPIView
 ):
-    serializer_class = AwardModelSerializer
+    serializer_class = AwardWithStatsSerializer
     search_fields = ['name']
-    filterset_fields = [
-        'issued_by_course_teacher',
-        'issued_by_group_teacher',
-        'issued_by_manager',
-        'is_active',
-    ]
-    ordering_fields = [
-        'points', 
-        'created_at', 
-        'updated_at', 
-        'is_active'
-    ]
+    filterset_fields = ['is_active']
+    ordering_fields = ['points', 'created_at', 'updated_at', 'is_active']
     
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)
@@ -47,12 +38,12 @@ class SchoolAwardsListCreateAPI(
         return serializer.save(school=self.school)
 
     def get_queryset(self):
-        return AwardService.get_awards_of_school(self.school)
+        return Award.objects.of_school(self.school).select_related(*Award.related_fields)
 
 
 class AwardDetailAPI(generics.RetrieveUpdateAPIView):
     serializer_class = AwardModelSerializer
-    queryset = AwardService.queryset()
+    queryset = Award.objects.select_related(*Award.related_fields)
     
     def get_permissions(self):
         self.permission_classes = [OnlyOwnSchool]

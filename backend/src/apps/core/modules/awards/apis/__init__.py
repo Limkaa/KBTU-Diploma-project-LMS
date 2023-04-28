@@ -1,8 +1,10 @@
 from django.urls import include
 
-from . import awards
+from . import awards, winners, statistics
 
 
 urlpatterns = [
-    *awards.urlpatterns
+    *awards.urlpatterns,
+    *winners.urlpatterns,
+    *statistics.urlpatterns
 ]

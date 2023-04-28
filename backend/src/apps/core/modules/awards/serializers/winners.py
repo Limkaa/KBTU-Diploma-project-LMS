@@ -7,9 +7,7 @@ from ...students.serializers import StudentModelNestedSerializer
 from ..models import Winner
 
 
-class WinnerModelSerializer(serializers.ModelSerializer):
-    days_from_creation = serializers.IntegerField(read_only=True)
-    
+class WinnerModelSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Winner
         fields = '__all__'
@@ -22,7 +20,7 @@ class WinnerNestedSerializer(WinnerModelSerializer):
     award = AwardModelSerializer(read_only=True)
 
 
-class WinnerCreateUpdateSerializer(WinnerModelSerializer):
+class WinnerCreateSerializer(WinnerModelSerializer):
     class Meta(WinnerModelSerializer.Meta):
         read_only_fields = ['id', 'issued_by', 'created_at']
         
@@ -33,5 +31,5 @@ class WinnerCreateUpdateSerializer(WinnerModelSerializer):
 __all__ = [
     'WinnerModelSerializer',
     'WinnerNestedSerializer',
-    'WinnerCreateUpdateSerializer'
+    'WinnerCreateSerializer'
 ]

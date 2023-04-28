@@ -459,15 +459,44 @@ class Command(BaseCommand):
                 awards.append(Award(
                     school=school,
                     name=award.name,
-                    issued_by_course_teacher=award.issued_by_course_teacher,
-                    issued_by_group_teacher=award.issued_by_group_teacher,
-                    issued_by_manager=award.issued_by_manager,
                     description = self._get_lorem(1),
                     points = random.randint(1, 50),
                 ))
     
         Award.objects.bulk_create(awards)
         self.stdout.write(self.style.SUCCESS(f'Awards created ({len(awards)} objects)'))
+    
+    def _create_winners(self):
+        winners = []
+        
+        schools = School.objects.all()
+        
+        today = datetime.date.today()
+        start_date = today - timedelta(days=360)
+        
+        
+        def _create_course_awards():
+            for school in schools:
+                awards = Award.objects.filter(school=school)
+                courses = Course.objects.filter(school=school)
+                for course in courses:
+                    students = Student.objects.filter(group=course.group)
+                    for student in students:
+                        awards_number = random.randint(2, 10)
+                        for award in range(awards_number):
+                            winners.append(Winner(
+                                student=student,
+                                award=random.choice(awards),
+                                issued_by=course.teacher,
+                                comment=self._get_lorem(random.randint(0, 1)),
+                                course=course
+                            ))
+                        
+        _create_course_awards()
+        random.shuffle(winners)
+        
+        Winner.objects.bulk_create(winners)
+        self.stdout.write(self.style.SUCCESS(f'Winners created ({len(winners)} objects)'))
     
     def handle(self, *args, **options):
         self.schools = self._create_schools()
@@ -489,6 +518,7 @@ class Command(BaseCommand):
         self._create_timetables()
         self._create_assignment_marks()
         self._create_awards()
+        self._create_winners()
         
         self._create_superuser()
         

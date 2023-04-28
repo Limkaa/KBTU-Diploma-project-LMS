@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user4@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1230,13 +1230,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/11/groups",
+							"raw": "{{BASE_URL}}/teachers/45/groups",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"11",
+								"45",
 								"groups"
 							],
 							"query": [
@@ -1725,13 +1725,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/2/years?page=1&is_active=&search=&ordering",
+							"raw": "{{BASE_URL}}/schools/1/years?page=1&is_active=&search=&ordering",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"schools",
-								"2",
+								"1",
 								"years"
 							],
 							"query": [
@@ -1841,13 +1841,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/years/5/terms?page=1&search=&ordering&is_closed=",
+							"raw": "{{BASE_URL}}/years/2/terms?page=1&search=&ordering&is_closed=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"years",
-								"5",
+								"2",
 								"terms"
 							],
 							"query": [
@@ -2014,13 +2014,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/14/courses?page=1&search=&ordering&is_active&subject__grade=&year=",
+							"raw": "{{BASE_URL}}/teachers/1/courses?page=1&search=&ordering&is_active&subject__grade=&year=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"14",
+								"1",
 								"courses"
 							],
 							"query": [
@@ -2214,13 +2214,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/45/students?page=1&search=&ordering&user__gender=",
+							"raw": "{{BASE_URL}}/courses/1/students?page=1&search=&ordering&user__gender=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"45",
+								"1",
 								"students"
 							],
 							"query": [
@@ -2397,237 +2397,6 @@
 			"name": "Assignments",
 			"item": [
 				{
-					"name": "Marks",
-					"item": [
-						{
-							"name": "Get assignment marks",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/assignments/55/marks?page=1&search=",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"assignments",
-										"55",
-										"marks"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "search",
-											"value": "",
-											"description": "student's first_name, last_name"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create assignment mark",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"student\": 25,\n    \"number\": 5,\n    \"comment\": \"Great\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/assignments/6/marks",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"assignments",
-										"6",
-										"marks"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get one assignment mark",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/marks/4",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"marks",
-										"4"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update assignment mark",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"number\": 5,\n    \"comment\": \"Nice work!\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/marks/4",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"marks",
-										"4"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete assignment mark",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/marks/6",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"marks",
-										"6"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get all marks of one student",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/students/19/marks?page=1&is_active&term=7&course=14&course__teacher&course__subject=&course__subject__grade=&course__year&no_marks=&ordering=datetime&search",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"students",
-										"19",
-										"marks"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "is_active",
-											"value": null
-										},
-										{
-											"key": "term",
-											"value": "7"
-										},
-										{
-											"key": "course",
-											"value": "14"
-										},
-										{
-											"key": "course__teacher",
-											"value": null
-										},
-										{
-											"key": "course__subject",
-											"value": ""
-										},
-										{
-											"key": "course__subject__grade",
-											"value": ""
-										},
-										{
-											"key": "course__year",
-											"value": null
-										},
-										{
-											"key": "no_marks",
-											"value": "",
-											"description": "true, false (does have any marks or no)"
-										},
-										{
-											"key": "ordering",
-											"value": "datetime",
-											"description": "assignment datetime"
-										},
-										{
-											"key": "search",
-											"value": null,
-											"description": "assignment name"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get all marks of one term of course",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/courses/23/terms/7/marks?page=1&ordering=&search=",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"courses",
-										"23",
-										"terms",
-										"7",
-										"marks"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "ordering",
-											"value": "",
-											"description": "average_mark"
-										},
-										{
-											"key": "search",
-											"value": "",
-											"description": "student's first_name, last_name"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Get one assignment",
 					"request": {
 						"method": "GET",
@@ -2731,13 +2500,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/1/assignments",
+							"raw": "{{BASE_URL}}/courses/25/assignments",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"1",
+								"25",
 								"assignments"
 							],
 							"query": [
@@ -3967,6 +3736,266 @@
 									"description": "room name, subject name",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Final marks",
+			"item": [
+				{
+					"name": "Course final marks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/1/final-marks?page=1&search=&user__gender=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"1",
+								"final-marks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "student email, name, surname"
+								},
+								{
+									"key": "user__gender",
+									"value": "",
+									"description": "male, female"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "School terms marks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/final-marks?search=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"final-marks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "grade",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "grade__is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "subject name, code"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Student final marks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/students/4/final-marks?page=1&search=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"students",
+								"4",
+								"final-marks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "grade",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "grade__is_active",
+									"value": "true",
+									"description": "true, false",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "subject name, code"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Awards",
+			"item": [
+				{
+					"name": "Get one award",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/awards/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"awards",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update award",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"issued_by_course_teacher\": false,\n    \"issued_by_group_teacher\": true,\n    \"issued_by_manager\": true,\n    \"name\": \"Most active student of lesson\",\n    \"description\": \"Some description\",\n    \"points\": 1,\n    \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/awards/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"awards",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school awards list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/awards?ordering=&issued_by_course_teacher=&issued_by_group_teacher=&issued_by_manager=&is_active=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"awards"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "",
+									"description": "points, created_at, updated_at, is_active"
+								},
+								{
+									"key": "issued_by_course_teacher",
+									"value": ""
+								},
+								{
+									"key": "issued_by_group_teacher",
+									"value": ""
+								},
+								{
+									"key": "issued_by_manager",
+									"value": ""
+								},
+								{
+									"key": "is_active",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create award",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"issued_by_course_teacher\": false,\n    \"issued_by_group_teacher\": true,\n    \"issued_by_manager\": true,\n    \"name\": \"Most creative student of lesson\",\n    \"description\": \"Some description\",\n    \"points\": 10,\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/awards",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"awards"
 							]
 						}
 					},

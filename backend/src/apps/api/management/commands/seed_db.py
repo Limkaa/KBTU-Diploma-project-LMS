@@ -23,6 +23,8 @@ from apps.core.modules.timetables.models import Room, Timebound, Timetable
 from apps.core.modules.comments.models import CoursePostComment, SchoolPostComment
 from apps.core.modules.marks.models import Mark
 from apps.core.modules.awards.models import Award, Winner
+from apps.core.modules.todos.models import Todo
+from apps.core.modules.communities.models import Community, Membership
 
 from apps.api import mock_data
 
@@ -50,6 +52,11 @@ class Command(BaseCommand):
     groups = []
     subjects = []
     years = []
+
+    def bulk_create(self, model, name, objects):
+        model.objects.bulk_create(objects)
+        message = f'{name} created ({len(objects)} objects)'
+        self.stdout.write(self.style.SUCCESS(message))
 
     def _get_random_string_code(self, length=5):
         return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -498,6 +505,59 @@ class Command(BaseCommand):
         Winner.objects.bulk_create(winners)
         self.stdout.write(self.style.SUCCESS(f'Winners created ({len(winners)} objects)'))
     
+    def _create_todos(self):
+        todos = []
+        
+        for user in User.objects.all():
+            todos_number = random.randint(0, 10)
+            for todo in range(todos_number):
+                todos.append(Todo(
+                    user=user,
+                    name=self._get_lorem(1),
+                    description=self._get_lorem(random.randint(0, 3)),
+                    is_done=random.choice([True, False, False]),
+                    priority=random.randint(0, 3)
+                ))
+        
+        Todo.objects.bulk_create(todos)
+        self.stdout.write(self.style.SUCCESS(f'Todos created ({len(todos)} objects)'))
+    
+    def _create_communities(self):
+        communities = []
+        for school in School.objects.all():
+            sample = list(mock_data.COMMUNITIES)
+            total = len(sample)
+            start, end = [round(total * 0.5), total]
+            quantity = random.randint(start, end)
+            communities_sample = random.sample(sample, quantity)
+            
+            for object in communities_sample:
+                communities.append(Community(
+                    school=school,
+                    name=object.name,
+                    description=object.description,
+                    link=object.link
+                ))
+        
+        self.bulk_create(Community, 'Communities', communities)
+        
+    def _create_memberships(self):
+        memberships = []
+        for school in School.objects.all():
+            students = Student.objects.filter(user__school=school)
+            communities = Community.objects.filter(school=school)
+            for community in communities:
+                total = len(students)
+                random_number = random.randint(0, round(total*0.5))
+                students_sample = random.sample(list(students), random_number)
+                for student in students_sample:
+                    memberships.append(Membership(
+                        community=community,
+                        student=student
+                    ))
+        
+        self.bulk_create(Membership, 'Memberships', memberships)
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
@@ -519,6 +579,9 @@ class Command(BaseCommand):
         self._create_assignment_marks()
         self._create_awards()
         self._create_winners()
+        self._create_todos()
+        self._create_communities()
+        self._create_memberships()
         
         self._create_superuser()
         

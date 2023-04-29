@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user16@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2014,13 +2014,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/teachers/1/courses?page=1&search=&ordering&is_active&subject__grade=&year=",
+							"raw": "{{BASE_URL}}/teachers/34/courses?page=1&search=&ordering&is_active&subject__grade=&year=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"teachers",
-								"1",
+								"34",
 								"courses"
 							],
 							"query": [
@@ -2214,13 +2214,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/1/students?page=1&search=&ordering&user__gender=",
+							"raw": "{{BASE_URL}}/courses/3/students?page=1&search=&ordering&user__gender=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"1",
+								"3",
 								"students"
 							],
 							"query": [
@@ -3906,7 +3906,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"issued_by_course_teacher\": false,\n    \"issued_by_group_teacher\": true,\n    \"issued_by_manager\": true,\n    \"name\": \"Most active student of lesson\",\n    \"description\": \"Some description\",\n    \"points\": 1,\n    \"is_active\": false\n}",
+							"raw": "{\n    \"name\": \"Most active student of lesson\",\n    \"description\": \"Some description\",\n    \"points\": 1,\n    \"is_active\": false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3932,7 +3932,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/awards?ordering=&issued_by_course_teacher=&issued_by_group_teacher=&issued_by_manager=&is_active=",
+							"raw": "{{BASE_URL}}/schools/1/awards?page=1&is_active=&ordering=&search",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -3944,8 +3944,11 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1",
-									"disabled": true
+									"value": "1"
+								},
+								{
+									"key": "is_active",
+									"value": ""
 								},
 								{
 									"key": "ordering",
@@ -3953,20 +3956,9 @@
 									"description": "points, created_at, updated_at, is_active"
 								},
 								{
-									"key": "issued_by_course_teacher",
-									"value": ""
-								},
-								{
-									"key": "issued_by_group_teacher",
-									"value": ""
-								},
-								{
-									"key": "issued_by_manager",
-									"value": ""
-								},
-								{
-									"key": "is_active",
-									"value": ""
+									"key": "search",
+									"value": null,
+									"description": "award name"
 								}
 							]
 						}
@@ -3980,7 +3972,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"issued_by_course_teacher\": false,\n    \"issued_by_group_teacher\": true,\n    \"issued_by_manager\": true,\n    \"name\": \"Most creative student of lesson\",\n    \"description\": \"Some description\",\n    \"points\": 10,\n    \"is_active\": true\n}",
+							"raw": "{\n    \"name\": \"Most creative student of lesson\",\n    \"description\": \"Some description\",\n    \"points\": 10,\n    \"is_active\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3996,6 +3988,362 @@
 								"schools",
 								"1",
 								"awards"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Winners",
+			"item": [
+				{
+					"name": "Statistics",
+					"item": [
+						{
+							"name": "Get awards stats of school",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/schools/1/awards-overview?page=1&search=",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"schools",
+										"1",
+										"awards-overview"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "ordering",
+											"value": "issued_total",
+											"description": "issued_total, points, created_at, updated_at, is_active",
+											"disabled": true
+										},
+										{
+											"key": "search",
+											"value": "",
+											"description": "award name"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get awards stats of student",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/students/2/awards-overview?page=1&search=",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"students",
+										"2",
+										"awards-overview"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "ordering",
+											"value": "-issued_total",
+											"description": "issued_total, points, created_at, updated_at, is_active",
+											"disabled": true
+										},
+										{
+											"key": "search",
+											"value": "",
+											"description": "award name"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get issued by user winners stats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/users/34/issued-winners-overview?page=1&search=",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"users",
+										"34",
+										"issued-winners-overview"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "ordering",
+											"value": "-issued_total",
+											"description": "issued_total, points, created_at, updated_at, is_active",
+											"disabled": true
+										},
+										{
+											"key": "search",
+											"value": "",
+											"description": "award name"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get course awards stats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/courses/3/awards-overview?page=1&search=",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"courses",
+										"3",
+										"awards-overview"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "ordering",
+											"value": "-issued_total",
+											"description": "issued_total, points, created_at, updated_at, is_active",
+											"disabled": true
+										},
+										{
+											"key": "search",
+											"value": "",
+											"description": "award name"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get winner",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/winners/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"winners",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get winners of award",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/awards/3/winners",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"awards",
+								"3",
+								"winners"
+							],
+							"query": [
+								{
+									"key": "student__user__gender",
+									"value": "male",
+									"description": "male, female",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "",
+									"description": "created_at",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get winners of school",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/winners",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"winners"
+							],
+							"query": [
+								{
+									"key": "student__user__gender",
+									"value": "male",
+									"description": "male, female",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "-created_at",
+									"description": "created_at",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get awards of student",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/students/2/awards",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"students",
+								"2",
+								"awards"
+							],
+							"query": [
+								{
+									"key": "award",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "",
+									"description": "created_at",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get issued winners by user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/34/issued-winners",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"34",
+								"issued-winners"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create course winner",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student\": 2,\n    \"award\": 2,\n    \"comment\": \"Great work\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/courses/3/winners",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"3",
+								"winners"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get course winners",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/3/winners",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"3",
+								"winners"
 							]
 						}
 					},

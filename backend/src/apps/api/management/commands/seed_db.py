@@ -22,7 +22,11 @@ from apps.core.modules.posts.models import CoursePost, SchoolPost
 from apps.core.modules.timetables.models import Room, Timebound, Timetable
 from apps.core.modules.comments.models import CoursePostComment, SchoolPostComment
 from apps.core.modules.marks.models import Mark
+from apps.core.modules.awards.models import Award, Winner
 
+from apps.api import mock_data
+
+MOCK_DATA_PATH = 'apps/api/mock_data'
 
 lorems = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -75,7 +79,7 @@ class Command(BaseCommand):
         )
 
     def _create_schools(self):
-        json_schools = self._get_data_from_json_file('mock_data/schools.json') or []
+        json_schools = self._get_data_from_json_file(f'{MOCK_DATA_PATH}/schools.json') or []
         
         objects = []
         for school in json_schools:
@@ -85,7 +89,7 @@ class Command(BaseCommand):
         return objects
         
     def _create_users(self):
-        json_users = self._get_data_from_json_file('mock_data/users.json') or []
+        json_users = self._get_data_from_json_file(f'{MOCK_DATA_PATH}/users.json') or []
         
         objects = []
         for index, user in enumerate(json_users):
@@ -115,7 +119,7 @@ class Command(BaseCommand):
         return objects
     
     def _create_groups(self):
-        json_group_codes = self._get_data_from_json_file('mock_data/groups.json') or []
+        json_group_codes = self._get_data_from_json_file(f'{MOCK_DATA_PATH}/groups.json') or []
         
         objects = []
         for school in self.schools:
@@ -146,7 +150,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Students assigned to groups'))
     
     def _create_subjects(self):
-        json_subjects = self._get_data_from_json_file('mock_data/subjects.json') or []
+        json_subjects = self._get_data_from_json_file(f'{MOCK_DATA_PATH}/subjects.json') or []
         
         objects = []
         for school in self.schools:
@@ -169,7 +173,7 @@ class Command(BaseCommand):
         return objects
     
     def _create_academic_years_and_terms(self):
-        json_years = self._get_data_from_json_file('mock_data/years.json') or []
+        json_years = self._get_data_from_json_file(f'{MOCK_DATA_PATH}/years.json') or []
         
         for school in self.schools:
             for year in json_years:
@@ -306,7 +310,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f'Rooms created ({len(rooms)} objects)'))
     
     def _create_timebounds(self):
-        json = self._get_data_from_json_file('mock_data/timebounds.json')
+        json = self._get_data_from_json_file(f'{MOCK_DATA_PATH}/timebounds.json')
         timebounds = []
 
         for school in self.schools:
@@ -444,6 +448,56 @@ class Command(BaseCommand):
         Timetable.objects.bulk_create(timetables)
         self.stdout.write(self.style.SUCCESS(f'Timetables created ({len(timetables)} objects)'))
     
+    def _create_awards(self):
+        awards: list[Award] = []
+        
+        for school in School.objects.all():
+            awards_data = mock_data.AWARDS
+            awards_sample = random.sample(awards_data, random.randint(7, len(awards_data)))
+            
+            for award in awards_sample:
+                awards.append(Award(
+                    school=school,
+                    name=award.name,
+                    description = self._get_lorem(1),
+                    points = random.randint(1, 50),
+                ))
+    
+        Award.objects.bulk_create(awards)
+        self.stdout.write(self.style.SUCCESS(f'Awards created ({len(awards)} objects)'))
+    
+    def _create_winners(self):
+        winners = []
+        
+        schools = School.objects.all()
+        
+        today = datetime.date.today()
+        start_date = today - timedelta(days=360)
+        
+        
+        def _create_course_awards():
+            for school in schools:
+                awards = Award.objects.filter(school=school)
+                courses = Course.objects.filter(school=school)
+                for course in courses:
+                    students = Student.objects.filter(group=course.group)
+                    for student in students:
+                        awards_number = random.randint(2, 10)
+                        for award in range(awards_number):
+                            winners.append(Winner(
+                                student=student,
+                                award=random.choice(awards),
+                                issued_by=course.teacher,
+                                comment=self._get_lorem(random.randint(0, 1)),
+                                course=course
+                            ))
+                        
+        _create_course_awards()
+        random.shuffle(winners)
+        
+        Winner.objects.bulk_create(winners)
+        self.stdout.write(self.style.SUCCESS(f'Winners created ({len(winners)} objects)'))
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
@@ -463,6 +517,8 @@ class Command(BaseCommand):
         self._create_timebounds()
         self._create_timetables()
         self._create_assignment_marks()
+        self._create_awards()
+        self._create_winners()
         
         self._create_superuser()
         

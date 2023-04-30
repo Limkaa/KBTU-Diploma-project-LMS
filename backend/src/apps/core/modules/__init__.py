@@ -1,3 +1,5 @@
 from . import (
-    awards
+    awards,
+    todos,
+    communities
 )

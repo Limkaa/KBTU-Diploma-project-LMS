@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user16@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user18@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4089,13 +4089,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/users/34/issued-winners-overview?page=1&search=",
+									"raw": "{{BASE_URL}}/users/15/issued-winners-overview?page=1&search=",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"users",
-										"34",
+										"15",
 										"issued-winners-overview"
 									],
 									"query": [
@@ -4289,13 +4289,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/users/34/issued-winners",
+							"raw": "{{BASE_URL}}/users/15/issued-winners",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"34",
+								"15",
 								"issued-winners"
 							]
 						}
@@ -4344,6 +4344,391 @@
 								"courses",
 								"3",
 								"winners"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Todos",
+			"item": [
+				{
+					"name": "Get one todo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/todos/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"todos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update todo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test\",\n    \"description\": \"lol\",\n    \"is_done\": true,\n    \"priority\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/todos/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"todos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all my todos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/todos?page=1&is_done&priority&search&ordering",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"todos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "is_done",
+									"value": null,
+									"description": "true, false"
+								},
+								{
+									"key": "priority",
+									"value": null,
+									"description": "0,1,2,3"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "todo name"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "priority, is_done, created_at, updated_at"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create todo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Another new todo\",\n    \"description\": \"lol\",\n    \"is_done\": true,\n    \"priority\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/todos",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete todo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/todos/168",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"todos",
+								"168"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Communities",
+			"item": [
+				{
+					"name": "Memberships",
+					"item": [
+						{
+							"name": "Ger community members",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/communities/2/memberships?page=1&search=&ordering",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"communities",
+										"2",
+										"memberships"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "search",
+											"value": "",
+											"description": "email, first_name, last__name"
+										},
+										{
+											"key": "ordering",
+											"value": null,
+											"description": "created_at, updated_at"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get student memberships",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/students/1/memberships?page=1&search=&ordering",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"students",
+										"1",
+										"memberships"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "search",
+											"value": "",
+											"description": "community name"
+										},
+										{
+											"key": "ordering",
+											"value": null,
+											"description": "created_at, updated_at"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Join community",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/communities/1/memberships",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"communities",
+										"1",
+										"memberships"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one membership",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/memberships/39",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"memberships",
+										"39"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete membership",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/memberships/66",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"memberships",
+										"66"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get one community",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/communities/4",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"communities",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update community",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New community\",\n    \"description\": \"A community of lovers to read interesting books and discuss them with other people. Share opinions, learn something new\",\n    \"link\": \"https://lol.com\",\n    \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/communities/17",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"communities",
+								"17"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get school communities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/communities?page=1&is_active&ordering=&search=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"communities"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "is_active",
+									"value": null,
+									"description": "true, false"
+								},
+								{
+									"key": "ordering",
+									"value": "",
+									"description": "is_active, members_count, created_at, updated_at"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "community name "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create community",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New community\",\n    \"description\": \"Some description\",\n    \"link\": \"\",\n    \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schools/1/communities",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schools",
+								"1",
+								"communities"
 							]
 						}
 					},

@@ -247,6 +247,7 @@ const styles = {
     padding: 8,
     justifyContent: "flex-end",
     display: "flex",
+    marginTop: 10,
   },
   assCont: {
     display: "flex",

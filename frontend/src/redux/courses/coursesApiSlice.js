@@ -5,25 +5,24 @@ export const coursesApiSlice = authApi.injectEndpoints({
     getSchoolCourses: builder.query({
       query: ({ school_id, page, search }) =>
         `/api/schools/${school_id}/courses?page=${page}&search=${search}`,
-      keepUnusedDataFor: 5,
     }),
     getTeacherCourses: builder.query({
       query: ({ teacher_id, year_id, search }) =>
         `/api/teachers/${teacher_id}/courses?year=${year_id}&search=${search}`,
-      keepUnusedDataFor: 5,
+    }),
+    getTeacherCoursesWithout: builder.query({
+      query: ({ teacher_id, year_id }) =>
+        `/api/teachers/${teacher_id}/courses?year=${year_id}`,
     }),
     getGroupCourses: builder.query({
       query: ({ group_id, year_id, search }) =>
         `/api/groups/${group_id}/courses?year=${year_id}&search=${search}`,
-      keepUnusedDataFor: 5,
     }),
     getCourseStudents: builder.query({
       query: ({ course_id }) => `/api/courses/${course_id}/students`,
-      keepUnusedDataFor: 5,
     }),
     getCourse: builder.query({
       query: ({ id }) => `/api/courses/${id}`,
-      keepUnusedDataFor: 5,
     }),
     addCourse: builder.mutation({
       query: ({ school_id, ...data }) => ({
@@ -47,6 +46,7 @@ export const {
   useGetCourseQuery,
   useLazyGetGroupCoursesQuery,
   useLazyGetTeacherCoursesQuery,
+  useLazyGetTeacherCoursesWithoutQuery,
   useGetCourseStudentsQuery,
   useAddCourseMutation,
   useUpdateCourseMutation,

@@ -7,9 +7,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Checkbox, TimePicker, DatePicker } from "antd";
+import { Checkbox, TimePicker, DatePicker, Tag } from "antd";
 import dayjs from "dayjs";
 import styled from "styled-components";
+import moment from "moment-timezone";
 
 const InputStyled = styled(TextField)`
   .MuiInputBase-root {
@@ -48,12 +49,21 @@ const Picker = styled(DatePicker)`
   }
 `;
 
-
-const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
+const AssignmentCreate = ({
+  show,
+  setShow,
+  handleAdd,
+  terms,
+  selectedYear,
+  years,
+  courses,
+  setSelectedYear,
+}) => {
+  console.log("courses", courses);
   const [isActive, setIsActive] = React.useState(true);
   const [datetime, setDatetime] = React.useState(dayjs());
   return (
-    <div style={{ ...styles.wrapper, right: show ? "0" : "-30%" }}>
+    <div style={{ ...styles.wrapper, right: show ? "0" : "-35%" }}>
       <div style={styles.header}>
         <div style={styles.headerTitle}>Create Assignment</div>
         <img
@@ -66,6 +76,7 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
       </div>
       <Formik
         initialValues={{
+          course: "",
           term: "",
           name: "",
           description: "",
@@ -85,6 +96,7 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
           handleAdd(values, isActive, datetime);
           resetForm({
             values: {
+              course: "",
               term: "",
               name: "",
               description: "",
@@ -96,6 +108,34 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
         {({ isSubmitting }) => (
           <Form style={styles.form}>
             <p style={styles.contentTitle}>Assignment</p>
+            {years && (
+              <>
+                <FormControl
+                  sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
+                  size="small"
+                >
+                  <InputLabel id="year">Year</InputLabel>
+                  <Select
+                    labelId="year"
+                    id="year"
+                    value={selectedYear || ""}
+                    label="Year"
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                  >
+                    <MenuItem value="" disabled>
+                      <em>Choose year</em>
+                    </MenuItem>
+                    {years?.map((item) => (
+                      <MenuItem value={item.id} key={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <div style={{ margin: 6 }} />
+              </>
+            )}
+
             <Field name="term">
               {({ field, form: { touched, errors } }) => (
                 <>
@@ -114,7 +154,14 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
                       </MenuItem>
                       {terms?.map((item) => (
                         <MenuItem value={item.id} key={item.id}>
-                          {item.name}
+                          <div>
+                            {item.name}{" "}
+                            <Tag color={"geekblue"}>
+                              From{" "}
+                              {moment(item.from_date).format("DD MMM YYYY")} to{" "}
+                              {moment(item.to_date).format("DD MMM YYYY")}
+                            </Tag>
+                          </div>
                         </MenuItem>
                       ))}
                     </Select>
@@ -126,6 +173,50 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
               )}
             </Field>
             <div style={{ margin: 6 }} />
+            {courses && (
+              <>
+                <Field name="course">
+                  {({ field, form: { touched, errors } }) => (
+                    <>
+                      <FormControl
+                        sx={{
+                          width: "100%",
+                          fontSize: 15,
+                          fieldset: { borderRadius: "10px" },
+                        }}
+                        size="small"
+                      >
+                        <InputLabel id="course">Course</InputLabel>
+                        <Select
+                          labelId="course"
+                          id="course"
+                          label="Course"
+                          {...field}
+                        >
+                          <MenuItem value="" disabled>
+                            <em>Choose course</em>
+                          </MenuItem>
+                          {courses?.map((item) => (
+                            <MenuItem value={item.id} key={item.id}>
+                              <div>
+                                {item?.subject?.name}{" "}
+                                <Tag color={"geekblue"}>
+                                  {item?.subject?.grade?.name}
+                                </Tag>
+                              </div>
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      {touched[field.name] && errors[field.name] && (
+                        <div className="error">{errors[field.name]}</div>
+                      )}
+                    </>
+                  )}
+                </Field>
+                <div style={{ margin: 6 }} />
+              </>
+            )}
             <Field name="name">
               {({ field, form: { touched, errors } }) => (
                 <>
@@ -165,9 +256,9 @@ const AssignmentCreate = ({ show, setShow, handleAdd, terms }) => {
             </Field>
             <div style={{ margin: 6 }} />
             <Picker
+              value={datetime}
               onChange={(value) => setDatetime(value)}
               showTime
-              defaultValue={datetime}
             />
             <div style={{ margin: 6 }} />
             <div>
@@ -197,7 +288,7 @@ const styles = {
     position: "fixed",
     transition: "all 0.3s",
     top: 0,
-    width: "25%",
+    width: "35%",
     height: "100%",
     zIndex: 1,
     borderTopLeftRadius: 20,

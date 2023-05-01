@@ -9,4 +9,4 @@ modules = [
     APIConfig(enrollments.urls_path, active=True),
 ]
 
-urlpatterns = [module.connect() for module in modules]
+urlpatterns = [module.connect() for module in modules if module.active]

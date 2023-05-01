@@ -25,6 +25,8 @@ from apps.core.modules.marks.models import Mark
 from apps.core.modules.awards.models import Award, Winner
 from apps.core.modules.todos.models import Todo
 from apps.core.modules.communities.models import Community, Membership
+from apps.core.modules.enrollments.models import Enrollment
+
 
 from apps.api import mock_data
 
@@ -558,6 +560,53 @@ class Command(BaseCommand):
         
         self.bulk_create(Membership, 'Memberships', memberships)
     
+    def _create_enrollments(self):
+        enrollments = []
+        
+        for course in Course.objects.all():
+            students = Student.objects.filter(group=course.group)
+            students_with_enrollments = random.randint(round(len(students)*0.7), len(students))
+            students_with_enrollments_sample = random.sample(list(students), students_with_enrollments)
+            
+            for student in students_with_enrollments_sample:
+                enrollments.append(Enrollment(
+                    student=student,
+                    subject=course.subject,
+                    year=course.year,
+                    course=course
+                ))
+        
+        self.bulk_create(Enrollment, 'Enrollments', enrollments)
+    
+    def _create_trasferred_enrollments(self):
+        enrollments = []
+        
+        for course in Course.objects.all():
+            students_with_enrollments = Enrollment.objects.filter(course=course).values_list('student_id', flat=True)
+            students_without_enrollments = Student.objects.filter(group=course.group).exclude(id__in=students_with_enrollments)
+            
+            students_transferred_num = random.randint(0, len(students_without_enrollments))
+            students_transferred = random.sample(list(students_without_enrollments), students_transferred_num)
+            
+            same_courses = Course.objects.filter(
+                school=course.school,
+                subject=course.subject,
+                year=course.year
+            )
+            
+            if not same_courses:
+                continue
+            
+            for student in students_transferred:
+                enrollments.append(Enrollment(
+                    student=student,
+                    subject=course.subject,
+                    year=course.year,
+                    course=random.choice(same_courses)
+                ))
+        
+        self.bulk_create(Enrollment, 'Transferred enrollments', enrollments)
+    
     def handle(self, *args, **options):
         self.schools = self._create_schools()
         self.grades = self._create_grades()
@@ -582,6 +631,8 @@ class Command(BaseCommand):
         self._create_todos()
         self._create_communities()
         self._create_memberships()
+        self._create_enrollments()
+        self._create_trasferred_enrollments()
         
         self._create_superuser()
         

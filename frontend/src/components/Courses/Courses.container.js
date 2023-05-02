@@ -93,11 +93,13 @@ const CoursesContainer = () => {
         });
       }
     } else if (user?.role === "teacher") {
-      getTeacherCourses({
-        teacher_id: user?.id,
-        year_id: selectedYear,
-        search: search,
-      });
+      if (selectedYear) {
+        getTeacherCourses({
+          teacher_id: user?.id,
+          year_id: selectedYear,
+          search: search,
+        });
+      }
     }
   }, [user, studentCard, selectedYear, search]);
 
@@ -155,7 +157,10 @@ const CoursesContainer = () => {
             </Select>
           </FormControl>
         </div>
-        <Spin spinning={isLoading} size="large">
+        <Spin
+          spinning={user?.role === "student" ? isLoading : teacherIsLoading}
+          size="large"
+        >
           <Grid
             container
             spacing={{ xs: 3, md: 3 }}
@@ -240,6 +245,8 @@ const styles = {
   },
   title: {
     marginTop: 20,
+    fontSize: 16,
+    fontWeight: 600,
   },
 };
 

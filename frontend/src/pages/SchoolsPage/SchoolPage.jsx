@@ -59,7 +59,7 @@ const SchoolPage = () => {
     isLoading,
     isSuccess,
     refetch: refetchSchool,
-  } = useGetSchoolQuery(user.school_id);
+  } = useGetSchoolQuery(user?.school_id);
   const [name, setName] = useState(school?.name);
   const [address, setAddress] = useState(school?.address);
   const [desc, setDesc] = useState(school?.description);
@@ -70,6 +70,8 @@ const SchoolPage = () => {
   const [text, setText] = React.useState("");
   const [posts, setPosts] = React.useState();
   const [isReply, setIsReply] = React.useState(false);
+
+  console.log(user)
 
   const {
     data: dataPosts,

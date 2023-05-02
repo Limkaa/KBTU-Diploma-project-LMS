@@ -5,19 +5,18 @@ import {
     useAddTimeBoundMutation,
     useDeleteTimeBoundMutation,
     useGetTimeBoundsQuery, useUpdateTimeBoundMutation
-} from "../../redux/timebounds/timeboundsApiSlice";
+} from "../../redux/timeline/timeboundsApiSlice";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
-import {Space, Table, TimePicker, Button, Radio} from "antd";
+import {Table, TimePicker, Button, Radio, Spin} from "antd";
 import "./TimeBoundsPage.css";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import moment from "moment";
+import {DeleteOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
 import {toastify} from "../../components/shared/Toast/Toast";
 
 const TimeBoundsPage = () => {
     const user = useSelector(selectCurrentUser);
-    const [order, setOrder] = useState("");
+    const [order, setOrder] = useState("from_time");
     const {data: timeBoundsData, isLoading, isSuccess, refetch} =
         useGetTimeBoundsQuery({schoolId: user.school_id, order});
     const [timeBounds, setTimeBounds] = useState([]);
@@ -143,14 +142,16 @@ const TimeBoundsPage = () => {
             </header>
             <section>
                 <div className="table">
-                    <Table
-                        rowKey={(record) => record.id}
-                        columns={columns}
-                        dataSource={timeBounds}
-                        pagination={false}
-                        rowSelection={rowSelection}
-                    >
-                    </Table>
+                    <Spin spinning={isLoading}>
+                        <Table
+                            rowKey={(record) => record.id}
+                            columns={columns}
+                            dataSource={timeBounds}
+                            pagination={false}
+                            rowSelection={rowSelection}
+                        >
+                        </Table>
+                    </Spin>
                 </div>
                 <div className="forms">
                     <div className="add-form">

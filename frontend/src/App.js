@@ -28,6 +28,7 @@ import SyllabusContainer from "./components/Syllabus/Syllabus.container";
 import StudentsPage from "./pages/StudentsPage/StudentsPage";
 import RoomPage from "./pages/RoomPage/RoomPage";
 import TimeBoundsPage from "./pages/TimeBoundsPage/TimeBoundsPage";
+import TimeTablePage from "./pages/TimeTablePage/TimeTablePage";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -118,6 +119,11 @@ function App() {
               exact
               path="/timeline/time-bounds"
               element={<TimeBoundsPage/>}
+          />
+          <Route
+              exact
+              path="/timeline/timetable"
+              element={<TimeTablePage/>}
           />
         </Route>
         <Route path="*" element={<NotFound />} />

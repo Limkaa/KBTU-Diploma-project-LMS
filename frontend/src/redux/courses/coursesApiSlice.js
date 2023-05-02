@@ -2,6 +2,11 @@ import { authApi } from "../api/apiService";
 
 export const coursesApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
+    getAllSchoolCourses: builder.query({
+      query: (school_id) =>
+          `/api/schools/${school_id}/courses`,
+      keepUnusedDataFor: 5,
+    }),
     getSchoolCourses: builder.query({
       query: ({ school_id, page }) =>
         `/api/schools/${school_id}/courses?page=${page}`,
@@ -39,6 +44,7 @@ export const coursesApiSlice = authApi.injectEndpoints({
 });
 
 export const {
+  useGetAllSchoolCoursesQuery,
   useGetSchoolCoursesQuery,
   useGetCourseQuery,
   useLazyGetGroupCoursesQuery,

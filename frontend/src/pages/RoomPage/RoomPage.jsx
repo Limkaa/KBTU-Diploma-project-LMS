@@ -9,7 +9,7 @@ import {
     useDeleteRoomMutation,
     useGetRoomsQuery,
     useUpdateRoomMutation
-} from "../../redux/rooms/roomsApiSlice";
+} from "../../redux/timeline/roomsApiSlice";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
 import Search from "../../assets/icons/search.svg";
@@ -42,7 +42,6 @@ const RoomPage = () => {
     }, [roomsData, isRoomsSuccess]);
 
     const saveRoom = async () => {
-        console.log(selectedRoom);
         updateRoom({roomId: selectedRoom.id, ...selectedRoom})
             .unwrap()
             .then(() => {
@@ -178,7 +177,8 @@ const RoomPage = () => {
                         footer={
                             <Button type={"primary"} key="update" onClick={saveRoom}>
                                 Update
-                            </Button>}
+                            </Button>
+                        }
                     >
                         <div style={{display: "flex", flexDirection: "column", gap: 10}}>
                             <Input

@@ -4735,6 +4735,208 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Enrollments",
+			"item": [
+				{
+					"name": "Get one enrollment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/17/enrollments/73",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"17",
+								"enrollments",
+								"73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update enrollment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/courses/49/enrollments/73",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"49",
+								"enrollments",
+								"73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create enrollment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/courses/17/enrollments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"17",
+								"enrollments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get course enrollments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/17/enrollments?page=1&ordering=&search=&student__user__gender=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"17",
+								"enrollments"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "ordering",
+									"value": "",
+									"description": "created_at, updated_at, student__user__gender, student__user__email, student__user__first_name, student__user__last_name,\n"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "student's email, first and last names"
+								},
+								{
+									"key": "student__user__gender",
+									"value": "",
+									"description": "male, female, unknown"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get students with transferred enrollment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/17/transferred-enrollments?page=1&ordering=&search=&student__user__gender=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"17",
+								"transferred-enrollments"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "ordering",
+									"value": "",
+									"description": "created_at, updated_at, student__user__gender, student__user__email, student__user__first_name, student__user__last_name,\n"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "student's email, first and last names"
+								},
+								{
+									"key": "student__user__gender",
+									"value": "",
+									"description": "male, female, unknown"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get students not enrolled to course",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/courses/49/not-enrolled-students?page=1&ordering=&search=&user__gender=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"courses",
+								"49",
+								"not-enrolled-students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "ordering",
+									"value": "",
+									"description": "created_at, updated_at, user__gender, user__email, user__first_name, user__last_name"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "student's email, first and last names"
+								},
+								{
+									"key": "user__gender",
+									"value": "",
+									"description": "male, female, unknown"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {

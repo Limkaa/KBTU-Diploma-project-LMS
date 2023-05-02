@@ -52,3 +52,83 @@
 .rbc-event:hover {
     background-color: lightgray;
 }
+
+#timetable section {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#timetable .slots {
+    width: 100%;
+    border-radius: 8px;
+}
+
+#timetable .group {
+    background-color: white;
+    border: 1px solid #f0f0f0;
+}
+
+#timetable .add {
+    width: 250px;
+    margin-top: 0;
+    padding: 20px 30px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+#timetable h2 {
+    margin: 0;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#timetable h3 {
+    min-width: 60px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: right;
+    margin: 10px 10px 10px 0;
+}
+
+#timetable .filters {
+    margin-top: 10px;
+}
+
+#timetable .btn {
+    display: block;
+    margin: 10px auto 0;
+}
+
+#timetable .filters {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+}
+
+#timetable .search {
+    padding: 11px;
+    display: flex;
+    background-color: #FAFAFA;
+    border: 1px solid #f0f0f0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+#timetable .select {
+    display: flex;
+    align-items: center;
+}
+
+#timetable .radio {
+    text-align: center;
+    min-width: 40%;
+}
+
+#timetable .radio:first-child {
+    min-width: 20%;
+}

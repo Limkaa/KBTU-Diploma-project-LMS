@@ -2,6 +2,10 @@ import { authApi } from "../api/apiService";
 
 export const roomsApiSlice = authApi.injectEndpoints({
     endpoints: (builder) => ({
+        getAllRooms: builder.query({
+            query: (schoolId) =>
+                `api/schools/${schoolId}/rooms`
+        }),
         getRooms: builder.query({
             query: ({schoolId, page, order, search}) =>
                 `api/schools/${schoolId}/rooms?page=${page}&ordering=${order}&search=${search}`
@@ -31,6 +35,7 @@ export const roomsApiSlice = authApi.injectEndpoints({
 
 export const {
     useGetRoomsQuery,
+    useGetAllRoomsQuery,
     useUpdateRoomMutation,
     useAddRoomMutation,
     useDeleteRoomMutation

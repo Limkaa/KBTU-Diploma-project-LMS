@@ -68,7 +68,7 @@ const TimeBoundsPage = () => {
                 />
             ),
         },
-    ]
+    ];
 
     const rowSelection = {
         type: "radio",

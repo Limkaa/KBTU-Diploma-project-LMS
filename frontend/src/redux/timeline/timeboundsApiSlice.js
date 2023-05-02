@@ -2,6 +2,10 @@ import { authApi } from "../api/apiService";
 
 export const timeBoundsApiSlice = authApi.injectEndpoints({
     endpoints: (builder) => ({
+        getAllTimeBounds: builder.query({
+            query: (schoolId) =>
+                `api/schools/${schoolId}/timebounds`
+        }),
         getTimeBounds: builder.query({
             query: ({schoolId, order}) =>
                 `api/schools/${schoolId}/timebounds?ordering=${order}`
@@ -30,6 +34,7 @@ export const timeBoundsApiSlice = authApi.injectEndpoints({
 });
 
 export const {
+    useGetAllTimeBoundsQuery,
     useGetTimeBoundsQuery,
     useAddTimeBoundMutation,
     useDeleteTimeBoundMutation,

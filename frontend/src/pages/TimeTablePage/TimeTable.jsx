@@ -1,8 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import Header from "../../components/shared/Header/Header";
-import Profile from "../../components/Dashboard/Profile";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./TimeTablePage.css";
@@ -13,17 +9,22 @@ import {
     useGetTimeTableQuery,
     useUpdateTimeSlotMutation
 } from "../../redux/timeline/timetableApiSlice";
-import {Button, Modal, Spin} from "antd";
+import {Button, Input, Modal, Spin, Table, Select as AntSelect, Radio} from "antd";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import {useGetAllSchoolCoursesQuery} from "../../redux/courses/coursesApiSlice";
 import {toastify} from "../../components/shared/Toast/Toast";
+import {MinusOutlined} from "@ant-design/icons";
+import Search from "../../assets/icons/search.svg";
+import {useGetAllRoomsQuery} from "../../redux/timeline/roomsApiSlice";
+import {useGetAllTimeBoundsQuery} from "../../redux/timeline/timeboundsApiSlice";
 
 const TimeTable = () => {
-    // const localizer = momentLocalizer(moment);
     const user = useSelector(selectCurrentUser);
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState();
     const [weekday, setWeekday] = useState("");
     const [timeBound, setTimeBound] = useState("");
     const [courseId, setCourseId] = useState("");
@@ -31,132 +32,171 @@ const TimeTable = () => {
     const [noCourse, setNoCourse] = useState("");
     const [search, setSearch] = useState("");
     const {data: timetableData, isSuccess, isLoading, refetch} = useGetSchoolTimeTableQuery(
-        {schoolId: user.school_id, weekday, timeBound, courseId, room, noCourse, search});
-    // const [events, setEvents] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+        {schoolId: user.school_id, weekday, timeBound, courseId, room, noCourse, search, page});
+    const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState();
     const {data: coursesData, isSuccess: isCoursesSuccess} = useGetAllSchoolCoursesQuery(user.school_id);
     const [updateTimeSlot] = useUpdateTimeSlotMutation();
     const [coursesOptions, setCoursesOptions] = useState([]);
+    const [roomsOptions, setRoomsOptions] = useState([]);
+    const [tbOptions, setTBOptions] = useState([]);
     const [course, setCourse] = useState({});
-
-
-
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         const arr = timetableData?.map(event => ({
-    //             id: event.id,
-    //             title: event.course ? `${event.course.subject.name} ${event.course.subject.grade.name}` : 'No course',
-    //             start: moment().day(weekdays[event.weekday]).hour(Number(event.timebound.from_time.split(':')[0])).minute(Number(event.timebound.from_time.split(':')[1])).toDate(),
-    //             end: moment().day(weekdays[event.weekday]).hour(Number(event.timebound.to_time.split(':')[0])).minute(Number(event.timebound.to_time.split(':')[1])).toDate(),
-    //             room: event.room.name,
-    //             timeBound: `${event.timebound.from_time} - ${event.timebound.to_time}`,
-    //             course: event.course,
-    //         }))
-    //         setEvents(arr);
-    //         console.log(arr);
-    //     }
-    // }, [timetableData, isSuccess])
+    const [selectedRows, setSelectedRows] = useState([]);
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const {data: roomsData, isSuccess: isRoomsSuccess} = useGetAllRoomsQuery(user.school_id);
+    const {data: tbData, isSuccess: isTBSuccess} = useGetAllTimeBoundsQuery(user.school_id);
 
     useEffect(() => {
+        if (isSuccess) {
+            if (page === 1) setTotal(timetableData.count);
+            setEvents(timetableData.results);
+        }
+    }, [timetableData, isSuccess])
+
+    useEffect(() => {
+        let arr = [{ value: "", label: "All courses" }];
         if (isCoursesSuccess) {
-            setCoursesOptions(coursesData);
+            coursesData.forEach((course) => {
+                arr.push({ value: course.id, label: `${course?.subject.name}(${course?.subject.code})` });
+            });
+            setCoursesOptions(arr);
         }
     }, [coursesData, isCoursesSuccess])
 
-    // const formats = {
-    //     dayFormat: (date, culture, localizer) =>
-    //         localizer.format(date, 'dddd', culture),
-    //     timeGutterFormat: (date, culture, localizer) =>
-    //         localizer.format(date, 'HH:mm', culture),
-    //     eventTimeRangeFormat: ({ start, end }, culture, localizer) => {
-    //         const timeFormat = 'HH:mm';
-    //         return `${localizer.format(start, timeFormat, culture)} - ${localizer.format(
-    //             end,
-    //             timeFormat,
-    //             culture
-    //         )}`;
-    //     },
-    // };
+    useEffect(() => {
+        let arr = [{ value: "", label: "All rooms" }];
+        if (isRoomsSuccess) {
+            roomsData.forEach(room => {
+                arr.push({ value: room.id, label: `${room.name}` });
+            });
+            setRoomsOptions(arr);
+        }
+    }, [roomsData, isRoomsSuccess])
+
+    useEffect(() => {
+        let arr = [{ value: "", label: "All time bounds" }];
+        if (isTBSuccess) {
+            tbData.forEach(tb => {
+                arr.push({ value: tb.id, label: `${tb.from_time.slice(0, -3)} - ${tb.to_time.slice(0, -3)}`});
+            });
+            setTBOptions(arr);
+        }
+    }, [tbData, isTBSuccess])
 
     const saveTimeSlot = async () => {
         updateTimeSlot({slotId: selectedEvent.id, course})
             .unwrap()
             .then(() => {
-                setIsModalOpen(false);
                 refetch();
                 toastify("success", "Time slot course updated");
             })
             .catch((err) => {
-                setIsModalOpen(false);
                 console.log(err);
                 toastify("error", "Time slot update failed");
             })
     }
 
-    return (
-        <main id="timetable">
-            <header className="header">
-                <Header text={"Time table"} />
-                <Profile />
-            </header>
-            <section>
-                <Spin spinning={isLoading}>
+    const columns = [
+        {
+            title: 'Time',
+            key: 'time',
+            render: (slot) => (
+                <div>
+                    {slot.timebound.from_time.slice(0, -3)} - {slot.timebound.to_time.slice(0, -3)}
+                </div>
+            ),
+        },
+        {
+            title: "Weekday",
+            key: "weekday",
+            render: (slot) => (
+                <div>
+                    {weekdays[slot.weekday]}
+                </div>
+            )
+        },
+        {
+            title: "Room",
+            key: "room",
+            render: (slot) => (
+                <div>
+                    {slot.room.name}
+                </div>
+            ),
+        },
+        {
+            title: "Subject",
+            key: "subject",
+            render: (slot) => (
+                <div>
+                    {slot.course?.subject?.name ?
+                        `${slot.course.subject.name}(${slot.course.subject.code})` : <MinusOutlined />}
+                </div>
+            )
+        },
+        {
+            title: "Grade",
+            key: "grade",
+            render: (slot) => (
+                <div>
+                    {slot.course?.subject?.grade?.name??<MinusOutlined />}
+                </div>
+            )
+        },
+        {
+            title: "Teacher",
+            key: "teacher",
+            render: (slot) => (
+                <div>
+                    {slot.teacher ?
+                        `${slot.teacher.first_name} ${slot.teacher.last_name}`
+                        : <MinusOutlined />}
+                </div>
+            )
+        },
+    ];
 
-                    {/*<Calendar*/}
-                    {/*    localizer={localizer}*/}
-                    {/*    events={events}*/}
-                    {/*    formats={formats}*/}
-                    {/*    defaultView="week"*/}
-                    {/*    views={['week', 'day']}*/}
-                    {/*    toolbar={{*/}
-                    {/*        views: ['day', 'week'],*/}
-                    {/*    }}*/}
-                    {/*    min={moment().hour(6).minute(0).toDate()}*/}
-                    {/*    max={moment().hour(23).minute(0).toDate()}*/}
-                    {/*    step={60}*/}
-                    {/*    timeslots={1}*/}
-                    {/*    firstDay={1}*/}
-                    {/*    eventPropGetter={(event, start, end, isSelected) => {*/}
-                    {/*        const style = {*/}
-                    {/*            backgroundColor: '#00899E',*/}
-                    {/*            borderRadius: '3px',*/}
-                    {/*            color: 'white',*/}
-                    {/*            border: '1px solid white',*/}
-                    {/*            display: 'block',*/}
-                    {/*        };*/}
-                    {/*        return {*/}
-                    {/*            style,*/}
-                    {/*        };*/}
-                    {/*    }}*/}
-                    {/*    components={{*/}
-                    {/*        event: (props) => {*/}
-                    {/*            return (*/}
-                    {/*                <div*/}
-                    {/*                    onClick={() => {*/}
-                    {/*                        setSelectedEvent(props.event);*/}
-                    {/*                        setIsModalOpen(true);*/}
-                    {/*                    }}*/}
-                    {/*                >*/}
-                    {/*                    <div>{props.event.title}</div>*/}
-                    {/*                    <div>{props.event.room}</div>*/}
-                    {/*                </div>*/}
-                    {/*            );*/}
-                    {/*        },*/}
-                    {/*    }}*/}
-                    {/*    eventOverlap="overlap"*/}
-                    {/*/>*/}
+    const rowSelection = {
+        selectedRows,
+        onChange: (keys, selectedRows) => {
+            setSelectedRows(selectedRows);
+        },
+    };
+
+    return (
+        <section>
+            <div className="group slots">
+                <Spin spinning={isLoading}>
+                    <Table
+                        rowKey={(record) => record.id}
+                        columns={columns}
+                        dataSource={events}
+                        pagination={{
+                            total: total,
+                            current: page,
+                            onChange: (page) => {
+                                setPage(page);
+                                window.scrollTo(0,0);
+                            },
+                            showSizeChanger: false,
+                        }}
+                        rowSelection={rowSelection}
+                    />
                 </Spin>
-                <Modal title="Time table event" open={isModalOpen}
-                       onCancel={() => setIsModalOpen(false)}
-                       footer={
-                           <Button type={"primary"} key="update" onClick={saveTimeSlot}>
-                               Update
-                           </Button>
-                       }>
-                    <div>{selectedEvent?.timeBound}</div>
-                    <div>{selectedEvent?.title}</div>
-                    <div>{selectedEvent?.room}</div>
+            </div>
+            <aside>
+                <div className="search">
+                    <Input
+                        placeholder="Search code"
+                        prefix={
+                            <img alt="" src={Search} style={{ height: 15, width: 15 }} />
+                        }
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value.toLowerCase())}
+                    />
+                </div>
+                <div className="group add">
+                    <h2>Change time slots' course</h2>
                     <FormControl
                         sx={{ width: "100%", fieldset: { borderRadius: "10px" } }}
                         size="small"
@@ -173,17 +213,99 @@ const TimeTable = () => {
                         >
                             {
                                 coursesOptions?.map(course =>
-                                    <MenuItem key={course?.id} value={course?.id}>
-                                        {course?.subject.name}({course?.subject.code})
+                                    <MenuItem key={course?.value} value={course?.value}>
+                                        {course?.label})
                                     </MenuItem>
                                 )
                             }
                         </Select>
-                        <div style={{height: 10}}></div>
                     </FormControl>
-                </Modal>
-            </section>
-        </main>
+                    <Button type={"primary"} className="btn"
+                            // onClick={handleGroupChange}
+                    >Update group</Button>
+                </div>
+                <div className="group add filters">
+                    <div className="select">
+                        <Radio.Group name="order"
+                                     size={"small"}
+                                     style={{width: '100%'}}
+                                     value={noCourse}
+                                     onChange={(e) => setNoCourse(e.target.value)}
+                        >
+                            <Radio.Button className="radio" value={""}>All</Radio.Button>
+                            <Radio.Button className="radio" value={"False"}>With course</Radio.Button>
+                            <Radio.Button className="radio" value={"True"}>No course</Radio.Button>
+                        </Radio.Group>
+                    </div>
+                    <div className="select">
+                        <h3>Weekday:</h3>
+                        <AntSelect
+                            size={"small"}
+                            style={{width: '100%'}}
+                            showSearch
+                            filterOption={(input, option) =>
+                                (option?.label ?? "").includes(input)
+                            }
+                            onChange={(val) => setWeekday(val)}
+                            options={(() => {
+                                let arr = [{ value: "", label: "All weekdays" }];
+                                for (let i = 0; i < weekdays.length; i++) {
+                                    arr.push({label: weekdays[i], value: String(i)})
+                                }
+                                return arr;
+                            })()}
+                            defaultValue={""}
+                            value={weekday}
+                        />
+                    </div>
+                    <div className="select">
+                        <h3>Course:</h3>
+                        <AntSelect
+                            size={"small"}
+                            style={{width: '100%'}}
+                            showSearch
+                            filterOption={(input, option) =>
+                                (option?.label ?? "").includes(input)
+                            }
+                            onChange={(val) => setCourseId(val)}
+                            options={coursesOptions}
+                            defaultValue={""}
+                            value={courseId}
+                        />
+                    </div>
+                    <div className="select">
+                        <h3>Room:</h3>
+                        <AntSelect
+                            size={"small"}
+                            style={{width: '100%'}}
+                            showSearch
+                            filterOption={(input, option) =>
+                                (option?.label ?? "").includes(input)
+                            }
+                            onChange={(val) => setRoom(val)}
+                            options={roomsOptions}
+                            defaultValue={""}
+                            value={room}
+                        />
+                    </div>
+                    <div className="select">
+                        <h3>Time:</h3>
+                        <AntSelect
+                            size={"small"}
+                            style={{width: '100%'}}
+                            showSearch
+                            filterOption={(input, option) =>
+                                (option?.label ?? "").includes(input)
+                            }
+                            onChange={(val) => setTimeBound(val)}
+                            options={tbOptions}
+                            defaultValue={""}
+                            value={timeBound}
+                        />
+                    </div>
+                </div>
+            </aside>
+        </section>
     );
 };
 

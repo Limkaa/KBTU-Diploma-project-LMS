@@ -23,14 +23,15 @@ export const timetablesApiSlice = authApi.injectEndpoints({
 
         }),
         getSchoolTimeTable: builder.query({
-            query: ({schoolId, weekday, timeBound, courseId, room, noCourse, search}) =>{
+            query: ({schoolId, page, weekday, timeBound, courseId, room, noCourse, search}) =>{
                     return 'api/schools/' + schoolId +
                         '/timetable?weekday=' + weekday +
                         '&timebound=' + timeBound +
                         '&course=' + courseId +
                         '&room=' + room +
                         '&no_course=' + noCourse +
-                        '&search=' + search;
+                        '&search=' + search +
+                        '&page=' + page;
             }
         }),
         updateTimeSlot: builder.mutation({

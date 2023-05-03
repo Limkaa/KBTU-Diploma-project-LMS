@@ -26,8 +26,6 @@ import { toastify } from "../shared/Toast/Toast";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 
 const AssignmentsCourse = () => {
-  const location = useLocation();
-  let courseId = location?.state?.courseId;
   const { data: user } = useGetAuthUserQuery();
   const [assignments, setAssignments] = React.useState();
   const [loading, setLoading] = React.useState(true);

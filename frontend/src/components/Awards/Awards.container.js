@@ -9,7 +9,7 @@ import { Box, Paper, Grid } from "@mui/material";
 // import Grid from "@mui/material/Grid";
 import Search from "../../assets/icons/search.svg";
 import { styled as styledmui } from "@mui/material/styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Input, Empty, Spin, Button } from "antd";
 
 const Item = styledmui(Paper)(({ theme }) => ({
@@ -43,6 +43,7 @@ const InputStyled = styled(Input)`
 const AwardsContainer = () => {
   const [schoolAwards, setSchoolAwards] = React.useState();
   const [search, setSearch] = React.useState("");
+  const navigate = useNavigate();
 
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
 
@@ -52,7 +53,6 @@ const AwardsContainer = () => {
 
   React.useEffect(() => {
     if (data && !isLoading) {
-      console.log(data);
       setSchoolAwards(data);
     }
   }, [data, isLoading]);
@@ -81,37 +81,39 @@ const AwardsContainer = () => {
             {schoolAwards?.length > 0 ? (
               schoolAwards?.map((item) => (
                 <Grid item key={item.id} xs={6} sm={8} md={4}>
-                  <Link
-                    // to={`/courses/${item.id}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Item>
-                      <div style={styles.title}>{item?.name}</div>
-                      <div style={styles.des}>
-                        Description: {item?.description}
-                      </div>
-                      <div style={styles.recentCont}>
-                        <div style={styles.recentTitle}>Recent winnners</div>
-                        {item?.recent_winners?.map((winner) => (
-                          <div style={styles.recent}>
-                            <div
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
-                              <img style={styles.img} />
-                              <div style={styles.name}>
-                                {winner.student?.user?.first_name}{" "}
-                                {winner.student?.user?.last_name}
-                              </div>
-                            </div>
-                            <div style={styles.rating}>
-                              {winner?.student?.user?.rating}
+                  <Item>
+                    <div style={styles.title}>{item?.name}</div>
+                    <div style={styles.des}>{item?.description}</div>
+                    <div style={styles.recentCont}>
+                      <div style={styles.recentTitle}>Recent winnners</div>
+                      {item?.recent_winners?.map((winner) => (
+                        <div style={styles.recent}>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <img style={styles.img} />
+                            <div style={styles.name}>
+                              {winner.student?.user?.first_name}{" "}
+                              {winner.student?.user?.last_name}
                             </div>
                           </div>
-                        ))}
-                        <Button style={styles.btn}>More</Button>
-                      </div>
-                    </Item>
-                  </Link>
+                          <div style={styles.rating}>
+                            {winner?.student?.user?.rating}
+                          </div>
+                        </div>
+                      ))}
+                      <Button
+                        style={styles.btn}
+                        onClick={() =>
+                          navigate(`/awards/${item?.id}/winners`, {
+                            state: { awardId: item?.id },
+                          })
+                        }
+                      >
+                        More
+                      </Button>
+                    </div>
+                  </Item>
                 </Grid>
               ))
             ) : (
@@ -155,7 +157,7 @@ const styles = {
     marginTop: 10,
   },
   recentTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 600,
     color: "rgba(74, 77, 88, 1)",
   },
@@ -163,11 +165,16 @@ const styles = {
     fontSize: 14,
     fontWeight: 600,
     color: "#4A4D58",
-    marginLeft: 5,
+    marginLeft: 7,
+  },
+  rating: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: "#4A4D58",
   },
   img: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     borderRadius: 120,
     border: "none",
     backgroundColor: "rgba(0, 0, 0, 0.1)",

@@ -124,18 +124,11 @@ const ReplyButton = styled(Button)`
   }
 `;
 
-const SchoolPost = ({
-  item,
-  handleUpdatePost,
-  handleDeletePost,
-  user,
-  isReply,
-  setIsReply,
-}) => {
+const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
   const [comments, setComments] = React.useState([]);
   const [isEdit, setIsEdit] = React.useState(false);
   const [isEditComment, setIsEditComment] = React.useState(false);
-  // const [isReply, setIsReply] = React.useState(false);
+  const [isReply, setIsReply] = React.useState(false);
   const inputRef = useRef(null);
   const [showDeletePost, setShowDeletePost] = React.useState(false);
   const [showDeleteComment, setShowDeleteComment] = React.useState(false);
@@ -450,41 +443,43 @@ const SchoolPost = ({
               </Modal>
             </div>
           ))}
-        </div>
-      )}
-      {isReply ? (
-        <Space.Compact style={{ width: "100%" }}>
-          <InputReply
-            placeholder="Comment..."
-            size="large"
-            onChange={(e) => setTextComment(e.target.value)}
-          />
-          <ReplyButton
-            type="link"
-            icon={
-              <img
-                src={require("../../assets/icons/send.png")}
-                style={styles.send}
+          {isReply ? (
+            <Space.Compact style={{ width: "100%" }}>
+              <InputReply
+                placeholder="Comment..."
+                size="large"
+                onChange={(e) => setTextComment(e.target.value)}
               />
-            }
-            onClick={handleCreatePostComment}
-          />
-        </Space.Compact>
-      ) : (
-        <AntButton
-          type="link"
-          icon={
-            <img
-              src={require("../../assets/icons/reply.png")}
-              style={styles.reply}
-            />
-          }
-          onClick={() => {
-            setIsReply(true);
-          }}
-        >
-          Reply
-        </AntButton>
+              <ReplyButton
+                type="link"
+                icon={
+                  <img
+                    src={require("../../assets/icons/send.png")}
+                    style={styles.send}
+                  />
+                }
+                onClick={handleCreatePostComment}
+              />
+            </Space.Compact>
+          ) : (
+            <AntButton
+              type="link"
+              icon={
+                <img
+                  src={require("../../assets/icons/reply.png")}
+                  style={styles.reply}
+                />
+              }
+              onClick={() => {
+                setIsReply(true);
+                setIsEdit(false);
+                setIsEditComment(false);
+              }}
+            >
+              Reply
+            </AntButton>
+          )}
+        </div>
       )}
       <Modal
         title="Are you sure about deleting this post?"

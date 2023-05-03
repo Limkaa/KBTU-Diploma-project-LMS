@@ -69,7 +69,6 @@ const SchoolPage = () => {
   const [title, setTitle] = React.useState("");
   const [text, setText] = React.useState("");
   const [posts, setPosts] = React.useState();
-  const [isReply, setIsReply] = React.useState(false);
 
   console.log(user)
 
@@ -350,8 +349,6 @@ const SchoolPage = () => {
                       handleUpdatePost={handleUpdatePost}
                       handleDeletePost={handleDeletePost}
                       user={user}
-                      isReply={isReply}
-                      setIsReply={setIsReply}
                     />
                   ))}
                 </div>

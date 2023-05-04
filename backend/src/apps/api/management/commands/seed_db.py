@@ -135,7 +135,7 @@ class Command(BaseCommand):
             grades = list(filter(lambda x: x.school_id == school.id, self.grades))
             teachers = list(filter(lambda x: x.school_id == school.id and x.role == User.Role.TEACHER, self.users))
             
-            for group_code in random.sample(json_group_codes, 10):
+            for group_code in random.sample(json_group_codes, 3):
                 objects.append(Group.objects.create(
                     school_id = school.id,
                     teacher_id = random.choice(teachers).id,
@@ -151,8 +151,10 @@ class Command(BaseCommand):
         for school in self.schools:
             students = Student.objects.filter(user__school_id = school.id)
             groups = Group.objects.filter(school=school)
+            students_with_groups_num = round(len(students)*0.8)
+            students_with_groups = random.sample(list(students), students_with_groups_num)
             
-            for student in students:
+            for student in students_with_groups:
                 student.group = random.choice(groups)
                 student.save()
         
@@ -209,8 +211,8 @@ class Command(BaseCommand):
             teachers = User.objects.filter(school=school, role=User.Role.TEACHER)
             
             for group in groups:
-                subjects_objects = list(Subject.objects.all().filter(school=school, grade=group.grade))
-                subjects = random.sample(subjects_objects, random.randint(1, len(subjects_objects)//2))
+                subjects_objects = list(Subject.objects.filter(school=school, grade=group.grade))
+                subjects = random.sample(subjects_objects, random.randint(round(len(subjects_objects)*0.2), round(len(subjects_objects)*0.8)))
                 
                 for subject in subjects:
                     teacher = random.choice(teachers)
@@ -565,7 +567,7 @@ class Command(BaseCommand):
         
         for course in Course.objects.all():
             students = Student.objects.filter(group=course.group)
-            students_with_enrollments = random.randint(round(len(students)*0.7), len(students))
+            students_with_enrollments = random.randint(round(len(students)*0.6), len(students))
             students_with_enrollments_sample = random.sample(list(students), students_with_enrollments)
             
             for student in students_with_enrollments_sample:
@@ -578,34 +580,29 @@ class Command(BaseCommand):
         
         self.bulk_create(Enrollment, 'Enrollments', enrollments)
     
-    def _create_trasferred_enrollments(self):
-        enrollments = []
+    def _simulate_students_group_transfers(self):
+        students = Student.objects.exclude(group__isnull=True)
+        students_to_transfer_num = round(len(students) * 0.3)
+        students_to_transfer = random.sample(list(students), students_to_transfer_num)
         
-        for course in Course.objects.all():
-            students_with_enrollments = Enrollment.objects.filter(course=course).values_list('student_id', flat=True)
-            students_without_enrollments = Student.objects.filter(group=course.group).exclude(id__in=students_with_enrollments)
-            
-            students_transferred_num = random.randint(0, len(students_without_enrollments))
-            students_transferred = random.sample(list(students_without_enrollments), students_transferred_num)
-            
-            same_courses = Course.objects.filter(
-                school=course.school,
-                subject=course.subject,
-                year=course.year
-            )
-            
-            if not same_courses:
+        transferred_student_count = 0
+        
+        for student in students_to_transfer:
+            grade = student.group.grade if student.group else None
+            if not grade:
                 continue
             
-            for student in students_transferred:
-                enrollments.append(Enrollment(
-                    student=student,
-                    subject=course.subject,
-                    year=course.year,
-                    course=random.choice(same_courses)
-                ))
+            new_groups = Group.objects.filter(
+                school=student.user.school, 
+                grade=grade
+            )
+            transferred_student_count += 1
+            
+            student.group = random.choice(new_groups)
+            student.save()
         
-        self.bulk_create(Enrollment, 'Transferred enrollments', enrollments)
+        self.stdout.write(self.style.SUCCESS(f"Students transferred ({transferred_student_count} students)"))
+        
     
     def handle(self, *args, **options):
         self.schools = self._create_schools()
@@ -632,7 +629,7 @@ class Command(BaseCommand):
         self._create_communities()
         self._create_memberships()
         self._create_enrollments()
-        self._create_trasferred_enrollments()
+        self._simulate_students_group_transfers()
         
         self._create_superuser()
         

@@ -23,12 +23,15 @@ const Item = styledmui(Paper)(({ theme }) => ({
   flexDirection: "column",
   color: "black",
   boxShadow: "0px 8px 8px rgba(0, 0, 0, 0.06)",
-  marginTop: 20,
+  marginTop: 30,
 }));
 
 const TableStyled = styled(Table)`
   &.ant-table-wrapper .ant-table-thead > tr > th {
-    background-color: rgba(160, 145, 255, 0.37);
+    background-color: rgba(22, 58, 97, 1);
+    color: white;
+    font-size: 15px;
+    font-weight: 600px;
   }
   &.ant-input-affix-wrapper {
     background-color: #fafafa;
@@ -46,7 +49,6 @@ const Award = () => {
   let awardId = location?.state?.awardId;
   const [winners, setWinners] = React.useState([]);
   const [award, setAward] = React.useState([]);
-
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
 
@@ -72,7 +74,6 @@ const Award = () => {
   React.useEffect(() => {
     if (dataAward && !isLoadingAward) {
       setAward(dataAward);
-      console.log(dataAward);
     }
   }, [dataAward, isLoadingAward]);
 
@@ -81,10 +82,13 @@ const Award = () => {
       title: () => {
         return <>Name</>;
       },
-      width: "20%",
+      width: "13%",
       render: (item) => (
-        <div>
-          {item?.student?.user?.first_name} {item?.student?.user?.last_name}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img style={styles.img} />
+          <div style={styles.name}>
+            {item?.student?.user?.first_name} {item?.student?.user?.last_name}
+          </div>
         </div>
       ),
     },
@@ -92,15 +96,34 @@ const Award = () => {
       title: () => {
         return <>Grade</>;
       },
-      width: "25%",
+      width: "10%",
       render: (item) => <div>{item?.student?.group?.grade?.name}</div>,
     },
     {
       title: () => {
-        return <>Hours</>;
+        return <>Comment</>;
       },
-      width: "10%",
-      render: (item) => <div>{item?.hours}</div>,
+      width: "20%",
+      render: (item) => (
+        <div style={item?.comment ? styles.commentStyle : {}}>
+          {item?.comment}
+        </div>
+      ),
+    },
+    {
+      title: () => {
+        return <>Issued by</>;
+      },
+      width: "15%",
+      render: (item) =>
+        item?.issued_by && (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img style={styles.img} />
+            <div>
+              {item?.issued_by?.first_name} {item?.issued_by?.last_name}
+            </div>
+          </div>
+        ),
     },
     // {
     //   title: () => {
@@ -129,12 +152,18 @@ const Award = () => {
       <Spin spinning={isLoading} size="large">
         <Item>
           <img
-            src={require("../../assets/icons/reward.png")}
+            src={require("../../assets/icons/success.png")}
             style={styles.imgReward}
           />
           <div style={styles.title}>{award?.name}</div>
           <div style={styles.des}>{award?.description}</div>
-          <div style={styles.point}>Points: +{award?.points}</div>
+          <div style={styles.coinCont}>
+            <img
+              src={require("../../assets/icons/coin2.png")}
+              style={styles.coin}
+            />
+            <div style={styles.pointCnt}>+{award?.points}</div>
+          </div>
           <TableStyled
             dataSource={winners}
             columns={columns}
@@ -199,6 +228,39 @@ const styles = {
     fontWeight: 600,
     color: "black",
     alignSelf: "center",
+  },
+  coin: {
+    width: 55,
+    heigth: 55,
+  },
+  pointCnt: {
+    fontSize: 19,
+    fontWeight: 600,
+    color: "white",
+    position: "absolute",
+    zIndex: 100,
+  },
+  coinCont: {
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  commentStyle: {
+    padding: 10,
+    border: "none",
+    borderRadius: 6,
+    backgroundColor: "rgba(248, 249, 250, 0.5)",
+    boxShadow: "inset 0px 4px 4px rgba(0, 0, 0, 0.03)",
+  },
+  img: {
+    width: 35,
+    height: 35,
+    borderRadius: 120,
+    border: "none",
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    marginRight: 10,
   },
 };
 

@@ -5,6 +5,8 @@ import Header from "../shared/Header/Header";
 import styled from "styled-components";
 import Profile from "../Dashboard/Profile";
 import { Box, Paper, Grid } from "@mui/material";
+import Plus from "../../assets/icons/plus.svg";
+
 // import Paper from "@mui/material/Paper";
 // import Grid from "@mui/material/Grid";
 import Search from "../../assets/icons/search.svg";
@@ -43,12 +45,15 @@ const InputStyled = styled(Input)`
 const AwardsContainer = () => {
   const [schoolAwards, setSchoolAwards] = React.useState();
   const [search, setSearch] = React.useState("");
+  const [showAddAward, setShowAddAward] = React.useState("");
+
   const navigate = useNavigate();
 
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
 
   const { data, isLoading } = useGetSchoolAwardsQuery({
     school_id: user?.school_id,
+    search,
   });
 
   React.useEffect(() => {
@@ -64,13 +69,27 @@ const AwardsContainer = () => {
         <Profile />
       </div>
       <Box sx={{ flexGrow: 1, marginTop: 3 }}>
-        <div style={{ marginBottom: 25 }}>
+        <div
+          style={{
+            marginBottom: 25,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <InputStyled
             size="default size"
-            placeholder="Search..."
+            placeholder="Search by award name..."
             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
+          <Button
+            type="primary"
+            style={styles.btnAdd}
+            icon={<img src={Plus} style={{ paddingRight: 5 }} />}
+            onClick={() => setShowAddAward(true)}
+          >
+            Create award
+          </Button>
         </div>
         <Spin spinning={isLoading} size="large">
           <Grid
@@ -200,6 +219,15 @@ const styles = {
     fontSize: 15,
     fontWeight: 600,
     color: "white",
+  },
+  btnAdd: {
+    backgroundColor: "#163A61",
+    height: 40,
+    borderRadius: 8,
+    alignItems: "center",
+    display: "flex",
+    fontWeight: 500,
+    marginLeft: 16,
   },
 };
 export default AwardsContainer;

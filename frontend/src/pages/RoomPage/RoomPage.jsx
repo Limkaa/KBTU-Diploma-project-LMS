@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Header from "../../components/shared/Header/Header";
 import Profile from "../../components/Dashboard/Profile";
 import './RoomPage.css';
-import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import {EditOutlined, DeleteOutlined, ScheduleOutlined} from "@ant-design/icons";
 import {Button, Card, Checkbox, Divider, Input, Modal, Pagination, Radio, Spin, Tag} from "antd";
 import {
     useAddRoomMutation,
@@ -15,9 +15,11 @@ import {selectCurrentUser} from "../../redux/auth/authSlice";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import {toastify} from "../../components/shared/Toast/Toast";
+import {useNavigate} from "react-router-dom";
 
 const RoomPage = () => {
     const user = useSelector(selectCurrentUser);
+    const navigate = useNavigate();
     const [page, setPage] = useState(1);
     const [order, setOrder] = useState("name");
     const [search, setSearch] = useState("");
@@ -137,6 +139,12 @@ const RoomPage = () => {
                                               setSelectedRoom(room);
                                               setShowModal(true);
                                           }}
+                                      />,
+                                      <ScheduleOutlined
+                                           key="schedule"
+                                           onClick={() => {
+                                               navigate(`${room.id}/timetable`);
+                                           }}
                                       />,
                                       <DeleteOutlined
                                           className="delete"

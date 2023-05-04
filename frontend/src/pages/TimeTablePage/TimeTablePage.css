@@ -6,34 +6,38 @@
     display: none;
 }
 
-.rbc-btn-group > button {
+.rbc-btn-group:first-child {
+    display: none;
+}
+
+.rbc-toolbar button.rbc-active {
+
+}
+
+button.rbc-active:hover, .rbc-toolbar button.rbc-active:focus {
+    background-color: white;
     border: 1px solid #d9d9d9;
-    background-color: #fafafa;
-    color: rgba(0, 0, 0, 0.65);
-    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.rbc-toolbar button.rbc-active, .rbc-toolbar button.rbc-active:focus {
+    background-color: #163A61;
+    color: white;
+}
+
+.rbc-toolbar button {
     background-color: white;
 }
 
-.rbc-btn-group > button:hover {
-    border-color: #163A61;
-    color: #163A61;
-    background-color: white;
+.rbc-toolbar button.rbc-active:hover {
+    background-color: #163A61;
+    color: white;
 }
 
-.rbc-btn-group > button:focus {
-    border-color: #163A61;
-    color: #163A61;
-    outline: 0;
-    /*box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);*/
+.rbc-toolbar button:hover, .rbc-toolbar button:active {
     background-color: white;
+    cursor: pointer;
 }
 
-.rbc-btn-group > button:active {
-    border-color: #163A61;
-    color: #163A61;
-    background-color: #e6f7ff;
-    background-color: white;
-}
 
 .rbc-time-slot {
     align-items: center;
@@ -42,7 +46,7 @@
 }
 
 .rbc-timeslot-group {
-    min-height: 50px;
+    min-height: 70px;
 }
 
 .rbc-event-content {
@@ -51,6 +55,10 @@
 
 .rbc-event:hover {
     background-color: lightgray;
+}
+
+.rbc-day-slot .rbc-events-container {
+    margin-right: 0;
 }
 
 #timetable section {
@@ -131,4 +139,17 @@
 
 #timetable .radio:first-child {
     min-width: 20%;
+}
+
+#timetable section.schedule {
+    flex-direction: column;
+}
+
+#timetable .calendar {
+    width: 100%;
+}
+
+#timetable .schedule .filters {
+    display: flex;
+    flex-direction: row;
 }

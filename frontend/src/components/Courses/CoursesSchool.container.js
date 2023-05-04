@@ -237,6 +237,22 @@ const CoursesSchoolContainer = () => {
         </Space>
       ),
     },
+    {
+      title: "Action",
+      key: "action",
+      width: "15%",
+      render: (_, record) => (
+          <Space size="middle">
+            <Link
+                className="action"
+                style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
+                to={`${record.id}/timetable`}
+            >
+              Schedule
+            </Link>
+          </Space>
+      ),
+    },
   ];
 
   return (

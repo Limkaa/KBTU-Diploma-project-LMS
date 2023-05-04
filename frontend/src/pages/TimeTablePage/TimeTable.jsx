@@ -41,7 +41,7 @@ const TimeTable = () => {
     const [roomsOptions, setRoomsOptions] = useState([]);
     const [tbOptions, setTBOptions] = useState([]);
     const [course, setCourse] = useState({});
-    const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedRow, setSelectedRow] = useState([]);
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const {data: roomsData, isSuccess: isRoomsSuccess} = useGetAllRoomsQuery(user.school_id);
     const {data: tbData, isSuccess: isTBSuccess} = useGetAllTimeBoundsQuery(user.school_id);
@@ -82,19 +82,6 @@ const TimeTable = () => {
             setTBOptions(arr);
         }
     }, [tbData, isTBSuccess])
-
-    const saveTimeSlot = async () => {
-        updateTimeSlot({slotId: selectedEvent.id, course})
-            .unwrap()
-            .then(() => {
-                refetch();
-                toastify("success", "Time slot course updated");
-            })
-            .catch((err) => {
-                console.log(err);
-                toastify("error", "Time slot update failed");
-            })
-    }
 
     const columns = [
         {
@@ -157,11 +144,28 @@ const TimeTable = () => {
     ];
 
     const rowSelection = {
-        selectedRows,
+        type: "radio",
+        selectedRow,
         onChange: (keys, selectedRows) => {
-            setSelectedRows(selectedRows);
+            setSelectedRow(selectedRows[0]);
         },
+        getCheckboxProps: (record) => ({
+            disabled: record.course !== null,
+        }),
     };
+
+    const handleCourseChange = async () => {
+        updateTimeSlot({slotId: selectedRow.id, course})
+            .unwrap()
+            .then(() => {
+                refetch();
+                toastify("success", "Time slot course updated");
+            })
+            .catch((err) => {
+                toastify("error", "This course already has lesson at that time and weekday");
+            })
+        setSelectedRow(null);
+    }
 
     return (
         <section>
@@ -221,14 +225,14 @@ const TimeTable = () => {
                         </Select>
                     </FormControl>
                     <Button type={"primary"} className="btn"
-                            // onClick={handleGroupChange}
+                            onClick={handleCourseChange}
                     >Update group</Button>
                 </div>
                 <div className="group add filters">
                     <div className="select">
                         <Radio.Group name="order"
                                      size={"small"}
-                                     style={{width: '100%'}}
+                                     style={{width: '100%', marginBottom: 7}}
                                      value={noCourse}
                                      onChange={(e) => setNoCourse(e.target.value)}
                         >

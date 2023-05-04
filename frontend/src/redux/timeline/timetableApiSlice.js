@@ -3,7 +3,7 @@ import { authApi } from "../api/apiService";
 export const timetablesApiSlice = authApi.injectEndpoints({
     endpoints: (builder) => ({
         getTimeTable: builder.query({
-            query: ({type, schoolId, courseId, roomId, groupId}) =>{
+            query: ({type, schoolId, courseId, roomId, groupId, teacherId, studentGroupId}) =>{
                 if (type === "school") {
                     return 'api/schools/' + schoolId + '/timetable'
                 }
@@ -17,7 +17,13 @@ export const timetablesApiSlice = authApi.injectEndpoints({
                         // '&no_course=' + noCourse
                 }
                 else if (type === "group") {
-                    return '/groups/' + groupId + '/timetable'
+                    return 'api/groups/' + groupId + '/timetable'
+                }
+                else if (type === "student") {
+                    return 'api/groups/' + studentGroupId + '/timetable'
+                }
+                else if (type === "teacher") {
+                    return 'api/teachers/' + teacherId + '/timetable'
                 }
             }
 

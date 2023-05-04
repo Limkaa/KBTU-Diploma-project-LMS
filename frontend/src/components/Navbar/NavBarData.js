@@ -145,6 +145,11 @@ export const studentMenu = [
     path: `/school`,
     icon: SubjectsSvg,
   },
+  // {
+  //   title: "Timetable",
+  //   path: `/schedule`,
+  //   icon: ScheduleSvg,
+  // },
 ];
 
 export const teacherMenu = [
@@ -197,5 +202,10 @@ export const teacherMenu = [
     title: "Groups",
     path: `/my-groups`,
     icon: GroupSvg,
+  },
+  {
+    title: "Timetable",
+    path: `/timetable`,
+    icon: ScheduleSvg,
   },
 ];

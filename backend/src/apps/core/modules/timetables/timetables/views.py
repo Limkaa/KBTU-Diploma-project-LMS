@@ -15,22 +15,26 @@ from .serializers import *
 from ..filters import TimetableFilterset
 
 
+RELATED_FIELDS = [
+    'school',
+    'room',
+    'room__school',
+    'timebound',
+    'timebound__school',
+    'course',
+    'course__year',
+    'course__school',
+    'course__teacher',
+    'course__group',
+    'course__group__teacher',
+    'course__group__grade',
+    'course__subject',
+    'course__subject__grade',
+]
+
 class TimetableSlotRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
     serializer_class = TimetableUpdateSerializer
-    queryset = Timetable.objects.select_related(
-        'school',
-        'room',
-        'room__school',
-        'timebound',
-        'timebound__school',
-        'course',
-        'course__school',
-        'course__teacher',
-        'course__group',
-        'course__group__teacher',
-        'course__group__grade',
-        'course__subject',
-    )
+    queryset = Timetable.objects.select_related(*RELATED_FIELDS)
     permission_classes = [OnlyOwnSchool, IsManager]
 
 
@@ -46,18 +50,7 @@ class SchoolTimetableListAPI(OptionalPaginationListAPIView):
         self.check_object_permissions(request, self.school)
     
     def get_queryset(self):
-        return Timetable.objects.filter(school=self.school).select_related(
-            'room',
-            'timebound',
-            'course',
-            'course__teacher',
-            'course__group',
-            'course__group__grade',
-            'course__group__teacher',
-            'course__year',
-            'course__subject',
-            'course__subject__grade'
-        )
+        return Timetable.objects.filter(school=self.school).select_related(*RELATED_FIELDS)
 
 
 class CourseTimetableListAPI(OptionalPaginationListAPIView):
@@ -68,12 +61,8 @@ class CourseTimetableListAPI(OptionalPaginationListAPIView):
             permissions=[IsManager, IsGroupTeacher, IsCourseStudent, IsCourseTeacher],
             message="This view can be accessed only by: school manager, group teacher, course teacher or student"
         )
-    ]
-    
-    class OutputSerializer(TimetableNestedSerializer):
-        course = None
-    
-    serializer_class = OutputSerializer
+    ]    
+    serializer_class = TimetableNestedSerializer
     filterset_fields = ['weekday']
     
     def initial(self, request, *args, **kwargs):
@@ -82,16 +71,12 @@ class CourseTimetableListAPI(OptionalPaginationListAPIView):
         self.check_object_permissions(request, self.course)
     
     def get_queryset(self):
-        return Timetable.objects.filter(course=self.course).select_related('timebound', 'room')
+        return Timetable.objects.filter(course=self.course).select_related(*RELATED_FIELDS)
 
 
 class RoomTimetableListAPI(OptionalPaginationListAPIView):
-    permission_classes = [OnlyOwnSchool, IsManager]
-    
-    class OutputSerializer(TimetableNestedSerializer):
-        room = None
-    
-    serializer_class = OutputSerializer
+    permission_classes = [OnlyOwnSchool, IsManager]    
+    serializer_class = TimetableNestedSerializer
     
     class Filters(TimetableFilterset):
         class Meta(TimetableFilterset.Meta):
@@ -106,17 +91,7 @@ class RoomTimetableListAPI(OptionalPaginationListAPIView):
         self.check_object_permissions(request, self.room)
     
     def get_queryset(self):
-        return Timetable.objects.filter(room=self.room).select_related(
-            'timebound',
-            'course',
-            'course__teacher',
-            'course__group',
-            'course__group__grade',
-            'course__group__teacher',
-            'course__year',
-            'course__subject',
-            'course__subject__grade'
-        )
+        return Timetable.objects.filter(room=self.room).select_related(*RELATED_FIELDS)
 
 
 class GroupTimetableListAPI(OptionalPaginationListAPIView):
@@ -129,7 +104,7 @@ class GroupTimetableListAPI(OptionalPaginationListAPIView):
         )
     ]
     
-    serializer_class = GroupTimetableSerializer  
+    serializer_class = TimetableNestedSerializer  
       
     class Filters(TimetableFilterset):
         no_course = None
@@ -143,14 +118,7 @@ class GroupTimetableListAPI(OptionalPaginationListAPIView):
         self.check_object_permissions(request, self.group)
     
     def get_queryset(self):
-        return Timetable.objects.filter(course__group=self.group).select_related(
-            'room',
-            'timebound',
-            'course',
-            'course__teacher',
-            'course__year',
-            'course__subject',
-        )
+        return Timetable.objects.filter(course__group=self.group).select_related(*RELATED_FIELDS)
 
 
 class TeacherTimetableListAPI(OptionalPaginationListAPIView):
@@ -170,7 +138,7 @@ class TeacherTimetableListAPI(OptionalPaginationListAPIView):
         )
     ]
     
-    serializer_class = TeacherTimetableSerializer  
+    serializer_class = TimetableNestedSerializer  
       
     class Filters(TimetableFilterset):
         no_course = None
@@ -184,27 +152,12 @@ class TeacherTimetableListAPI(OptionalPaginationListAPIView):
         self.check_object_permissions(request, self.teacher)
     
     def get_queryset(self):
-        return Timetable.objects.filter(course__teacher=self.teacher).select_related(
-            'room',
-            'timebound',
-            'course',
-            'course__group',
-            'course__group__grade',
-            'course__group__teacher',
-            'course__year',
-            'course__subject',
-            'course__subject__grade'
-        )
-
+        return Timetable.objects.filter(course__teacher=self.teacher).select_related(*RELATED_FIELDS)
 
 
 class TimeboundTimetableListAPI(OptionalPaginationListAPIView):
-    permission_classes = [OnlyOwnSchool, IsManager]  
-    
-    class OutputSerializer(TimetableNestedSerializer):
-        timebound = None
-      
-    serializer_class = OutputSerializer  
+    permission_classes = [OnlyOwnSchool, IsManager]    
+    serializer_class = TimetableNestedSerializer  
       
     class Filters(TimetableFilterset):
         class Meta(TimetableFilterset.Meta):
@@ -219,14 +172,4 @@ class TimeboundTimetableListAPI(OptionalPaginationListAPIView):
         self.check_object_permissions(request, self.timebound)
     
     def get_queryset(self):
-        return Timetable.objects.filter(timebound=self.timebound).select_related(
-            'room',
-            'course',
-            'course__teacher',
-            'course__group',
-            'course__group__grade',
-            'course__group__teacher',
-            'course__year',
-            'course__subject',
-            'course__subject__grade'
-        )
+        return Timetable.objects.filter(timebound=self.timebound).select_related(*RELATED_FIELDS)

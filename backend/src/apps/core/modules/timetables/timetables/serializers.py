@@ -34,27 +34,9 @@ class SchoolTimetableSerializer(serializers.Serializer):
     free_rooms_num = serializers.IntegerField()
 
 
-class GroupTimetableSerializer(TimetableNestedSerializer):
-    class CourseSerializer(CourseModelNestedSerializer):
-        subject = SubjectModelSerializer()
-        group = None
-        
-    course = CourseSerializer()
-
-
-class TeacherTimetableSerializer(TimetableNestedSerializer):
-    class CourseSerializer(CourseModelNestedSerializer):
-        teacher = None
-    
-    course = CourseSerializer()
-
-
-
 __all__ = [
     "TimetableModelSerializer",
     "TimetableNestedSerializer",
     "TimetableUpdateSerializer",
     "SchoolTimetableSerializer",
-    "GroupTimetableSerializer",
-    "TeacherTimetableSerializer"
 ]

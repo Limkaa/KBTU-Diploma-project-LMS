@@ -13,6 +13,9 @@ import Search from "../../assets/icons/search.svg";
 import { styled as styledmui } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
 import { Input, Empty, Spin, Button } from "antd";
+import AwardAdd from "./AwardAdd";
+import { useCreateAwardMutation } from "../../redux/awards/awardsApiSlice";
+import { toastify } from "../shared/Toast/Toast";
 
 const Item = styledmui(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -51,7 +54,9 @@ const AwardsContainer = () => {
 
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
 
-  const { data, isLoading } = useGetSchoolAwardsQuery({
+  const [createAward] = useCreateAwardMutation();
+
+  const { data, isLoading, refetch } = useGetSchoolAwardsQuery({
     school_id: user?.school_id,
     search,
   });
@@ -61,6 +66,28 @@ const AwardsContainer = () => {
       setSchoolAwards(data);
     }
   }, [data, isLoading]);
+
+  const handleAdd = async (values, isActive) => {
+    console.log(values, isActive);
+    try {
+      await createAward({
+        school_id: user?.school_id,
+        name: values?.name,
+        description: values?.description,
+        points: values?.points,
+        is_active: isActive,
+      })
+        .unwrap()
+        .then((payload) => {
+          refetch();
+          toastify("success", "Award Created");
+        });
+    } catch (err) {
+      console.log(err);
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -82,14 +109,16 @@ const AwardsContainer = () => {
             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
-          <Button
-            type="primary"
-            style={styles.btnAdd}
-            icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-            onClick={() => setShowAddAward(true)}
-          >
-            Create award
-          </Button>
+          {user?.role === "manager" && (
+            <Button
+              type="primary"
+              style={styles.btnAdd}
+              icon={<img src={Plus} style={{ paddingRight: 5 }} />}
+              onClick={() => setShowAddAward(true)}
+            >
+              Create award
+            </Button>
+          )}
         </div>
         <Spin spinning={isLoading} size="large">
           <Grid
@@ -104,23 +133,30 @@ const AwardsContainer = () => {
                     <div style={styles.title}>{item?.name}</div>
                     <div style={styles.des}>{item?.description}</div>
                     <div style={styles.recentCont}>
-                      <div style={styles.recentTitle}>Recent winnners</div>
-                      {item?.recent_winners?.map((winner) => (
-                        <div style={styles.recent}>
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            <img style={styles.img} />
-                            <div style={styles.name}>
-                              {winner.student?.user?.first_name}{" "}
-                              {winner.student?.user?.last_name}
+                      {item?.recent_winners?.length > 0 && (
+                        <>
+                          <div style={styles.recentTitle}>Recent winnners</div>
+                          {item?.recent_winners?.map((winner) => (
+                            <div style={styles.recent} key={winner.id}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <img style={styles.img} />
+                                <div style={styles.name}>
+                                  {winner.student?.user?.first_name}{" "}
+                                  {winner.student?.user?.last_name}
+                                </div>
+                              </div>
+                              <div style={styles.rating}>
+                                {winner?.student?.user?.rating}
+                              </div>
                             </div>
-                          </div>
-                          <div style={styles.rating}>
-                            {winner?.student?.user?.rating}
-                          </div>
-                        </div>
-                      ))}
+                          ))}
+                        </>
+                      )}
                       <Button
                         style={styles.btn}
                         onClick={() =>
@@ -129,7 +165,11 @@ const AwardsContainer = () => {
                           })
                         }
                       >
-                        More
+                        <div>More</div>
+                        <img
+                          src={require("../../assets/icons/right.png")}
+                          style={{ height: 12, width: 12, paddingRight: 5 }}
+                        />
                       </Button>
                     </div>
                   </Item>
@@ -143,6 +183,11 @@ const AwardsContainer = () => {
           </Grid>
         </Spin>
       </Box>
+      <AwardAdd
+        show={showAddAward}
+        setShow={setShowAddAward}
+        handle={handleAdd}
+      />
     </div>
   );
 };
@@ -207,18 +252,24 @@ const styles = {
     border: "1px solid rgba(0, 0, 0, 0.05)",
     justifyContent: "space-between",
   },
+  // btn: {
+  //   display: "flex",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   padding: "18px 8px",
+  //   borderRadius: 8,
+  //   margin: "10px 0px",
+  //   backgroundColor: "rgba(22, 58, 97, 1)",
+  //   width: "100%",
+  //   fontSize: 15,
+  //   fontWeight: 600,
+  //   color: "white",
+  // },
   btn: {
+    border: "none",
+    boxShadow: "none",
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "18px 8px",
-    borderRadius: 8,
-    margin: "10px 0px",
     backgroundColor: "rgba(22, 58, 97, 1)",
-    width: "100%",
-    fontSize: 15,
-    fontWeight: 600,
-    color: "white",
   },
   btnAdd: {
     backgroundColor: "#163A61",

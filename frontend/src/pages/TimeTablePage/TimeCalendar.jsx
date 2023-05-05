@@ -57,6 +57,7 @@ const TimeCalendar = (props) => {
 
     useEffect(() => {
         if (isSuccess) {
+            console.log(timetableData);
             const arr = timetableData?.map(event => ({
                 id: event.id,
                 title: event.course ? `${event.course?.subject?.name} ${event.course?.subject?.grade?.name}` : 'No course',

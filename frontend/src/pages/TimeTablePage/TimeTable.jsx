@@ -87,15 +87,17 @@ const TimeTable = () => {
         {
             title: 'Time',
             key: 'time',
+            width: "10%",
             render: (slot) => (
                 <div>
-                    {slot.timebound.from_time.slice(0, -3)} - {slot.timebound.to_time.slice(0, -3)}
+                    {slot.timebound.from_time.slice(0, -3)} {slot.timebound.to_time.slice(0, -3)}
                 </div>
             ),
         },
         {
             title: "Weekday",
             key: "weekday",
+            width: "17%",
             render: (slot) => (
                 <div>
                     {weekdays[slot.weekday]}
@@ -105,6 +107,7 @@ const TimeTable = () => {
         {
             title: "Room",
             key: "room",
+            width: "9%",
             render: (slot) => (
                 <div>
                     {slot.room.name}
@@ -114,16 +117,18 @@ const TimeTable = () => {
         {
             title: "Subject",
             key: "subject",
+            width: "21%",
             render: (slot) => (
                 <div>
                     {slot.course?.subject?.name ?
-                        `${slot.course.subject.name}(${slot.course.subject.code})` : <MinusOutlined />}
+                        `${slot.course.subject.name} (${slot.course.subject.code})` : <MinusOutlined />}
                 </div>
             )
         },
         {
             title: "Grade",
             key: "grade",
+            width: "13%",
             render: (slot) => (
                 <div>
                     {slot.course?.subject?.grade?.name??<MinusOutlined />}
@@ -133,10 +138,11 @@ const TimeTable = () => {
         {
             title: "Teacher",
             key: "teacher",
+            width: "30%",
             render: (slot) => (
                 <div>
-                    {slot.teacher ?
-                        `${slot.teacher.first_name} ${slot.teacher.last_name}`
+                    {slot.course !== null && slot.course.teacher !== null ?
+                        `${slot.course.teacher?.first_name} ${slot.course.teacher?.last_name}`
                         : <MinusOutlined />}
                 </div>
             )

@@ -149,9 +149,6 @@ const TimeTable = () => {
         onChange: (keys, selectedRows) => {
             setSelectedRow(selectedRows[0]);
         },
-        getCheckboxProps: (record) => ({
-            disabled: record.course !== null,
-        }),
     };
 
     const handleCourseChange = async () => {
@@ -164,7 +161,6 @@ const TimeTable = () => {
             .catch((err) => {
                 toastify("error", "This course already has lesson at that time and weekday");
             })
-        setSelectedRow(null);
     }
 
     return (

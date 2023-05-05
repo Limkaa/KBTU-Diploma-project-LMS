@@ -26,7 +26,7 @@ const TimeCalendar = (props) => {
             teacherId: user.user_id,
             studentGroupId: student?.group?.id,
         });
-    const [isGroup, setIsGroup] = useState(false);
+    const [isGroup, setIsGroup] = useState(true);
 
     useEffect(() => {
         console.log(studentData);
@@ -44,7 +44,8 @@ const TimeCalendar = (props) => {
     }, [studentData, isSuccess])
 
     useEffect(() => {
-        if (error) {
+        if (error && props.type === "student") {
+            console.log(error);
             setIsGroup(false);
         }
         else {

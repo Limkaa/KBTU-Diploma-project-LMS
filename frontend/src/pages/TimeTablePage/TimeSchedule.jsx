@@ -156,7 +156,6 @@ const TimeSchedule = (props) => {
 
     return (
         <section className="schedule">
-            {user.role === "manager" &&
                 <div className="filters">
                     <Radio.Group
                         size={"small"}
@@ -231,7 +230,6 @@ const TimeSchedule = (props) => {
                         }
                     </div>
                 </div>
-            }
             <div className="calendar">
                 <Spin spinning={isLoading}>
                     <Calendar

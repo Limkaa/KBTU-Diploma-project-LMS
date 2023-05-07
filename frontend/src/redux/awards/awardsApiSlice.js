@@ -12,7 +12,14 @@ export const awardsApiSlice = authApi.injectEndpoints({
         body: data,
       }),
     }),
+    updateAward: builder.mutation({
+      query: ({ award_id, ...data }) => ({
+        url: `/api/awards/${award_id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetAwardQuery, useCreateAwardMutation } = awardsApiSlice;
+export const { useGetAwardQuery, useCreateAwardMutation, useUpdateAwardMutation } = awardsApiSlice;

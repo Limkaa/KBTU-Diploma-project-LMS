@@ -15,13 +15,12 @@ import { styled as styledmui } from "@mui/material/styles";
 const Item = styledmui(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
   fontFamily: "Open Sans",
-  fontSize: 18,
   fontWeight: 500,
+  color: "#4A4D58",
   padding: theme.spacing(2),
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
-  color: "black",
   boxShadow: "0px 8px 8px rgba(0, 0, 0, 0.06)",
   marginTop: 30,
 }));
@@ -97,7 +96,9 @@ const Award = () => {
         return <>Grade</>;
       },
       width: "10%",
-      render: (item) => <div>{item?.student?.group?.grade?.name}</div>,
+      render: (item) => (
+        <div style={styles.name}>{item?.student?.group?.grade?.name}</div>
+      ),
     },
     {
       title: () => {
@@ -119,7 +120,7 @@ const Award = () => {
         item?.issued_by && (
           <div style={{ display: "flex", alignItems: "center" }}>
             <img style={styles.img} />
-            <div>
+            <div style={styles.name}>
               {item?.issued_by?.first_name} {item?.issued_by?.last_name}
             </div>
           </div>
@@ -203,8 +204,8 @@ const styles = {
     alignSelf: "center",
   },
   name: {
-    fontSize: 14,
-    fontWeight: 600,
+    fontSize: 13,
+    fontWeight: 500,
     color: "#4A4D58",
   },
   title: {
@@ -253,6 +254,9 @@ const styles = {
     borderRadius: 6,
     backgroundColor: "rgba(248, 249, 250, 0.5)",
     boxShadow: "inset 0px 4px 4px rgba(0, 0, 0, 0.03)",
+    fontSize: 13,
+    fontWeight: 500,
+    color: "#4A4D58",
   },
   img: {
     width: 35,

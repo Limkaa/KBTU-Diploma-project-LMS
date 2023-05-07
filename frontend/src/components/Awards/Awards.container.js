@@ -14,8 +14,12 @@ import { styled as styledmui } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
 import { Input, Empty, Spin, Button } from "antd";
 import AwardAdd from "./AwardAdd";
-import { useCreateAwardMutation } from "../../redux/awards/awardsApiSlice";
+import {
+  useCreateAwardMutation,
+  useUpdateAwardMutation,
+} from "../../redux/awards/awardsApiSlice";
 import { toastify } from "../shared/Toast/Toast";
+import AwardUpdate from "./AwardUpdate";
 
 const Item = styledmui(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -48,13 +52,16 @@ const InputStyled = styled(Input)`
 const AwardsContainer = () => {
   const [schoolAwards, setSchoolAwards] = React.useState();
   const [search, setSearch] = React.useState("");
-  const [showAddAward, setShowAddAward] = React.useState("");
+  const [showAddAward, setShowAddAward] = React.useState(false);
+  const [showUpdateAward, setShowUpdateAward] = React.useState(false);
+  const [selectedAward, setSelectedAward] = React.useState();
 
   const navigate = useNavigate();
 
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
 
   const [createAward] = useCreateAwardMutation();
+  const [updateAward] = useUpdateAwardMutation();
 
   const { data, isLoading, refetch } = useGetSchoolAwardsQuery({
     school_id: user?.school_id,
@@ -81,6 +88,28 @@ const AwardsContainer = () => {
         .then((payload) => {
           refetch();
           toastify("success", "Award Created");
+        });
+    } catch (err) {
+      console.log(err);
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
+    }
+  };
+
+  const handleUpdate = async (values, isActive) => {
+    console.log(values, isActive);
+    try {
+      await updateAward({
+        award_id: selectedAward?.id,
+        name: values?.name,
+        description: values?.description,
+        points: values?.points,
+        is_active: values?.is_active,
+      })
+        .unwrap()
+        .then((payload) => {
+          refetch();
+          toastify("success", "Award Updated");
         });
     } catch (err) {
       console.log(err);
@@ -157,20 +186,39 @@ const AwardsContainer = () => {
                           ))}
                         </>
                       )}
-                      <Button
-                        style={styles.btn}
-                        onClick={() =>
-                          navigate(`/awards/${item?.id}/winners`, {
-                            state: { awardId: item?.id },
-                          })
-                        }
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          // flexDirection: "column",
+                        }}
                       >
-                        <div>More</div>
-                        <img
-                          src={require("../../assets/icons/right.png")}
-                          style={{ height: 12, width: 12, paddingRight: 5 }}
-                        />
-                      </Button>
+                        <Button
+                          style={styles.btn}
+                          onClick={() =>
+                            navigate(`/awards/${item?.id}/winners`, {
+                              state: { awardId: item?.id },
+                            })
+                          }
+                        >
+                          {/* <div style={styles.moreText}>More</div> */}
+                          More
+                          {/* <img
+                            src={require("../../assets/icons/arrowcirlce.png")}
+                            style={{ height: 30, width: 30 }}
+                          /> */}
+                        </Button>
+                        <Button
+                          style={styles.btn2}
+                          onClick={() => {
+                            setShowUpdateAward(true);
+                            setSelectedAward(item);
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </div>
                     </div>
                   </Item>
                 </Grid>
@@ -187,6 +235,13 @@ const AwardsContainer = () => {
         show={showAddAward}
         setShow={setShowAddAward}
         handle={handleAdd}
+      />
+      <AwardUpdate
+        selected={selectedAward}
+        setSelected={setSelectedAward}
+        show={showUpdateAward}
+        setShow={setShowUpdateAward}
+        handle={handleUpdate}
       />
     </div>
   );
@@ -207,12 +262,12 @@ const styles = {
     display: "flex",
   },
   title: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 700,
     color: "#4A4D58",
   },
   des: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 500,
     color: "#9699A5",
     marginTop: 4,
@@ -221,24 +276,24 @@ const styles = {
     marginTop: 10,
   },
   recentTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 600,
     color: "rgba(74, 77, 88, 1)",
   },
   name: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 600,
     color: "#4A4D58",
     marginLeft: 7,
   },
   rating: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 600,
     color: "#4A4D58",
   },
   img: {
-    width: 35,
-    height: 35,
+    width: 32,
+    height: 32,
     borderRadius: 120,
     border: "none",
     backgroundColor: "rgba(0, 0, 0, 0.1)",
@@ -252,25 +307,40 @@ const styles = {
     border: "1px solid rgba(0, 0, 0, 0.05)",
     justifyContent: "space-between",
   },
-  // btn: {
-  //   display: "flex",
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   padding: "18px 8px",
-  //   borderRadius: 8,
-  //   margin: "10px 0px",
-  //   backgroundColor: "rgba(22, 58, 97, 1)",
-  //   width: "100%",
-  //   fontSize: 15,
-  //   fontWeight: 600,
-  //   color: "white",
-  // },
-  btn: {
-    border: "none",
-    boxShadow: "none",
+  btn2: {
     display: "flex",
-    backgroundColor: "rgba(22, 58, 97, 1)",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "18px 8px",
+    borderRadius: 8,
+    margin: "0px 5px 0px 5px",
+    backgroundColor: "white",
+    width: "50%",
+    fontSize: 14,
+    fontWeight: 500,
+    color: "#4A4D58",
   },
+  btn: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "18px 8px",
+    borderRadius: 8,
+    margin: "0px 5px 0px 5px",
+    backgroundColor: "rgba(22, 58, 97, 1)",
+    width: "50%",
+    fontSize: 14,
+    fontWeight: 500,
+    color: "white",
+  },
+  // btn: {
+  //   border: "none",
+  //   boxShadow: "none",
+  //   // display: "flex",
+  //   // backgroundColor: "rgba(22, 58, 97, 1)",
+  //   // alignItems: "center",
+  //   // justifyContent: "center",
+  // },
   btnAdd: {
     backgroundColor: "#163A61",
     height: 40,
@@ -279,6 +349,11 @@ const styles = {
     display: "flex",
     fontWeight: 500,
     marginLeft: 16,
+  },
+  moreText: {
+    fontSize: 14,
+    fontWeight: 600,
+    color: "white",
   },
 };
 export default AwardsContainer;

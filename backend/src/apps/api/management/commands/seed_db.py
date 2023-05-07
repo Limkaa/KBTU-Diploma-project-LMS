@@ -387,21 +387,20 @@ class Command(BaseCommand):
         marks = []
         
         for course in courses:
-            students = Student.objects.filter(group=course.group)
+            enrollments = Enrollment.objects.filter(course=course)
             assignments = Assignment.objects.filter(course=course)
             
             for assignment in assignments:
-                for student in students:
+                for enrollment in enrollments:
                     if random.choice([True, False]):
                         marks.append(Mark(
                             assignment=assignment,
-                            student=student,
+                            enrollment=enrollment,
                             number=random.randint(1, 5),
                             comment=self._get_lorem(random.randint(0, 1))
                         ))
         
-        Mark.objects.bulk_create(marks)
-        self.stdout.write(self.style.SUCCESS(f'Assignments marks created ({len(marks)} objects)'))
+        self.bulk_create(Mark, 'Marks', marks)
     
     def _create_timetables(self):
         schools = School.objects.all()
@@ -622,13 +621,13 @@ class Command(BaseCommand):
         self._create_rooms()
         self._create_timebounds()
         self._create_timetables()
-        self._create_assignment_marks()
         self._create_awards()
         self._create_winners()
         self._create_todos()
         self._create_communities()
         self._create_memberships()
         self._create_enrollments()
+        self._create_assignment_marks()
         self._simulate_students_group_transfers()
         
         self._create_superuser()

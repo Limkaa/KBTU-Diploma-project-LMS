@@ -6,10 +6,9 @@ import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
 import {
     useGetSchoolTimeTableQuery,
-    useGetTimeTableQuery,
     useUpdateTimeSlotMutation
 } from "../../redux/timeline/timetableApiSlice";
-import {Button, Input, Modal, Spin, Table, Select as AntSelect, Radio} from "antd";
+import {Button, Input, Spin, Table, Select as AntSelect, Radio} from "antd";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -34,7 +33,6 @@ const TimeTable = () => {
     const {data: timetableData, isSuccess, isLoading, refetch} = useGetSchoolTimeTableQuery(
         {schoolId: user.school_id, weekday, timeBound, courseId, room, noCourse, search, page});
     const [events, setEvents] = useState([]);
-    const [selectedEvent, setSelectedEvent] = useState();
     const {data: coursesData, isSuccess: isCoursesSuccess} = useGetAllSchoolCoursesQuery(user.school_id);
     const [updateTimeSlot] = useUpdateTimeSlotMutation();
     const [coursesOptions, setCoursesOptions] = useState([]);
@@ -164,7 +162,7 @@ const TimeTable = () => {
                 refetch();
                 toastify("success", "Time slot course updated");
             })
-            .catch((err) => {
+            .catch(() => {
                 toastify("error", "This course already has lesson at that time and weekday");
             })
     }
@@ -211,7 +209,6 @@ const TimeTable = () => {
                         <Select
                             labelId="Course"
                             id="course"
-                            defaultValue={selectedEvent?.course??""}
                             label="Course"
                             onChange={(e) => {
                                 setCourse(e.target.value);

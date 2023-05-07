@@ -9,7 +9,7 @@ import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
 import {useGetAllSchoolCoursesQuery} from "../../redux/courses/coursesApiSlice";
 import {useGetAllRoomsQuery} from "../../redux/timeline/roomsApiSlice";
-import {Radio, Select, Select as AntSelect, Spin} from "antd";
+import {Button, Radio, Select, Select as AntSelect, Spin} from "antd";
 import {useGetAllActiveGroupsQuery} from "../../redux/groups/groupsApiSlice";
 import {useGetTeachersQuery} from "../../redux/users/usersApiSlice";
 

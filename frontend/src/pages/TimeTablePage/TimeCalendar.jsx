@@ -1,19 +1,21 @@
 import React from 'react';
 import {useGetTimeTableQuery} from "../../redux/timeline/timetableApiSlice";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
 import {useEffect, useState} from "react";
 import moment from "moment";
-import {Alert, Radio, Select as AntSelect, Spin, Tabs} from "antd";
+import {Alert, Spin, Button} from "antd";
 import {Calendar, momentLocalizer} from "react-big-calendar";
 import Header from "../../components/shared/Header/Header";
 import Profile from "../../components/Dashboard/Profile";
 import {useGetStudentCardQuery} from "../../redux/studentsCards/studentsCardsApiSlice";
+import {ArrowLeftOutlined} from "@ant-design/icons";
 
 const TimeCalendar = (props) => {
     const user = useSelector(selectCurrentUser);
     const {id} = useParams();
+    const navigate = useNavigate();
     const localizer = momentLocalizer(moment);
     const [events, setEvents] = useState([]);
     const {data: studentData, isSuccess: isStudentSuccess, error} = useGetStudentCardQuery({student_id: user.user_id});
@@ -87,6 +89,10 @@ const TimeCalendar = (props) => {
         },
     };
 
+    const goBack = () => {
+        navigate(-1);
+    }
+
     return (
         <main id="timetable">
             <header className="header">
@@ -95,6 +101,7 @@ const TimeCalendar = (props) => {
             </header>
             {isGroup &&
                 <section className="schedule">
+                    <Button onClick={goBack} className="back"><ArrowLeftOutlined /></Button>
                     <div className="calendar">
                         <Spin spinning={isLoading}>
                             <Calendar

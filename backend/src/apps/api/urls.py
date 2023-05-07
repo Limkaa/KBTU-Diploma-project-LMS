@@ -22,8 +22,6 @@ urlpatterns = [
     path("", include(("apps.core.modules.comments.course.urls", "courses-posts-comments"))),
     path("", include(("apps.core.modules.comments.school.urls", "schools-posts-comments"))),
     
-    path("", include(("apps.core.modules.marks.urls", "assignments-marks"))),
-    
     path("", include(("apps.core.apis.urls", "core")))
 
 ]

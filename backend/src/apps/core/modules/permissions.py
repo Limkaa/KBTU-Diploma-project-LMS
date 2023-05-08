@@ -47,6 +47,8 @@ class IsGroupTeacher(IsTeacher):
     def has_object_permission(self, request, view, obj):
         if not isinstance(obj, Group):
             obj = obj.group
+            if not obj:
+                return False
         return obj.teacher == request.user
 
 

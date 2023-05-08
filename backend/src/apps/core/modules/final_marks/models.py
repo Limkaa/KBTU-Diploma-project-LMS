@@ -78,3 +78,57 @@ class TermMark(CustomModel):
         
         if errors:
             raise ValidationError(errors.map)
+
+
+class YearMark(CustomModel):
+    enrollment = models.OneToOneField(
+        to=Enrollment,
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+    number = models.PositiveSmallIntegerField(
+        blank=False, null=False,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ]
+    )
+    last_edited_by = models.ForeignKey(
+        to=User,
+        related_name="issued_year_marks",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    non_updatable_fields = ["id", "enrollment", "created_at"]
+    
+    related_fields = [
+        'enrollment',
+        'enrollment__subject',
+        'enrollment__subject__grade',
+        'enrollment__year',
+        'enrollment__course',
+        'enrollment__student',
+        'enrollment__student__user',
+        'enrollment__student__group',
+        'enrollment__student__group__grade',
+        'enrollment__student__group__teacher',
+        'last_edited_by'
+    ]
+    
+    def __str__(self) -> str:
+        return f"{self.enrollment.student} got {self.number} for {self.enrollment.subject}"
+    
+    def clean(self) -> None:
+        errors = ResponseDetails()
+        errors.clear()
+        
+        if not self.enrollment.year.is_opened_to_marks:
+            errors.add_field_message('year', "Year is not opened to evaluation")
+
+        if errors:
+            raise ValidationError(errors.map)

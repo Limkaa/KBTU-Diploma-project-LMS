@@ -197,15 +197,15 @@ const Course = () => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.header}>
+      {/* <div style={styles.header}>
         <Header text={"Course"} />
         <Profile />
-      </div>
+      </div> */}
       <Spin spinning={isLoading} size="large">
         <Box
           sx={{
             flexGrow: 1,
-            marginTop: 3,
+            marginTop: 1,
             marginBottom: 8,
           }}
           onClick={() => setIsPost(false)}
@@ -268,25 +268,6 @@ const Course = () => {
                   )}
                 </div>
               </Item>
-              {/* <Item>
-                <div style={styles.cont}>
-                  <div style={styles.titleForCont}>Awards</div>
-                  <Button
-                    type="link"
-                    onClick={() =>
-                      navigate(`/courses/${course?.id}/syllabus`, {
-                        state: { courseId: course?.id },
-                      })
-                    }
-                    style={styles.seeAll}
-                  >
-                    See all
-                  </Button>
-                </div>
-                {syllabus?.slice(0, 3).map((item) => (
-                  <CourseSyllabus key={item.id} item={item} />
-                ))}
-              </Item> */}
               <div>
                 <div style={styles.cont}>
                   <div
@@ -429,7 +410,7 @@ const Course = () => {
                   }}
                   htmlType="submit"
                 >
-                  Submit
+                  Send
                 </Button>
               </Form>
             </div>
@@ -452,7 +433,6 @@ const styles = {
   container: {
     flex: 1,
     backgroundColor: "#FAFAFA",
-    padding: 16,
   },
   header: {
     display: "flex",
@@ -478,8 +458,9 @@ const styles = {
     marginRight: 30,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 600,
+    color: "rgba(74, 77, 88, 1)",
   },
   titleCont: {
     display: "flex",
@@ -519,7 +500,7 @@ const styles = {
     marginRight: 8,
   },
   titleForCont: {
-    fontSize: 19,
+    fontSize: 18,
     fontWeight: 700,
     color: "#4A4D58",
   },

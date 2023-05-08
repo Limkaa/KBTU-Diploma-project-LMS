@@ -527,7 +527,7 @@ const styles = {
     padding: "0px 15px 15px 15px",
     color: "rgba(92, 92, 92, 1)",
     fontWeight: 400,
-    fontSize: 15,
+    fontSize: 14,
   },
   commentsCont: {
     backgroundColor: "rgba(248, 249, 250, 1)",

@@ -6,13 +6,10 @@ import styled from "styled-components";
 import Profile from "../Dashboard/Profile";
 import { Box, Paper, Grid } from "@mui/material";
 import Plus from "../../assets/icons/plus.svg";
-
-// import Paper from "@mui/material/Paper";
-// import Grid from "@mui/material/Grid";
 import Search from "../../assets/icons/search.svg";
 import { styled as styledmui } from "@mui/material/styles";
-import { Link, useNavigate } from "react-router-dom";
-import { Input, Empty, Spin, Button } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Input, Empty, Spin, Button, Card } from "antd";
 import AwardAdd from "./AwardAdd";
 import {
   useCreateAwardMutation,
@@ -20,6 +17,7 @@ import {
 } from "../../redux/awards/awardsApiSlice";
 import { toastify } from "../shared/Toast/Toast";
 import AwardUpdate from "./AwardUpdate";
+import { EditOutlined, RightOutlined } from "@ant-design/icons";
 
 const Item = styledmui(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -97,7 +95,6 @@ const AwardsContainer = () => {
   };
 
   const handleUpdate = async (values, isActive) => {
-    console.log(values, isActive);
     try {
       await updateAward({
         award_id: selectedAward?.id,
@@ -159,7 +156,40 @@ const AwardsContainer = () => {
             {schoolAwards?.length > 0 ? (
               schoolAwards?.map((item) => (
                 <Grid item key={item.id} xs={6} sm={8} md={4}>
-                  <Item>
+                  <Card
+                    className="card"
+                    key={item.id}
+                    actions={
+                      user?.role === "manager"
+                        ? [
+                            <EditOutlined
+                              key="edit"
+                              onClick={() => {
+                                setShowUpdateAward(true);
+                                setSelectedAward(item);
+                              }}
+                            />,
+                            <RightOutlined
+                              key="winners"
+                              onClick={() =>
+                                navigate(`/awards/${item?.id}/winners`, {
+                                  state: { awardId: item?.id },
+                                })
+                              }
+                            />,
+                          ]
+                        : [
+                            <RightOutlined
+                              key="winners"
+                              onClick={() =>
+                                navigate(`/awards/${item?.id}/winners`, {
+                                  state: { awardId: item?.id },
+                                })
+                              }
+                            />,
+                          ]
+                    }
+                  >
                     <div style={styles.title}>{item?.name}</div>
                     <div style={styles.des}>{item?.description}</div>
                     <div style={styles.recentCont}>
@@ -187,43 +217,8 @@ const AwardsContainer = () => {
                           ))}
                         </>
                       )}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          // flexDirection: "column",
-                        }}
-                      >
-                        <Button
-                          style={styles.btn}
-                          onClick={() =>
-                            navigate(`/awards/${item?.id}/winners`, {
-                              state: { awardId: item?.id },
-                            })
-                          }
-                        >
-                          {/* <div style={styles.moreText}>More</div> */}
-                          More
-                          {/* <img
-                            src={require("../../assets/icons/arrowcirlce.png")}
-                            style={{ height: 30, width: 30 }}
-                          /> */}
-                        </Button>
-                        {user?.role === "manager" && (
-                          <Button
-                            style={styles.btn2}
-                            onClick={() => {
-                              setShowUpdateAward(true);
-                              setSelectedAward(item);
-                            }}
-                          >
-                            Update
-                          </Button>
-                        )}
-                      </div>
                     </div>
-                  </Item>
+                  </Card>
                 </Grid>
               ))
             ) : (
@@ -266,14 +261,13 @@ const styles = {
   },
   title: {
     fontSize: 15,
-    fontWeight: 700,
+    fontWeight: 600,
     color: "#4A4D58",
   },
   des: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: 400,
     color: "#9699A5",
-    marginTop: 4,
   },
   recentCont: {
     marginTop: 10,
@@ -285,7 +279,7 @@ const styles = {
   },
   name: {
     fontSize: 13,
-    fontWeight: 600,
+    fontWeight: 500,
     color: "#4A4D58",
     marginLeft: 7,
   },
@@ -295,8 +289,8 @@ const styles = {
     color: "#4A4D58",
   },
   img: {
-    width: 32,
-    height: 32,
+    width: 30,
+    height: 30,
     borderRadius: 120,
     border: "none",
     backgroundColor: "rgba(0, 0, 0, 0.1)",

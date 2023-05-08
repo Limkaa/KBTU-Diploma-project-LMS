@@ -15,6 +15,17 @@ const InputStyled = styled(TextField)(({ theme }) => ({
     fontSize: 14,
     fontWeight: 500,
   },
+  "& .MuiOutlinedInput-root": {
+    fontFamily: "Open Sans",
+    fontSize: 14,
+    fontWeight: 500,
+    "& fieldset": {
+      borderColor: "rgba(0, 0, 0, 0.23)",
+    },
+    "&.Mui-focused fieldset": {
+      border: "2px solid #163A61",
+    },
+  },
 }));
 
 const AwardAdd = ({ setShow, show, handle }) => {
@@ -215,7 +226,7 @@ const styles = {
     marginTop: 15,
     fontWeight: 600,
     color: "white",
-    fontSize: 16,
+    fontSize: 15,
     backgroundColor: "#163A61",
   },
   contHour: {

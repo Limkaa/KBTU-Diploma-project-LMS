@@ -35,6 +35,9 @@ import RoomPage from "./pages/RoomPage/RoomPage";
 import TimeBoundsPage from "./pages/TimeBoundsPage/TimeBoundsPage";
 import TimeTablePage from "./pages/TimeTablePage/TimeTablePage";
 import TimeCalendar from "./pages/TimeTablePage/TimeCalendar";
+import Course from "./components/Courses/Course";
+import CourseContainer from "./components/Courses/CourseContainer";
+import CourseAward from "./components/Courses/CourseAward";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -52,7 +55,7 @@ function App() {
           <Route exact path="/" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
-          {/*<Route exact path="/courses/:id" element={<Course />} />*/}
+          <Route exact path="/courses/:id" element={<CourseContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />
           <Route exact path="/materials" element={<MaterialsContainer />} />
@@ -67,6 +70,7 @@ function App() {
           />
           <Route exact path="/awards" element={<AwardsContainer />} />
           <Route exact path="/awards/:id/winners" element={<Award />} />
+          <Route exact path="/courses/:id/winners" element={<CourseAward />} />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher", "student"]} />}>
           <Route
@@ -94,17 +98,17 @@ function App() {
             element={<GroupStudentsPage />}
           />
           <Route
-              exact
-              path="/timetable"
-              element={<TimeCalendar type="teacher"/>}
+            exact
+            path="/timetable"
+            element={<TimeCalendar type="teacher" />}
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["student"]} />}>
           <Route exact path="/my-groups" element={<TeacherGroupsPage />} />
           <Route
-              exact
-              path="/timeline"
-              element={<TimeCalendar type="student"/>}
+            exact
+            path="/timeline"
+            element={<TimeCalendar type="student" />}
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
@@ -149,34 +153,26 @@ function App() {
             element={<CoursesSchoolContainer />}
           />
           <Route
-              exact
-              path="/schools/courses/:id/timetable"
-              element={<TimeCalendar type="course" />}
+            exact
+            path="/schools/courses/:id/timetable"
+            element={<TimeCalendar type="course" />}
+          />
+          <Route exact path="/timeline/rooms" element={<RoomPage />} />
+          <Route
+            exact
+            path="/timeline/rooms/:id/timetable"
+            element={<TimeCalendar type="room" />}
           />
           <Route
-              exact
-              path="/timeline/rooms"
-              element={<RoomPage/>}
+            exact
+            path="/timeline/time-bounds"
+            element={<TimeBoundsPage />}
           />
+          <Route exact path="/timeline/timetable" element={<TimeTablePage />} />
           <Route
-              exact
-              path="/timeline/rooms/:id/timetable"
-              element={<TimeCalendar type="room" />}
-          />
-          <Route
-              exact
-              path="/timeline/time-bounds"
-              element={<TimeBoundsPage/>}
-          />
-          <Route
-              exact
-              path="/timeline/timetable"
-              element={<TimeTablePage/>}
-          />
-          <Route
-              exact
-              path="/groups/:id/timetable"
-              element={<TimeCalendar type="group" />}
+            exact
+            path="/groups/:id/timetable"
+            element={<TimeCalendar type="group" />}
           />
         </Route>
         <Route path="*" element={<NotFound />} />

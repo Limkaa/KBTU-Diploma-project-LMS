@@ -2,8 +2,11 @@ import React from "react";
 import Header from "../shared/Header/Header";
 import styled from "styled-components";
 import Profile from "../Dashboard/Profile";
-import { useLocation } from "react-router-dom";
-import { useGetWinnersOfAwardQuery } from "../../redux/winners/winnersApiSlice";
+import { useLocation, useParams } from "react-router-dom";
+import {
+  useGetCourseWinnersQuery,
+  useGetWinnersOfAwardQuery,
+} from "../../redux/winners/winnersApiSlice";
 import { Spin, Table } from "antd";
 import { useGetAwardQuery } from "../../redux/awards/awardsApiSlice";
 import { Paper } from "@mui/material";
@@ -41,7 +44,8 @@ const TableStyled = styled(Table)`
   }
 `;
 
-const Award = () => {
+const CourseAward = () => {
+  const { id: courseId } = useParams();
   const location = useLocation();
   let awardId = location?.state?.awardId;
   const [winners, setWinners] = React.useState([]);
@@ -49,10 +53,13 @@ const Award = () => {
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
 
-  const { data, isLoading } = useGetWinnersOfAwardQuery({
+  const { data, isLoading } = useGetCourseWinnersQuery({
+    course_id: courseId,
     award_id: awardId,
     page,
   });
+
+  console.log(courseId, awardId);
 
   const { data: dataAward, isLoading: isLoadingAward } = useGetAwardQuery({
     award_id: awardId,
@@ -247,4 +254,4 @@ const styles = {
   },
 };
 
-export default Award;
+export default CourseAward;

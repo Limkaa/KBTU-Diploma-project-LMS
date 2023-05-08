@@ -2,6 +2,7 @@ from django.db.models import Prefetch, Count
 
 from rest_framework.generics import get_object_or_404
 from rest_framework import generics
+from rest_framework.pagination import LimitOffsetPagination
 
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ....permissions import *
@@ -12,6 +13,7 @@ from ...serializers import *
 
 class SchoolCommunitiesListCreateAPI(generics.ListCreateAPIView):
     serializer_class = CommunityModelSerializer
+    pagination_class = LimitOffsetPagination
     filterset_fields = ['is_active']
     ordering_fields = ['is_active', 'members_count', 'created_at', 'updated_at']
     search_fields = ['name']

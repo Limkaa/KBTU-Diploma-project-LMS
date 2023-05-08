@@ -5,7 +5,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from ...utils.models import CustomModel
 from ...utils.exceptions import ResponseDetails
 
-from ..courses.models import Course
 from ..terms.models import Term
 from ..enrollments.models import Enrollment
 from ..users.models import User
@@ -14,13 +13,6 @@ from ..users.models import User
 class TermMark(CustomModel):
     enrollment = models.ForeignKey(
         to=Enrollment,
-        related_name="terms_marks",
-        on_delete=models.CASCADE,
-        null=False,
-        blank=False
-    )
-    course = models.ForeignKey(
-        to=Course,
         related_name="terms_marks",
         on_delete=models.CASCADE,
         null=False,
@@ -53,16 +45,8 @@ class TermMark(CustomModel):
     non_updatable_fields = ["id", "enrollment", "term", "created_at"]
     
     related_fields = [
-        'course',
-        'course__school',
-        'course__teacher',
-        'course__subject',
-        'course__subject__grade',
-        'course__year',
-        'course__group',
-        'course__group__teacher',
-        'course__group__grade',
         'term',
+        'term__year',
         'enrollment',
         'enrollment__subject',
         'enrollment__subject__grade',
@@ -80,7 +64,7 @@ class TermMark(CustomModel):
         unique_together = ['enrollment', 'term']
     
     def __str__(self) -> str:
-        return f"{self.enrollment.student} got {self.number} for {self.term} of {self.course.subject}"
+        return f"{self.enrollment.student} got {self.number} for {self.term} of {self.enrollment.subject}"
     
     def clean(self) -> None:
         errors = ResponseDetails()
@@ -88,10 +72,7 @@ class TermMark(CustomModel):
         
         if self.term.is_closed:
             errors.add_field_message('term', "Term is closed, so you can't create or update mark")
-        
-        if self.enrollment.course != self.course:
-            errors.add_field_message('course', "Enrollment course is different from mark course")
-        
+
         if self.term.year != self.enrollment.year:
             errors.add_field_message('term', "Enrollment year is different from term year")
         

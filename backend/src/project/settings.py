@@ -59,6 +59,7 @@ PROJECT_APPS = [
     "apps.core.modules.awards",
     "apps.core.modules.files",
     "apps.core.modules.syllabus",
+    "apps.core.modules.enrollments",
     "apps.core.modules.assignments",
     "apps.core.modules.timetables",
     "apps.core.modules.marks"

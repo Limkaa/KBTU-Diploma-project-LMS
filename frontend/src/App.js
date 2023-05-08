@@ -24,7 +24,6 @@ import GroupStudentsPage from "./pages/StudentsPage/GroupStudentsPage";
 import NotFound from "./components/NotFound/NotFound";
 import "./App.css";
 import CoursesSchoolContainer from "./components/Courses/CoursesSchool.container";
-import Course from "./components/Courses/Course";
 import SyllabusContainer from "./components/Syllabus/Syllabus.container";
 import AssignmentsCourse from "./components/Assignments/AssignmentsCourse";
 import Assignment from "./components/Assignments/Assignment";
@@ -32,6 +31,10 @@ import AssignmentContainer from "./components/Assignments/AssignmentContainer";
 import StudentsPage from "./pages/StudentsPage/StudentsPage";
 import AwardsContainer from "./components/Awards/Awards.container";
 import Award from "./components/Awards/Award";
+import RoomPage from "./pages/RoomPage/RoomPage";
+import TimeBoundsPage from "./pages/TimeBoundsPage/TimeBoundsPage";
+import TimeTablePage from "./pages/TimeTablePage/TimeTablePage";
+import TimeCalendar from "./pages/TimeTablePage/TimeCalendar";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -49,11 +52,10 @@ function App() {
           <Route exact path="/" element={<DashboardContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses" element={<CoursesContainer />} />
-          <Route exact path="/courses/:id" element={<Course />} />
+          {/*<Route exact path="/courses/:id" element={<Course />} />*/}
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />
           <Route exact path="/materials" element={<MaterialsContainer />} />
-          <Route exact path="/timeline" element={<TimelineContainer />} />
           <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
@@ -90,6 +92,19 @@ function App() {
             exact
             path="/my-groups/:groupId/students"
             element={<GroupStudentsPage />}
+          />
+          <Route
+              exact
+              path="/timetable"
+              element={<TimeCalendar type="teacher"/>}
+          />
+        </Route>
+        <Route element={<PrivateRoute allowedRoles={["student"]} />}>
+          <Route exact path="/my-groups" element={<TeacherGroupsPage />} />
+          <Route
+              exact
+              path="/timeline"
+              element={<TimeCalendar type="student"/>}
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>
@@ -132,6 +147,36 @@ function App() {
             exact
             path="/schools/courses"
             element={<CoursesSchoolContainer />}
+          />
+          <Route
+              exact
+              path="/schools/courses/:id/timetable"
+              element={<TimeCalendar type="course" />}
+          />
+          <Route
+              exact
+              path="/timeline/rooms"
+              element={<RoomPage/>}
+          />
+          <Route
+              exact
+              path="/timeline/rooms/:id/timetable"
+              element={<TimeCalendar type="room" />}
+          />
+          <Route
+              exact
+              path="/timeline/time-bounds"
+              element={<TimeBoundsPage/>}
+          />
+          <Route
+              exact
+              path="/timeline/timetable"
+              element={<TimeTablePage/>}
+          />
+          <Route
+              exact
+              path="/groups/:id/timetable"
+              element={<TimeCalendar type="group" />}
           />
         </Route>
         <Route path="*" element={<NotFound />} />

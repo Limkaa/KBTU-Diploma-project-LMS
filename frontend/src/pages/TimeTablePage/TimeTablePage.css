@@ -1,0 +1,165 @@
+.ant-table-cell {
+    padding: 10px 12px;
+}
+
+.rbc-calendar {
+    margin-top: 20px;
+}
+
+.rbc-allday-cell {
+    display: none;
+}
+
+.rbc-btn-group:first-child {
+    display: none;
+}
+
+.rbc-toolbar button.rbc-active {
+
+}
+
+button.rbc-active:hover, .rbc-toolbar button.rbc-active:focus {
+    background-color: white;
+    border: 1px solid #d9d9d9;
+}
+
+.rbc-toolbar button.rbc-active, .rbc-toolbar button.rbc-active:focus {
+    background-color: #163A61;
+    color: white;
+}
+
+.rbc-toolbar button {
+    background-color: white;
+}
+
+.rbc-toolbar button.rbc-active:hover {
+    background-color: #163A61;
+    color: white;
+}
+
+.rbc-toolbar button:hover, .rbc-toolbar button:active {
+    background-color: white;
+    cursor: pointer;
+}
+
+
+.rbc-time-slot {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.rbc-timeslot-group {
+    min-height: 70px;
+}
+
+.rbc-event-content {
+    font-size: 80%;
+}
+
+.rbc-event:hover {
+    background-color: lightgray;
+}
+
+.rbc-day-slot .rbc-events-container {
+    margin-right: 0;
+}
+
+#timetable section {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#timetable .slots {
+    width: 100%;
+    border-radius: 8px;
+}
+
+#timetable .group {
+    background-color: white;
+    border: 1px solid #f0f0f0;
+}
+
+#timetable .add {
+    width: 250px;
+    margin-top: 0;
+    padding: 20px 30px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+#timetable h2 {
+    margin: 0 0 10px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#timetable h3 {
+    min-width: 60px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: right;
+    margin: 10px 10px 10px 0;
+}
+
+#timetable .filters {
+    margin-top: 10px;
+}
+
+#timetable .btn {
+    display: block;
+    margin: 10px auto 0;
+}
+
+#timetable .filters {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+}
+
+#timetable .search {
+    padding: 11px;
+    display: flex;
+    background-color: #FAFAFA;
+    border: 1px solid #f0f0f0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+#timetable .select {
+    display: flex;
+    align-items: center;
+}
+
+#timetable .radio {
+    text-align: center;
+    min-width: 40%;
+}
+
+#timetable .radio:first-child {
+    min-width: 20%;
+}
+
+#timetable section.schedule {
+    flex-direction: column;
+}
+
+#timetable .calendar {
+    width: 100%;
+}
+
+#timetable .schedule .filters {
+    display: flex;
+    flex-direction: row;
+}
+
+#timetable .back {
+    height: 27px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

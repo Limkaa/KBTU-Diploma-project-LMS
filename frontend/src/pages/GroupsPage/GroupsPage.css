@@ -10,9 +10,8 @@
 
 .groups .table-header {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
-
 
 .modal .error, .modal .hidden {
     transition: 0.5s;

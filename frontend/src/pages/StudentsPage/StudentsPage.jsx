@@ -76,6 +76,69 @@ const StudentsPage = () => {
   useEffect(() => {
     let arr = [{ value: "", label: "All grades" }];
     if (isGradesLoaded) {
+      grades.forEach((grade) => {
+        arr.push({ value: grade.id, label: grade.name });
+      });
+      setGradesOptions(arr);
+      // setGradeId(arr[0].value);
+    }
+  }, [isGradesLoaded, grades]);
+
+  useEffect(() => {
+    let arr = [{ value: "", label: "All teachers" }];
+    if (isTeachersLoaded) {
+      teachers.forEach((user) => {
+        arr.push({
+          value: user.id,
+          label: `${user.first_name} ${user.last_name}`,
+        });
+      });
+      setTeacherOptions(arr);
+    }
+  }, [isTeachersLoaded, teachers]);
+
+  useEffect(() => {
+    if (isGroupsSuccess) {
+      setGroups(groupsData);
+    }
+  }, [groupsData, isGroupsSuccess]);
+
+  useEffect(() => {
+    let arr = [{ value: "", label: "All groups" }];
+    if (groups) {
+      groups.forEach((group) => {
+        arr.push({
+          value: group.id,
+          label: group.code,
+        });
+      });
+      setGroupsOptions(arr);
+    }
+  }, [groups]);
+
+  const handleGroupChange = async () => {
+    console.log(selectedRows);
+    let success = true;
+    for (let row of selectedRows) {
+      await updateGroup({ studentId: row.user.id, group: selectedGroup })
+        .then(() => (success = true))
+        .catch(() => {
+          success = false;
+          toastify(
+            "error",
+            `Failed to update group for ${row.user.first_name} ${row.user.last_name}`
+          );
+        });
+    }
+    if (success) {
+      refetch();
+      toastify("success", "Groups updated");
+    }
+  };
+
+  useEffect(() => {
+    let arr = [{ value: "", label: "All grades" }];
+    if (isGradesLoaded) {
       grades?.forEach((grade) => {
         arr.push({ value: grade.id, label: grade.name });
       });
@@ -183,25 +246,6 @@ const StudentsPage = () => {
     getCheckboxProps: (record) => ({
       disabled: record.group === null,
     }),
-  };
-
-  const handleGroupChange = async () => {
-    let success = true;
-    for (let row of selectedRows) {
-      await updateGroup({ studentId: row.user.id, group: selectedGroup })
-        .then(() => (success = true))
-        .catch(() => {
-          success = false;
-          toastify(
-            "error",
-            `Failed to update group for ${row.user.first_name} ${row.user.last_name}`
-          );
-        });
-    }
-    if (success) {
-      refetch();
-      toastify("success", "Groups updated");
-    }
   };
 
   return (

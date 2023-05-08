@@ -28,6 +28,11 @@ const THEME = createTheme({
       `,
     },
   },
+    palette: {
+        primary: {
+            main: "#163A61",
+        },
+    },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

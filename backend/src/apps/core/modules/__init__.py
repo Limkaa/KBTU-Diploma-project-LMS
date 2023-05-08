@@ -1,5 +1,6 @@
 from . import (
     awards,
     todos,
-    communities
+    communities,
+    enrollments
 )

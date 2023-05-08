@@ -13,6 +13,13 @@ class TermIsOpenedToFinalMarks(permissions.BasePermission):
         return obj.term.is_opened_to_final_marks
 
 
+class YearIsOpenedToFinalMarks(permissions.BasePermission):
+    message = 'Year is closed to evalutaion'
+    
+    def has_object_permission(self, request, view, obj):
+        return obj.enrollment.year.is_opened_to_final_marks
+
+
 class IsTeacherOfEnrollmentCourse(IsCourseTeacher):
     def has_object_permission(self, request, view, obj):
         return super().has_object_permission(request, view, obj.enrollment.course)

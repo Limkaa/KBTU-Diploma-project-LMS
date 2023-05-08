@@ -17,7 +17,7 @@ class YearIsOpenedToFinalMarks(permissions.BasePermission):
     message = 'Year is closed to evalutaion'
     
     def has_object_permission(self, request, view, obj):
-        return obj.enrollment.year.is_opened_to_final_marks
+        return obj.enrollment.year.is_opened_to_marks
 
 
 class IsTeacherOfEnrollmentCourse(IsCourseTeacher):

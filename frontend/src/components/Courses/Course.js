@@ -268,7 +268,25 @@ const Course = () => {
                   )}
                 </div>
               </Item>
-              {/* <Item> */}
+              {/* <Item>
+                <div style={styles.cont}>
+                  <div style={styles.titleForCont}>Awards</div>
+                  <Button
+                    type="link"
+                    onClick={() =>
+                      navigate(`/courses/${course?.id}/syllabus`, {
+                        state: { courseId: course?.id },
+                      })
+                    }
+                    style={styles.seeAll}
+                  >
+                    See all
+                  </Button>
+                </div>
+                {syllabus?.slice(0, 3).map((item) => (
+                  <CourseSyllabus key={item.id} item={item} />
+                ))}
+              </Item> */}
               <div>
                 <div style={styles.cont}>
                   <div
@@ -301,7 +319,6 @@ const Course = () => {
                     </div>
                   ))}
               </div>
-              {/* </Item> */}
             </Grid>
             <Grid item xs={1} sm={9} md={4}>
               {user?.role !== "manager" && (

@@ -75,7 +75,6 @@ const AwardsContainer = () => {
   }, [data, isLoading]);
 
   const handleAdd = async (values, isActive) => {
-    console.log(values, isActive);
     try {
       await createAward({
         school_id: user?.school_id,
@@ -87,6 +86,7 @@ const AwardsContainer = () => {
         .unwrap()
         .then((payload) => {
           refetch();
+          setShowAddAward(false);
           toastify("success", "Award Created");
         });
     } catch (err) {
@@ -109,6 +109,7 @@ const AwardsContainer = () => {
         .unwrap()
         .then((payload) => {
           refetch();
+          setShowUpdateAward(false);
           toastify("success", "Award Updated");
         });
     } catch (err) {
@@ -209,15 +210,17 @@ const AwardsContainer = () => {
                             style={{ height: 30, width: 30 }}
                           /> */}
                         </Button>
-                        <Button
-                          style={styles.btn2}
-                          onClick={() => {
-                            setShowUpdateAward(true);
-                            setSelectedAward(item);
-                          }}
-                        >
-                          Update
-                        </Button>
+                        {user?.role === "manager" && (
+                          <Button
+                            style={styles.btn2}
+                            onClick={() => {
+                              setShowUpdateAward(true);
+                              setSelectedAward(item);
+                            }}
+                          >
+                            Update
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </Item>

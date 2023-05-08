@@ -617,7 +617,7 @@ class Command(BaseCommand):
                 if not term.is_finished:
                     continue
                 enrollments_num = len(enrollments)
-                from_num = round(enrollments_num * 0.2)
+                from_num = round(enrollments_num * 0.6)
                 to_num = round(enrollments_num)
                 random_num = random.randint(from_num, to_num)
                 enrollments_with_marks = random.sample(list(enrollments), random_num)

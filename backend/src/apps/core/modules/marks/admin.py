@@ -7,14 +7,14 @@ from .models import Mark
 class MarkAdmin(CustomModelAdmin):
     model = Mark
     
-    raw_id_fields = ('assignment', 'student')
+    raw_id_fields = ('assignment', 'enrollment')
     
     list_display = (
         "__str__",
         "assignment",
     )
 
-    search_fields = ("assignment", "student__user__email")
+    search_fields = ("assignment", "enrollment__student__user__email")
 
     list_filter = ("number",)
 
@@ -24,7 +24,7 @@ class MarkAdmin(CustomModelAdmin):
             {
                 "fields": (
                     "assignment",
-                    "student",
+                    "enrollment",
                     "number",
                     "comment",
                 )

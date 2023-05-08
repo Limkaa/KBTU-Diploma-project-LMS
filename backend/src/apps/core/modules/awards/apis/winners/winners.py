@@ -37,7 +37,7 @@ class AwardWinnersListAPI(generics.ListAPIView):
 class SchoolWinnersListAPI(generics.ListAPIView):
     serializer_class = serializers.WinnerNestedSerializer
     permission_classes = [OnlyOwnSchool]
-    filterset_fields = ['student__user__gender']
+    filterset_fields = ['student__user__gender', 'award']
     ordering_fields = ['created_at']
 
     def initial(self, request, *args, **kwargs):
@@ -79,7 +79,7 @@ class IssuedWinnersListAPI(generics.ListAPIView):
             message='This view can be accessed only by: school manager or teacher'
         )
     ]
-    filterset_fields = ['student__user__gender']
+    filterset_fields = ['student__user__gender', 'award']
     ordering_fields = ['created_at']
 
     def initial(self, request, *args, **kwargs):
@@ -94,7 +94,7 @@ class IssuedWinnersListAPI(generics.ListAPIView):
 
 class CourseWinnersListCreatAPI(generics.ListCreateAPIView):
     serializer_class = serializers.WinnerCreateSerializer
-    filterset_fields = ['student__user__gender']
+    filterset_fields = ['student__user__gender', 'award']
     ordering_fields = ['created_at']
     ordering = '-created_at'
 

@@ -125,7 +125,7 @@ class CourseAwardsStatsListAPI(OptionalPaginationListAPIView):
     
     def get_queryset(self):
         last_winners_of_award = Subquery(
-            Winner.objects.filter(award=OuterRef('award_id'), course=OuterRef('course_id')).values_list('id', flat=True)[:5]
+            Winner.objects.filter(award=OuterRef('award_id'), course=self.course).values_list('id', flat=True)[:5]
         )
         return Award.objects.of_school(self.course.school).prefetch_related(
             Prefetch(

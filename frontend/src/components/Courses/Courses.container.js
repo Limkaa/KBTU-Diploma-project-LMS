@@ -59,7 +59,7 @@ const CoursesContainer = () => {
   const [years, setYears] = React.useState();
   const [search, setSearch] = React.useState("");
 
-  const { data: studentCard } = useGetStudentCardQuery({
+  const { data: student } = useGetStudentCardQuery({
     student_id: user?.id,
   });
 
@@ -85,23 +85,20 @@ const CoursesContainer = () => {
 
   React.useEffect(() => {
     if (user?.role === "student") {
-      if (studentCard && selectedYear) {
+      if (student) {
         getGroupCourse({
-          group_id: studentCard?.group?.id,
-          year_id: selectedYear,
+          group_id: student?.group?.id,
+          subject__grade: student?.group?.grade?.id,
           search: search,
         });
       }
     } else if (user?.role === "teacher") {
-      if (selectedYear) {
-        getTeacherCourses({
-          teacher_id: user?.id,
-          year_id: selectedYear,
-          search: search,
-        });
-      }
+      getTeacherCourses({
+        teacher_id: user?.id,
+        search: search,
+      });
     }
-  }, [user, studentCard, selectedYear, search]);
+  }, [user, student, selectedYear, search]);
 
   React.useEffect(() => {
     if (user?.role === "student") {
@@ -122,40 +119,13 @@ const CoursesContainer = () => {
         <Profile />
       </div>
       <Box sx={{ flexGrow: 1, marginTop: 3 }}>
-        <div>
+        <div style={{ marginBottom: 18 }}>
           <InputStyled
             size="default size"
             placeholder="Search..."
             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
-          <FormControl
-            sx={{
-              width: 220,
-              marginBottom: 3,
-              fieldset: { borderRadius: "10px" },
-            }}
-            size="small"
-          >
-            <InputLabel id="grade">Year</InputLabel>
-            <Select
-              labelId="grade"
-              id="grade"
-              label="Grade"
-              defaultValue={""}
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-            >
-              <MenuItem value="" disabled>
-                <em>Choose year</em>
-              </MenuItem>
-              {years?.map((item) => (
-                <MenuItem value={item.id} key={item.id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
         </div>
         <Spin
           spinning={user?.role === "student" ? isLoading : teacherIsLoading}

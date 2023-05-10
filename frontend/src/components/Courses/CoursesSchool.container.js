@@ -152,7 +152,8 @@ const CoursesSchoolContainer = () => {
           to={`/courses/${item.id}`}
           style={{ textDecoration: "none", fontWeight: 600, color: "#00889D" }}
         >
-          {item?.subject?.name} ({item?.subject?.code})
+          {item?.subject?.name}{" "}
+          {item?.subject?.code && "(" + item?.subject?.code + ")"}
         </Link>
       ),
     },
@@ -181,7 +182,8 @@ const CoursesSchoolContainer = () => {
       width: "15%",
       render: (item) => (
         <div>
-          {item?.group?.grade?.name} ({item?.group?.code})
+          {item?.group?.grade?.name}
+          {item?.group?.code && "(" + item?.group?.code + ")"}
         </div>
       ),
     },
@@ -213,23 +215,14 @@ const CoursesSchoolContainer = () => {
           >
             Change
           </Button>
+          <Link
+            className="action"
+            style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
+            to={`${record.id}/timetable`}
+          >
+            Schedule
+          </Link>
         </Space>
-      ),
-    },
-    {
-      title: "Action",
-      key: "action",
-      width: "15%",
-      render: (_, record) => (
-          <Space size="middle">
-            <Link
-                className="action"
-                style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
-                to={`${record.id}/timetable`}
-            >
-              Schedule
-            </Link>
-          </Space>
       ),
     },
   ];

@@ -18,12 +18,12 @@ const InputStyled = styled(TextField)`
   }
   .MuiFormLabel-root {
     font-family: "Open Sans";
-    font-weight: 400px;
+    font-weight: 400;
     font-size: 15px;
   }
   .MuiInputBase-input {
     font-family: "Open Sans";
-    font-weight: 400px;
+    font-weight: 400;
     font-size: 15px;
   }
 `;
@@ -41,7 +41,7 @@ const Picker = styled(DatePicker)`
     border-radius: 8px;
     padding: 8px 12px;
     font-family: "Open Sans";
-    font-weight: 400px;
+    font-weight: 400;
   }
   &.ant-picker-focused {
     border: 1px solid #277ed4;

@@ -21,6 +21,14 @@ const GroupsPage = () => {
   const [teacher, setTeacher] = useState();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [groups, setGroups] = useState();
+  const [gradesOptions, setGradesOptions] = useState([]);
+  const [teacherOptions, setTeacherOptions] = useState([]);
+  const [total, setTotal] = useState();
+  const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
+  const [showUpdateGroupModal, setShowUpdateGroupModal] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState();
+
   const {
     data: groupsData,
     isLoading,
@@ -31,20 +39,13 @@ const GroupsPage = () => {
     grade_id: grade,
     teacher_id: teacher,
     page,
-    search
+    search,
   });
   const { data: grades, isSuccess: isGradesLoaded } =
     useGetSchoolGradesWithoutPageQuery({ school_id: user?.school_id });
   const { data: teachers, isSuccess: isTeachersLoaded } = useGetTeachersQuery(
     user?.school_id
   );
-  const [groups, setGroups] = useState();
-  const [gradesOptions, setGradesOptions] = useState([]);
-  const [teacherOptions, setTeacherOptions] = useState([]);
-  const [total, setTotal] = useState();
-  const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
-  const [showUpdateGroupModal, setShowUpdateGroupModal] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState();
 
   useEffect(() => {
     if (groupsData && !isLoading) {
@@ -172,15 +173,15 @@ const GroupsPage = () => {
       key: "action",
       width: "15%",
       render: (_, record) => (
-          <Space size="middle">
-            <Link
-                className="action"
-                style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
-                to={`${record.id}/timetable`}
-            >
-              Schedule
-            </Link>
-          </Space>
+        <Space size="middle">
+          <Link
+            className="action"
+            style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
+            to={`${record.id}/timetable`}
+          >
+            Schedule
+          </Link>
+        </Space>
       ),
     },
   ];
@@ -193,7 +194,13 @@ const GroupsPage = () => {
       </header>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          <div style={{ marginRight: "auto", display: "flex", alignItems: "center" }}>
+          <div
+            style={{
+              marginRight: "auto",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <Radio.Group
               style={{ marginRight: 10 }}
               value={groupType}

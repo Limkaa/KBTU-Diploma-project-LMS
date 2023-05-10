@@ -11,20 +11,19 @@ export const coursesApiSlice = authApi.injectEndpoints({
         `/api/schools/${school_id}/courses?page=${page}&search=${search}`,
     }),
     getTeacherCourses: builder.query({
-      query: ({ teacher_id, year_id, search }) =>
-        `/api/teachers/${teacher_id}/courses?year=${year_id}&search=${search}`,
+      query: ({ teacher_id, search }) =>
+        `/api/teachers/${teacher_id}/courses?search=${search}`,
     }),
     getTeacherCoursesWithout: builder.query({
       query: ({ teacher_id, year_id }) =>
         `/api/teachers/${teacher_id}/courses?year=${year_id}`,
     }),
     getGroupCourses: builder.query({
-      query: ({ group_id, year_id, search }) =>
-        `/api/groups/${group_id}/courses?year=${year_id}&search=${search}`,
+      query: ({ group_id, subject__grade, search }) =>
+        `/api/groups/${group_id}/courses?subject__grade=${subject__grade}&search=${search}`,
     }),
     getCourseStudents: builder.query({
-      query: ({ course_id, search }) =>
-        `/api/courses/${course_id}/students`,
+      query: ({ course_id, search }) => `/api/courses/${course_id}/students`,
     }),
     getCourse: builder.query({
       query: ({ id }) => `/api/courses/${id}`,

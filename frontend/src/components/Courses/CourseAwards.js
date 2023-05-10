@@ -17,6 +17,9 @@ import { Input, Empty, Spin, Button, Card } from "antd";
 import { useUpdateAwardMutation } from "../../redux/awards/awardsApiSlice";
 import AwardUpdate from "../Awards/AwardUpdate";
 import { toastify } from "../shared/Toast/Toast";
+import AwardCourseStudent from "../Awards/AwardCourseStudent";
+import { useGetCourseStudentsQuery } from "../../redux/courses/coursesApiSlice";
+import { useCreateCourseWinnerMutation } from "../../redux/winners/winnersApiSlice";
 
 const InputStyled = styled(Input)`
   &.ant-input-affix-wrapper .ant-input {
@@ -37,18 +40,39 @@ const InputStyled = styled(Input)`
 const CourseAwards = () => {
   const { id: courseId } = useParams();
   const [search, setSearch] = React.useState("");
+  const [searchAwards, setSearchAwards] = React.useState("");
+
   const [courseAwards, setCourseAwards] = React.useState("");
   const navigate = useNavigate();
-  const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
+  const { data: user } = useGetAuthUserQuery();
   const [selectedAward, setSelectedAward] = React.useState();
   const [showUpdateAward, setShowUpdateAward] = React.useState(false);
+  const [showGiveAward, setShowGiveAward] = React.useState(false);
+  const [studentsOptions, setStudentsOptions] = React.useState([]);
+  const [studentId, setStudentId] = React.useState("");
+  const [awardsOptions, setAwardsOptions] = React.useState([]);
+  const [awardId, setAwardId] = React.useState("");
+  const [comment, setComment] = React.useState("");
 
   const { data, isLoading, refetch } = useGetCourseAwardsStatsQuery({
     course_id: courseId,
     search,
   });
 
+  const { data: dataStudents, isLoading: isLoadingStudents } =
+    useGetCourseStudentsQuery({
+      course_id: courseId,
+    });
+
+  const { data: dataAwards, isLoading: isLoadingAwards } =
+    useGetSchoolAwardsQuery({
+      school_id: user?.school_id,
+      search: searchAwards,
+    });
+
   const [updateAward] = useUpdateAwardMutation();
+
+  const [createCourseWinner] = useCreateCourseWinnerMutation();
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -56,8 +80,33 @@ const CourseAwards = () => {
     }
   }, [data, isLoading]);
 
+  React.useEffect(() => {
+    let arr = [{ value: "", label: "Select student" }];
+    if (dataStudents && !isLoadingStudents) {
+      dataStudents.forEach((item) => {
+        arr.push({
+          value: item.id,
+          label: item?.user?.first_name + " " + item?.user?.last_name,
+        });
+      });
+      setStudentsOptions(arr);
+    }
+  }, [dataStudents, isLoadingStudents]);
+
+  React.useEffect(() => {
+    let arr = [{ value: "", label: "Select award" }];
+    if (dataAwards && !isLoadingAwards) {
+      dataAwards.forEach((item) => {
+        arr.push({
+          value: item.id,
+          label: item?.name,
+        });
+      });
+      setAwardsOptions(arr);
+    }
+  }, [dataAwards, isLoadingAwards]);
+
   const handleUpdate = async (values, isActive) => {
-    console.log(values, isActive);
     try {
       await updateAward({
         award_id: selectedAward?.id,
@@ -71,6 +120,27 @@ const CourseAwards = () => {
           refetch();
           setShowUpdateAward(false);
           toastify("success", "Award Updated");
+        });
+    } catch (err) {
+      console.log(err);
+      let message = err.data.detail?.non_field_errors[0] ?? "Error";
+      toastify("error", message);
+    }
+  };
+
+  const handleCreateCourseWinner = async () => {
+    try {
+      await createCourseWinner({
+        course_id: courseId,
+        student: studentId,
+        award: awardId,
+        comment: comment,
+      })
+        .unwrap()
+        .then((payload) => {
+          refetch();
+          toastify("success", "Course Winner Created");
+          setShowGiveAward(false);
         });
     } catch (err) {
       console.log(err);
@@ -94,12 +164,12 @@ const CourseAwards = () => {
           prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
           onChange={(e) => setSearch(e.target.value.toLowerCase())}
         />
-        {user?.role === "manager" && (
+        {user?.role === "teacher" && (
           <Button
             type="primary"
             style={styles.btnAdd}
             icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-            // onClick={() => setShowAddAward(true)}
+            onClick={() => setShowGiveAward(true)}
           >
             Award student
           </Button>
@@ -192,6 +262,19 @@ const CourseAwards = () => {
         show={showUpdateAward}
         setShow={setShowUpdateAward}
         handle={handleUpdate}
+      />
+      <AwardCourseStudent
+        setShow={setShowGiveAward}
+        show={showGiveAward}
+        studentsOptions={studentsOptions}
+        studentId={studentId}
+        setStudentId={setStudentId}
+        awardId={awardId}
+        setAwardId={setAwardId}
+        awardsOptions={awardsOptions}
+        comment={comment}
+        setComment={setComment}
+        handle={handleCreateCourseWinner}
       />
     </Box>
   );

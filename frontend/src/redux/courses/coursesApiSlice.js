@@ -3,8 +3,7 @@ import { authApi } from "../api/apiService";
 export const coursesApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllSchoolCourses: builder.query({
-      query: (school_id) =>
-          `/api/schools/${school_id}/courses`,
+      query: (school_id) => `/api/schools/${school_id}/courses`,
       keepUnusedDataFor: 5,
     }),
     getSchoolCourses: builder.query({
@@ -24,7 +23,8 @@ export const coursesApiSlice = authApi.injectEndpoints({
         `/api/groups/${group_id}/courses?year=${year_id}&search=${search}`,
     }),
     getCourseStudents: builder.query({
-      query: ({ course_id }) => `/api/courses/${course_id}/students`,
+      query: ({ course_id, search }) =>
+        `/api/courses/${course_id}/students`,
     }),
     getCourse: builder.query({
       query: ({ id }) => `/api/courses/${id}`,

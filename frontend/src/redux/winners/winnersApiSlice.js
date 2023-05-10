@@ -10,8 +10,18 @@ export const winnersApiSlice = authApi.injectEndpoints({
       query: ({ course_id, award_id, page }) =>
         `/api/courses/${course_id}/winners?award=${award_id}&page=${page}`,
     }),
+    createCourseWinner: builder.mutation({
+      query: ({ course_id, ...data }) => ({
+        url: `/api/courses/${course_id}/winners`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetWinnersOfAwardQuery, useGetCourseWinnersQuery } =
-  winnersApiSlice;
+export const {
+  useGetWinnersOfAwardQuery,
+  useGetCourseWinnersQuery,
+  useCreateCourseWinnerMutation,
+} = winnersApiSlice;

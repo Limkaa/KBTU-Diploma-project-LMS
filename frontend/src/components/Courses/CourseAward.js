@@ -59,8 +59,6 @@ const CourseAward = () => {
     page,
   });
 
-  console.log(courseId, awardId);
-
   const { data: dataAward, isLoading: isLoadingAward } = useGetAwardQuery({
     award_id: awardId,
   });

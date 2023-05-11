@@ -1,6 +1,7 @@
 import { Radio, Select } from "antd";
 import React from "react";
 import {
+  useCreateEnrollmentMutation,
   useGetCourseEnrollmentsQuery,
   useGetNotEnrolledStudentsQuery,
   useGetStudentsWithTransferredEnrollmentsQuery,
@@ -10,6 +11,8 @@ import { Table, Input, Button, Space, Tag, Spin } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import styled from "styled-components";
+import { toastify } from "../shared/Toast/Toast";
+import PlusSvg from "../../assets/icons/PlusIcon";
 
 const SelectStyled = styled(Select)`
   &.ant-select-single .ant-select-selector {
@@ -17,6 +20,8 @@ const SelectStyled = styled(Select)`
     font-family: "Open Sans";
     font-weight: 700;
     font-size: 14px;
+    height: 40px;
+    align-items: center;
   }
 `;
 
@@ -27,15 +32,31 @@ const CourseEnrollment = () => {
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
   const [search, setSearch] = React.useState("");
+  const [selectedRows, setSelectedRows] = React.useState([]);
 
-  const { data: dataCourse, isLoading: isLoadingCourse } =
-    useGetCourseEnrollmentsQuery({ course_id, page, search });
+  const {
+    data: dataCourse,
+    isLoading: isLoadingCourse,
+    refetch,
+  } = useGetCourseEnrollmentsQuery({ course_id, page, search });
 
-  const { data: dataTransferred, isLoading: isLoadingTransferred } =
-    useGetStudentsWithTransferredEnrollmentsQuery({ course_id, page, search });
+  const {
+    data: dataTransferred,
+    isLoading: isLoadingTransferred,
+    refetch: refetchTransferred,
+  } = useGetStudentsWithTransferredEnrollmentsQuery({
+    course_id,
+    page,
+    search,
+  });
 
-  const { data: dataNotEnrolled, isLoading: isLoadingNotEnrolled } =
-    useGetNotEnrolledStudentsQuery({ course_id, page, search });
+  const {
+    data: dataNotEnrolled,
+    isLoading: isLoadingNotEnrolled,
+    refetch: refetchNotEnrolled,
+  } = useGetNotEnrolledStudentsQuery({ course_id, page, search });
+
+  const [createEnrollment] = useCreateEnrollmentMutation();
 
   React.useEffect(() => {
     if (select === "course") {
@@ -64,14 +85,41 @@ const CourseEnrollment = () => {
     select,
   ]);
 
-  console.log(enrollments);
+  const handleRowSelectionChange = (selectedRowKeys, selectedRows) => {
+    setSelectedRows(selectedRows);
+  };
+
+  const rowSelection = {
+    selectedRows,
+    onChange: handleRowSelectionChange,
+  };
+
+  const handleCreateEnrollment = async () => {
+    for (let row of selectedRows) {
+      try {
+        await createEnrollment({
+          course_id: course_id,
+          student: row?.id,
+        }).then(() => {
+          refetch();
+          refetchNotEnrolled();
+          toastify("success", "Enrollments Created");
+        });
+      } catch (err) {
+        toastify(
+          "error",
+          `Failed to create enrollment for ${row.user.first_name} ${row.user.last_name}`
+        );
+      }
+    }
+  };
 
   const columns = [
     {
       title: () => {
         return <>Student</>;
       },
-      width: "20%",
+      width: "30%",
       render: (item) => (
         <>
           <div
@@ -99,7 +147,7 @@ const CourseEnrollment = () => {
       title: () => {
         return <>Group</>;
       },
-      width: "20%",
+      width: "30%",
       render: (item) => (
         <div>
           {select === "notEnrolled"
@@ -111,7 +159,7 @@ const CourseEnrollment = () => {
     {
       title: "Gender",
       key: "gender",
-      width: "15%",
+      width: "20%",
       render: (item) => (
         <Tag
           style={{ minWidth: 50, textAlign: "center" }}
@@ -159,21 +207,40 @@ const CourseEnrollment = () => {
             defaultValue={"course"}
             value={select}
           />
-          <Input
-            size="default size"
-            placeholder="Search..."
-            prefix={<img src={Search} style={{ height: 15, width: 15 }} />}
-            style={styles.search}
-            onChange={(e) => setSearch(e.target.value.toLowerCase())}
-          />
-          {/* <Button
-              type="primary"
-              style={styles.btnAdd}
-              icon={<img src={Plus} style={{ paddingRight: 5 }} />}
-              onClick={() => setShowAddCourse(true)}
-            >
-              Create course
-            </Button> */}
+          <div style={{ display: "flex" }}>
+            <Input
+              size="default size"
+              placeholder="Search..."
+              prefix={<img src={Search} style={{ height: 15, width: 15 }} />}
+              style={styles.search}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
+            />
+            {select === "notEnrolled" && (
+              <Button
+                type="primary"
+                style={{
+                  ...styles.btnAdd,
+                  backgroundColor:
+                    selectedRows?.length === 0
+                      ? "rgba(248, 249, 250, 1)"
+                      : "#163A61",
+                }}
+                icon={
+                  <PlusSvg
+                    color={
+                      selectedRows?.length === 0
+                        ? "rgba(186, 187, 187, 1)"
+                        : "white"
+                    }
+                  />
+                }
+                onClick={() => handleCreateEnrollment()}
+                disabled={selectedRows?.length === 0}
+              >
+                Enroll students
+              </Button>
+            )}
+          </div>
         </div>
         <Spin spinning={isLoadingCourse} size="large">
           <Table
@@ -188,6 +255,7 @@ const CourseEnrollment = () => {
               },
               showSizeChanger: false,
             }}
+            rowSelection={select === "notEnrolled" ? rowSelection : false}
           />
         </Spin>
       </div>
@@ -202,7 +270,7 @@ const styles = {
     border: "1px solid #0000000D",
   },
   search: {
-    //   height: 40,
+    height: 40,
     width: 280,
     //   border: "none",
     //   borderRadius: 8,
@@ -212,6 +280,16 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  btnAdd: {
+    backgroundColor: "#163A61",
+    borderRadius: 8,
+    alignItems: "center",
+    display: "flex",
+    height: 40,
+    fontWeight: 500,
+    marginLeft: 16,
+    gap: 5,
   },
 };
 

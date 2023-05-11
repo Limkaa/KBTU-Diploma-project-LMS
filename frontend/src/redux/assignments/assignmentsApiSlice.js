@@ -16,6 +16,9 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
     getAssignmentMarks: builder.query({
       query: ({ assignment_id }) => `api/assignments/${assignment_id}/marks`,
     }),
+    getCourseMarksByEnrollments: builder.query({
+      query: ({ assignment_id }) => `api/assignments/${assignment_id}/marks`,
+    }),
     addAssignment: builder.mutation({
       query: ({ course_id, ...data }) => ({
         url: `/api/courses/${course_id}/assignments`,

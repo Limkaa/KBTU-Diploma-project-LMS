@@ -195,6 +195,8 @@ const Course = () => {
     }
   };
 
+  console.log(course);
+
   return (
     <div style={styles.container}>
       {/* <div style={styles.header}>
@@ -227,9 +229,16 @@ const Course = () => {
                         fontSize={20}
                       />
                       <div style={{ marginLeft: 8 }}>
-                        <div style={styles.title}>{course?.subject?.name}</div>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <div style={styles.title}>
+                            {course?.subject?.name}{" "}
+                          </div>
+                          <div style={styles.code}>{course?.subject?.code}</div>
+                        </div>
+
                         <div style={styles.podtext}>
                           {course?.subject?.grade?.name}
+                          {" (" + course?.group?.code + ")"}
                         </div>
                       </div>
                     </div>
@@ -461,6 +470,15 @@ const styles = {
     fontSize: 16,
     fontWeight: 600,
     color: "rgba(74, 77, 88, 1)",
+  },
+  code: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: "rgba(0, 136, 157, 1)",
+    backgroundColor: "rgba(240, 247, 255, 1)",
+    padding: "3px 7px",
+    borderRadius: 8,
+    marginLeft: 10,
   },
   titleCont: {
     display: "flex",

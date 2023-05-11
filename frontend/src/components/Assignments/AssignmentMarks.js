@@ -186,12 +186,12 @@ const AssignmentMarks = () => {
           />
         </div>
       </div>
-      <Table
+      {/* <Table
         dataSource={assignmentMarks}
         columns={columns}
         rowKey={(item) => item?.id}
         pagination={false}
-      />
+      /> */}
     </div>
   );
 };

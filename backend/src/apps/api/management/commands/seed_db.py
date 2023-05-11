@@ -26,6 +26,7 @@ from apps.core.modules.awards.models import Award, Winner
 from apps.core.modules.todos.models import Todo
 from apps.core.modules.communities.models import Community, Membership
 from apps.core.modules.enrollments.models import Enrollment
+from apps.core.modules.final_marks.models import TermMark, YearMark
 
 
 from apps.api import mock_data
@@ -601,7 +602,60 @@ class Command(BaseCommand):
             student.save()
         
         self.stdout.write(self.style.SUCCESS(f"Students transferred ({transferred_student_count} students)"))
+
+    def _create_term_marks(self):
+        marks = []
+    
+        for course in Course.objects.all():
+            enrollments = Enrollment.objects.filter(course=course)
+            teacher = course.teacher 
+            
+            if not teacher:
+                teacher = random.choice(User.objects.filter(school=course.school, role=User.Role.TEACHER))
+            
+            for term in Term.objects.filter(year=course.year):
+                if not term.is_finished:
+                    continue
+                enrollments_num = len(enrollments)
+                from_num = round(enrollments_num * 0.6)
+                to_num = round(enrollments_num)
+                random_num = random.randint(from_num, to_num)
+                enrollments_with_marks = random.sample(list(enrollments), random_num)
+                
+                for enrollment in enrollments_with_marks:
+                    marks.append(TermMark(
+                        enrollment = enrollment,
+                        term = term,
+                        last_edited_by = teacher,
+                        number = random.randint(1,5)
+                    ))
+    
+        self.bulk_create(TermMark, 'Terms marks', marks)
         
+    def _create_year_marks(self):
+        marks = []
+    
+        for course in Course.objects.all():
+            enrollments = Enrollment.objects.filter(course=course)
+            teacher = course.teacher 
+            
+            if not teacher:
+                teacher = random.choice(User.objects.filter(school=course.school, role=User.Role.TEACHER))
+            
+            enrollments_num = len(enrollments)
+            from_num = round(enrollments_num * 0.5)
+            to_num = round(enrollments_num)
+            random_num = random.randint(from_num, to_num)
+            enrollments_with_marks = random.sample(list(enrollments), random_num)
+            
+            for enrollment in enrollments_with_marks:
+                marks.append(YearMark(
+                    enrollment = enrollment,
+                    last_edited_by = teacher,
+                    number = random.randint(1,5)
+                ))
+    
+        self.bulk_create(YearMark, 'Year marks', marks)
     
     def handle(self, *args, **options):
         self.schools = self._create_schools()
@@ -628,12 +682,8 @@ class Command(BaseCommand):
         self._create_memberships()
         self._create_enrollments()
         self._create_assignment_marks()
+        self._create_term_marks()
+        self._create_year_marks()
         self._simulate_students_group_transfers()
         
         self._create_superuser()
-        
-        
-        
-
-    
-    

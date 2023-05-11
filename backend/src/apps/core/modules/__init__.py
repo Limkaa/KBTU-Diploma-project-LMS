@@ -3,5 +3,6 @@ from . import (
     todos,
     communities,
     enrollments,
-    marks
+    marks,
+    final_marks
 )

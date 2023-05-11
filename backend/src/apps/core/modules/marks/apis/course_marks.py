@@ -97,7 +97,10 @@ class CourseMarksGroupedByEnrollmentListAPI(OptionalPaginationListAPIView):
         return self.course
     
     def get_queryset(self):
-        qs = self.queryset.filter(course=self.course)
+        qs = self.queryset.filter(
+            student__group=self.course.group,
+            course=self.course
+        )
         
         marks_prefetch = Mark.objects.filter(enrollment__course=self.course).select_related(*Mark.related_fields)
         term_kwarg = self.request.GET.get('term', None)

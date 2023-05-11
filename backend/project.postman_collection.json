@@ -5182,7 +5182,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/assignments/2/marks",
+							"raw": "{{BASE_URL}}/assignments/2/marks?student__user__gender=&search&ordering",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -5190,6 +5190,23 @@
 								"assignments",
 								"2",
 								"marks"
+							],
+							"query": [
+								{
+									"key": "student__user__gender",
+									"value": "",
+									"description": "male, female"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "student's name or surname, email"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "updated_at, created_at, student__user__email, student__user__first_name, student__user__last_name"
+								}
 							]
 						}
 					},

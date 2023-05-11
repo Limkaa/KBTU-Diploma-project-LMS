@@ -52,6 +52,20 @@ class EnrollmentsAssignmentMarksListAPI(generics.ListAPIView):
     permission_classes = [OnlyOwnSchool, IsCourseTeacher]
     queryset = Enrollment.objects.select_related(*Enrollment.related_fields)
     
+    filterset_fields = ['student__user__gender']
+    search_fields = [
+        'student__user__email',
+        'student__user__first_name',
+        'student__user__last_name',
+    ]
+    ordering_fields = [
+        'created_at',
+        'updated_at',
+        'student__user__email',
+        'student__user__first_name',
+        'student__user__last_name',
+    ]
+    
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)
         self.check_object_permissions(request, self.get_assignment().course)

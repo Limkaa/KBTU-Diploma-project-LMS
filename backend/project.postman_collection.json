@@ -5114,14 +5114,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/assignments/2/marks-list?page=1&ordering=&search=&number=",
+							"raw": "{{BASE_URL}}/assignments/2/marks?page=1&ordering=&search=&number=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"assignments",
 								"2",
-								"marks-list"
+								"marks"
 							],
 							"query": [
 								{
@@ -5182,14 +5182,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/assignments/2/marks?student__user__gender=&search&ordering",
+							"raw": "{{BASE_URL}}/assignments/2/marks-grouped?student__user__gender=&search&ordering",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"assignments",
 								"2",
-								"marks"
+								"marks-grouped"
 							],
 							"query": [
 								{

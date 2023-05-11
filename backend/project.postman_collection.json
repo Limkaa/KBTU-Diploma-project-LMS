@@ -2500,13 +2500,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/25/assignments",
+							"raw": "{{BASE_URL}}/courses/1/assignments",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"25",
+								"1",
 								"assignments"
 							],
 							"query": [
@@ -4235,13 +4235,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/courses/3/winners?student__user__gender=&ordering&page=1&award=5",
+							"raw": "{{BASE_URL}}/courses/4/winners?student__user__gender=&ordering&page=1&award=5",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"courses",
-								"3",
+								"4",
 								"winners"
 							],
 							"query": [
@@ -5114,14 +5114,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/assignments/6/marks?page=1&ordering=&search=&number=",
+							"raw": "{{BASE_URL}}/assignments/2/marks-list?page=1&ordering=&search=&number=",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"assignments",
-								"6",
-								"marks"
+								"2",
+								"marks-list"
 							],
 							"query": [
 								{
@@ -5171,6 +5171,42 @@
 								"assignments",
 								"6",
 								"marks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get marks of assignment grouped by enrollments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/assignments/2/marks?student__user__gender=&search&ordering",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"assignments",
+								"2",
+								"marks"
+							],
+							"query": [
+								{
+									"key": "student__user__gender",
+									"value": "",
+									"description": "male, female"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "student's name or surname, email"
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "updated_at, created_at, student__user__email, student__user__first_name, student__user__last_name"
+								}
 							]
 						}
 					},

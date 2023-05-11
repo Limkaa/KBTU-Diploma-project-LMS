@@ -459,7 +459,6 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
   },
-  mainCont: {},
   teachCont: {
     display: "flex",
     alignItems: "center",

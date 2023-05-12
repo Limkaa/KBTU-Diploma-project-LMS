@@ -10,7 +10,10 @@ class YearModelSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_at', 'updated_at']
 
 
-class TermModelSerializer(serializers.ModelSerializer):  
+class TermModelSerializer(serializers.ModelSerializer):
+    is_finished = serializers.BooleanField(read_only=True)
+    is_opened_to_final_marks = serializers.BooleanField(read_only=True)
+      
     class Meta:
         model = Term
         fields = "__all__"

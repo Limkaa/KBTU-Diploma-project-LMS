@@ -146,11 +146,16 @@ const CoursesContainer = () => {
                     <Item>
                       <CourseLogo
                         title={item?.subject?.name}
-                        width={"50%"}
-                        height={"55%"}
+                        width={"43%"}
+                        height={"60%"}
                         fontSize={30}
                       />
                       <div style={styles.title}>{item?.subject?.name}</div>
+                      <div style={styles.code}>{item?.subject?.code}</div>
+                      <div style={styles.podtext}>
+                        {item?.subject?.grade?.name}
+                        {" (" + item?.group?.code + ")"}
+                      </div>
                       <div style={styles.teacher}>
                         <div style={styles.teachTitle}>Teacher:</div>
                         {item?.teacher ? (
@@ -201,22 +206,35 @@ const styles = {
   teacher_name: {
     fontSize: 14,
     fontWeight: 500,
+    color: "rgba(74, 77, 88, 1)",
   },
   teacher: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
+    gap: 8,
     marginTop: 6,
   },
   teachTitle: {
     fontSize: 14,
     fontWeight: 600,
+    color: "rgba(74, 77, 88, 1)",
   },
   title: {
     marginTop: 20,
     fontSize: 16,
     fontWeight: 600,
+    color: "rgba(74, 77, 88, 1)",
+  },
+  code: {
+    fontSize: 13,
+    fontWeight: 600,
+    color: "rgba(0, 136, 157, 1)",
+  },
+  podtext: {
+    fontSize: 14,
+    fontWeight: 500,
+    color: "#4A4D5896",
   },
 };
 

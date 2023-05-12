@@ -5,6 +5,7 @@ import {
   useGetCourseEnrollmentsQuery,
   useGetNotEnrolledStudentsQuery,
   useGetStudentsWithTransferredEnrollmentsQuery,
+  useUpdateEnrollmentMutation,
 } from "../../redux/enrollments/enrollmentsApiSlice";
 import { useParams } from "react-router-dom";
 import { Table, Input, Button, Space, Tag, Spin } from "antd";
@@ -33,6 +34,7 @@ const CourseEnrollment = () => {
   const [total, setTotal] = React.useState();
   const [search, setSearch] = React.useState("");
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [selectedTransferred, setSelectedTransferred] = React.useState([]);
 
   const {
     data: dataCourse,
@@ -57,6 +59,7 @@ const CourseEnrollment = () => {
   } = useGetNotEnrolledStudentsQuery({ course_id, page, search });
 
   const [createEnrollment] = useCreateEnrollmentMutation();
+  const [updateEnrollment] = useUpdateEnrollmentMutation();
 
   React.useEffect(() => {
     if (select === "course") {
@@ -86,7 +89,8 @@ const CourseEnrollment = () => {
   ]);
 
   const handleRowSelectionChange = (selectedRowKeys, selectedRows) => {
-    setSelectedRows(selectedRows);
+    if (select === "notEnrolled") setSelectedRows(selectedRows);
+    else if (select === "transferred") setSelectedTransferred(selectedRows);
   };
 
   const rowSelection = {
@@ -104,11 +108,33 @@ const CourseEnrollment = () => {
           refetch();
           refetchNotEnrolled();
           toastify("success", "Enrollments Created");
+          setSelectedRows([]);
         });
       } catch (err) {
         toastify(
           "error",
           `Failed to create enrollment for ${row.user.first_name} ${row.user.last_name}`
+        );
+      }
+    }
+  };
+
+  const handleUpdateEnrollment = async () => {
+    for (let row of selectedTransferred) {
+      try {
+        await updateEnrollment({
+          course_id: course_id,
+          enrollment_id: row?.id,
+        }).then(() => {
+          refetch();
+          refetchTransferred();
+          toastify("success", "Enrollments Updated");
+          setSelectedTransferred([]);
+        });
+      } catch (err) {
+        toastify(
+          "error",
+          `Failed to update enrollment for ${row.user.first_name} ${row.user.last_name}`
         );
       }
     }
@@ -240,6 +266,31 @@ const CourseEnrollment = () => {
                 Enroll students
               </Button>
             )}
+            {select === "transferred" && (
+              <Button
+                type="primary"
+                style={{
+                  ...styles.btnAdd,
+                  backgroundColor:
+                    selectedTransferred?.length === 0
+                      ? "rgba(248, 249, 250, 1)"
+                      : "#163A61",
+                }}
+                icon={
+                  <PlusSvg
+                    color={
+                      selectedTransferred?.length === 0
+                        ? "rgba(186, 187, 187, 1)"
+                        : "white"
+                    }
+                  />
+                }
+                onClick={() => handleUpdateEnrollment()}
+                disabled={selectedTransferred?.length === 0}
+              >
+                Enroll students
+              </Button>
+            )}
           </div>
         </div>
         <Spin spinning={isLoadingCourse} size="large">
@@ -255,7 +306,7 @@ const CourseEnrollment = () => {
               },
               showSizeChanger: false,
             }}
-            rowSelection={select === "notEnrolled" ? rowSelection : false}
+            rowSelection={select === "course" ? false : rowSelection}
           />
         </Spin>
       </div>

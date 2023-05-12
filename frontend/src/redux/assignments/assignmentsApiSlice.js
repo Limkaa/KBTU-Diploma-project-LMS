@@ -16,8 +16,9 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
     getAssignmentMarks: builder.query({
       query: ({ assignment_id }) => `api/assignments/${assignment_id}/marks`,
     }),
-    getCourseMarksByEnrollments: builder.query({
-      query: ({ assignment_id }) => `api/assignments/${assignment_id}/marks`,
+    getAssignmentMarksByEnrollments: builder.query({
+      query: ({ assignment_id }) =>
+        `api/assignments/${assignment_id}/marks-grouped`,
     }),
     addAssignment: builder.mutation({
       query: ({ course_id, ...data }) => ({
@@ -46,6 +47,7 @@ export const {
   useGetCourseAssignmentsQuery,
   useGetAssignmentQuery,
   useGetTeacherAssignmentsQuery,
+  useGetAssignmentMarksByEnrollmentsQuery,
   useGetAssignmentMarksQuery,
   useAddAssignmentMutation,
   useUpdateAssignmentMutation,

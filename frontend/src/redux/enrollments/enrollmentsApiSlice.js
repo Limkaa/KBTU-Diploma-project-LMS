@@ -22,10 +22,9 @@ export const enrollmentsApiSlice = authApi.injectEndpoints({
       }),
     }),
     updateEnrollment: builder.mutation({
-      query: ({ course_id, enrollment_id, ...data }) => ({
+      query: ({ course_id, enrollment_id }) => ({
         url: `/api/courses/${course_id}/enrollments/${enrollment_id}`,
         method: "PUT",
-        body: data,
       }),
     }),
   }),

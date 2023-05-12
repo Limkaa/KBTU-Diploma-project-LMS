@@ -1,10 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetAssignmentMarksQuery } from "../../redux/assignments/assignmentsApiSlice";
-import { Table, Input, Button, Space } from "antd";
+import { useGetAssignmentMarksByEnrollmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
+import { Table, Input, Button, Space, Tooltip } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import styled from "styled-components";
+import { CheckOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const InputComment = styled(Input)`
   &.ant-input {
@@ -31,7 +32,7 @@ const InputMark = styled(Input)`
     font-weight: 500;
     color: #163a61;
     border: none;
-    width: 50%;
+    width: 80%;
     // border-left: 4px solid #163a61;
     border-radius: 6px;
     background-color: rgba(248, 249, 250, 1);
@@ -47,24 +48,25 @@ const AssignmentMarks = () => {
   const [assignmentMarks, setAssignmentMarks] = React.useState([]);
   const [search, setSearch] = React.useState("");
   const [changedRows, setChangedRows] = React.useState([]);
+  const [newComment, setNewComment] = React.useState();
+  const [newMark, setNewMark] = React.useState();
 
-  const { data, isLoading, refetch } = useGetAssignmentMarksQuery({
+  const { data, isLoading, refetch } = useGetAssignmentMarksByEnrollmentsQuery({
     assignment_id: assignment_id,
   });
 
   React.useEffect(() => {
     if (data && !isLoading) {
-      setAssignmentMarks(data);
+      setAssignmentMarks(data.results);
     }
   }, [data, isLoading]);
 
-  console.log(assignmentMarks);
-
-  const handleDataChange = (newData) => {
-    const changedRowKeys = newData.map((row) => row.key);
-    setChangedRows(changedRowKeys);
-    setAssignmentMarks(newData);
-  };
+  // const handleDataChange = (id, data) => {
+  //   console.log(id, data);
+  //   // const changedRowKeys = newData.map((row) => row.key);
+  //   // setChangedRows([...changedRows, { id, comment, mark }]);
+  //   // setAssignmentMarks(newData);
+  // };
 
   const handleSave = () => {
     const changedData = assignmentMarks.filter((row) =>
@@ -78,100 +80,66 @@ const AssignmentMarks = () => {
       title: () => {
         return <>Name</>;
       },
-      width: "20%",
+      width: "15%",
       render: (item) => (
         <div>
-          {item?.user?.first_name} {item?.user?.last_name}
+          {item?.student?.user?.first_name} {item?.student?.user?.last_name}
         </div>
       ),
     },
     {
       title: "Comment",
+      width: "20%",
       render: (_, record) => (
-        <InputMark
-          defaultValue={record?.marks[0]?.comment}
-          onChange={(e) =>
-            handleDataChange(
-              assignmentMarks.map((row) =>
-                row.id === record.id
-                  ? {
-                      ...row,
-                      marks: [{ comment: e.target.value }],
-                    }
-                  : row
-              )
-            )
-          }
-        />
+        <InputMark defaultValue={record?.marks[0]?.comment} />
       ),
     },
     {
       title: "Mark",
       key: "mark",
+      width: "20%",
       render: (_, record) => (
         <InputMark
-          defaultValue={record.marks.mark}
-          onChange={(e) =>
-            handleDataChange(
-              assignmentMarks.map((row) =>
-                row.key === record.key ? { ...row, mark: e.target.value } : row
-              )
-            )
-          }
+          type="number"
+          defaultValue={record?.marks[0]?.number}
+          // onChange={(e) =>
+          //   handleDataChange(
+          //     assignmentMarks.map((row) =>
+          //       row.key === record.key ? { ...row, mark: e.target.value } : row
+          //     )
+          //   )
+          // }
         />
       ),
     },
-    // {
-    //   title: () => {
-    //     return <>Mark</>;
-    //   },
-    //   width: "15%",
-    //   render: (item) => (
-    //     <InputMark
-    //       value={item?.marks?.comment}
-    //       name="editedComment"
-    //       // onChange={(e) => setEditedComment(e.target.value)}
-    //       placeholder="Mark"
-    //     />
-    //   ),
-    // },
-    // {
-    //   title: () => {
-    //     return <>Comment</>;
-    //   },
-    //   width: "20%",
-    //   render: (item) => (
-    //     <InputComment
-    //       value={item?.marks?.comment}
-    //       name="editedComment"
-    //       // onChange={(e) => setEditedComment(e.target.value)}
-    //       placeholder="Comment"
-    //     />
-    //   ),
-    // },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   width: "15%",
-    //   render: (_, record) => (
-    //     <Space size="middle">
-    //       <Button
-    //         style={{ color: "#00899E", fontWeight: 500 }}
-    //         type={"link"}
-    //         onClick={() => {}}
-    //       >
-    //         Change
-    //       </Button>
-    //       <Button
-    //         style={{ color: "#F18D58", fontWeight: 500 }}
-    //         type={"link"}
-    //         onClick={() => {}}
-    //       >
-    //         Delete
-    //       </Button>
-    //     </Space>
-    //   ),
-    // },
+    {
+      title: "Action",
+      key: "action",
+      width: "15%",
+      render: (_, record) => (
+        <Space size="middle">
+          <Tooltip title="Create Mark">
+            <CheckOutlined />
+          </Tooltip>
+          <Tooltip title="Update Mark">
+            <EditOutlined
+              key="edit"
+              onClick={() => {
+                // setSelectedRoom(room);
+                // setShowModal(true);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Delete Mark">
+            <DeleteOutlined
+              className="delete"
+              key="delete"
+              // onClick={() => handleDeleteRoom(room.id)}
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
   ];
   return (
     <div style={styles.tableCont}>
@@ -186,12 +154,12 @@ const AssignmentMarks = () => {
           />
         </div>
       </div>
-      {/* <Table
+      <Table
         dataSource={assignmentMarks}
         columns={columns}
         rowKey={(item) => item?.id}
         pagination={false}
-      /> */}
+      />
     </div>
   );
 };

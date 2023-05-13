@@ -187,7 +187,7 @@ const CoursesSchoolContainer = () => {
     },
     {
       title: "Status",
-      width: "15%",
+      width: "10%",
       render: (item) => (
         <Tag
           style={{ minWidth: 70, textAlign: "center" }}
@@ -213,23 +213,14 @@ const CoursesSchoolContainer = () => {
           >
             Change
           </Button>
+          <Link
+            className="action"
+            style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
+            to={`${record.id}/timetable`}
+          >
+            Schedule
+          </Link>
         </Space>
-      ),
-    },
-    {
-      title: "Action",
-      key: "action",
-      width: "15%",
-      render: (_, record) => (
-          <Space size="middle">
-            <Link
-                className="action"
-                style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
-                to={`${record.id}/timetable`}
-            >
-              Schedule
-            </Link>
-          </Space>
       ),
     },
   ];

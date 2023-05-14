@@ -14,6 +14,7 @@ import TermSvg from "../../assets/icons/TermIcon";
 import SchoolSvg from "../../assets/icons/SchoolIcon";
 import GroupSvg from "../../assets/icons/GroupIcon";
 import StudentSvg from "../../assets/icons/StudentIcon";
+import AwardsSvg from "../../assets/icons/AwardsIcon";
 import TimelineSvg from "../../assets/icons/TimelineIcon";
 import RoomSvg from "../../assets/icons/RoomIcon";
 
@@ -74,6 +75,11 @@ export const managerMenu = [
     title: "Courses",
     path: `/schools/courses`,
     icon: CoursesSvg,
+  },
+  {
+    title: "Awards",
+    path: `/awards`,
+    icon: AwardsSvg,
   },
   {
     title: "Timeline",
@@ -145,6 +151,11 @@ export const studentMenu = [
     path: `/school`,
     icon: SubjectsSvg,
   },
+  {
+    title: "Awards",
+    path: `/awards`,
+    icon: AwardsSvg,
+  },
   // {
   //   title: "Timetable",
   //   path: `/schedule`,
@@ -202,6 +213,11 @@ export const teacherMenu = [
     title: "Groups",
     path: `/my-groups`,
     icon: GroupSvg,
+  },
+  {
+    title: "Awards",
+    path: `/awards`,
+    icon: AwardsSvg,
   },
   {
     title: "Timetable",

@@ -9,7 +9,7 @@ import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
+import { styled as styledmui } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import CourseLogo from "../shared/CourseLogo";
 import { useGetStudentCardQuery } from "../../redux/studentsCards/studentsCardsApiSlice";
@@ -17,11 +17,12 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Input, Empty } from "antd";
+import { Input, Empty, Spin } from "antd";
 import Search from "../../assets/icons/search.svg";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
+import styled from "styled-components";
 
-const Item = styled(Paper)(({ theme }) => ({
+const Item = styledmui(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
   fontFamily: "Open Sans",
   fontSize: 18,
@@ -34,6 +35,22 @@ const Item = styled(Paper)(({ theme }) => ({
   color: "black",
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.12)",
 }));
+
+const InputStyled = styled(Input)`
+  &.ant-input-affix-wrapper .ant-input {
+    background-color: #fafafa;
+    border-radius: 10px;
+  }
+  &.ant-input-affix-wrapper {
+    background-color: #fafafa;
+    height: 40px;
+    width: 280px;
+    border: 1px solid #c0c0c0;
+    border-radius: 10px;
+    background-color: #fafafa;
+    margin-right: 15px;
+  }
+`;
 
 const CoursesContainer = () => {
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
@@ -62,9 +79,7 @@ const CoursesContainer = () => {
   React.useEffect(() => {
     if (dataYears && !isLoadingYears) {
       setYears(dataYears);
-      setSelectedYear(
-        dataYears[dataYears.length - 1].id
-      );
+      setSelectedYear(dataYears[dataYears.length - 1].id);
     }
   }, [dataYears, isLoadingYears]);
 
@@ -78,12 +93,13 @@ const CoursesContainer = () => {
         });
       }
     } else if (user?.role === "teacher") {
-      console.log(user?.id);
-      getTeacherCourses({
-        teacher_id: user?.id,
-        year_id: selectedYear,
-        search: search,
-      });
+      if (selectedYear) {
+        getTeacherCourses({
+          teacher_id: user?.id,
+          year_id: selectedYear,
+          search: search,
+        });
+      }
     }
   }, [user, studentCard, selectedYear, search]);
 
@@ -107,11 +123,10 @@ const CoursesContainer = () => {
       </div>
       <Box sx={{ flexGrow: 1, marginTop: 3 }}>
         <div>
-          <Input
+          <InputStyled
             size="default size"
             placeholder="Search..."
             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
-            style={styles.search}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
           <FormControl
@@ -142,46 +157,52 @@ const CoursesContainer = () => {
             </Select>
           </FormControl>
         </div>
-        <Grid
-          container
-          spacing={{ xs: 3, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 15 }}
+        <Spin
+          spinning={user?.role === "student" ? isLoading : teacherIsLoading}
+          size="large"
         >
-          {courses?.length > 0 ? (
-            courses?.map((item) => (
-              <Grid item xs={6} sm={8} md={3} key={item.id}>
-                <Link
-                  to={`/courses/${item.id}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  <Item>
-                    <CourseLogo
-                      title={item?.subject?.name}
-                      width={"50%"}
-                      height={"55%"}
-                      fontSize={30}
-                    />
-                    <div style={styles.title}>{item?.subject?.name}</div>
-                    <div style={styles.teacher}>
-                      <div style={styles.teachTitle}>Teacher:</div>
-                      {item?.teacher ? (
-                        <div style={styles.teacher_name}>
-                          {item?.teacher?.first_name} {item?.teacher?.last_name}
-                        </div>
-                      ) : (
-                        <div style={styles.teacher_name}>-</div>
-                      )}
-                    </div>
-                  </Item>
-                </Link>
-              </Grid>
-            ))
-          ) : (
-            <div style={{ width: "100%", marginTop: 40 }}>
-              <Empty />
-            </div>
-          )}
-        </Grid>
+          <Grid
+            container
+            spacing={{ xs: 3, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 15 }}
+          >
+            {courses?.length > 0 ? (
+              courses?.map((item) => (
+                <Grid item xs={6} sm={8} md={3} key={item.id}>
+                  <Link
+                    to={`/courses/${item.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Item>
+                      <CourseLogo
+                        title={item?.subject?.name}
+                        width={"50%"}
+                        height={"55%"}
+                        fontSize={30}
+                      />
+                      <div style={styles.title}>{item?.subject?.name}</div>
+                      <div style={styles.teacher}>
+                        <div style={styles.teachTitle}>Teacher:</div>
+                        {item?.teacher ? (
+                          <div style={styles.teacher_name}>
+                            {item?.teacher?.first_name}{" "}
+                            {item?.teacher?.last_name}
+                          </div>
+                        ) : (
+                          <div style={styles.teacher_name}>-</div>
+                        )}
+                      </div>
+                    </Item>
+                  </Link>
+                </Grid>
+              ))
+            ) : (
+              <div style={{ width: "100%", marginTop: 40 }}>
+                <Empty />
+              </div>
+            )}
+          </Grid>
+        </Spin>
       </Box>
     </div>
   );
@@ -200,14 +221,6 @@ const styles = {
     padding: 8,
     justifyContent: "flex-end",
     display: "flex",
-  },
-  search: {
-    height: 40,
-    width: 280,
-    border: "1px solid #C0C0C0",
-    borderRadius: 10,
-    backgroundColor: "#FAFAFA",
-    marginRight: 15,
   },
   courseCont: {
     backgroundColor: "white",
@@ -232,6 +245,8 @@ const styles = {
   },
   title: {
     marginTop: 20,
+    fontSize: 16,
+    fontWeight: 600,
   },
 };
 

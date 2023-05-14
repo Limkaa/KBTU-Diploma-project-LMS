@@ -271,7 +271,7 @@ const styles = {
     borderRadius: 10,
     padding: "10px",
     marginTop: 15,
-    fontWeight: 600,
+    fontWeight: 500,
     color: "white",
     fontSize: 16,
     backgroundColor: "#163A61",

@@ -9,7 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 import {
   useAddSyllabusPointMutation,
   useDeleteSyllabusPointMutation,
-  useLazyGetCourseSyllabusQuery,
+  useGetCourseSyllabusQuery,
   useUpdateSyllabusPointMutation,
 } from "../../redux/syllabus/syllabusApiSlice";
 import SyllabusCreate from "./SyllabusCreate";
@@ -29,18 +29,15 @@ const SyllabusContainer = () => {
   const [search, setSearch] = React.useState("");
   const [syllabus, setSyllabus] = React.useState();
 
-  const [getSyllabus, { data: dataSyllabus, isLoading: isLoadingSyllabus }] =
-    useLazyGetCourseSyllabusQuery();
+  const {
+    data: dataSyllabus,
+    isLoading: isLoadingSyllabus,
+    refetch,
+  } = useGetCourseSyllabusQuery({ course_id: courseId, search });
 
   const [addSyllabus] = useAddSyllabusPointMutation();
   const [updateSyllabus] = useUpdateSyllabusPointMutation();
   const [deleteSyllabus] = useDeleteSyllabusPointMutation();
-
-  React.useEffect(() => {
-    if (courseId) {
-      getSyllabus({ course_id: courseId, search });
-    }
-  }, [courseId, search]);
 
   React.useEffect(() => {
     if (dataSyllabus && !isLoadingSyllabus) {
@@ -59,7 +56,7 @@ const SyllabusContainer = () => {
       })
         .unwrap()
         .then((payload) => {
-          getSyllabus({ course_id: courseId, search });
+          refetch();
           toastify("success", "Syllabus Point Created");
         });
     } catch (err) {
@@ -81,7 +78,7 @@ const SyllabusContainer = () => {
       })
         .unwrap()
         .then((payload) => {
-          getSyllabus({ course_id: courseId, search });
+          refetch();
           toastify("success", "Syllabus Point Updated");
         });
     } catch (err) {
@@ -99,7 +96,7 @@ const SyllabusContainer = () => {
       })
         .unwrap()
         .then((payload) => {
-          getSyllabus({ course_id: courseId, search });
+          refetch();
           toastify("success", "Syllabus Point Deleted");
         });
     } catch (err) {
@@ -277,7 +274,6 @@ const SyllabusContainer = () => {
 const styles = {
   container: {
     flex: 1,
-    height: "100%",
     backgroundColor: "#FAFAFA",
     padding: 16,
   },

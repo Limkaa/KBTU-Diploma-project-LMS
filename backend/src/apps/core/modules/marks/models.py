@@ -44,6 +44,8 @@ class Mark(CustomModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    MARK_RATING_MULTIPLIER = 1
+
     non_updatable_fields = ["id", "assignment", "enrollment", "created_at"]
     
     related_fields = [
@@ -76,6 +78,10 @@ class Mark(CustomModel):
     
     def __str__(self) -> str:
         return f"{self.enrollment.student} got {self.number} for {self.assignment}"
+    
+    @property
+    def rating_points(self):
+        return self.number * self.MARK_RATING_MULTIPLIER
     
     def clean(self) -> None:
         errors = ResponseDetails()

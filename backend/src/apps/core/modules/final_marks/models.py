@@ -42,6 +42,8 @@ class TermMark(CustomModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    TERM_MARK_RATING_MULTIPLIER = 3
+
     non_updatable_fields = ["id", "enrollment", "term", "created_at"]
     
     related_fields = [
@@ -65,6 +67,10 @@ class TermMark(CustomModel):
     
     def __str__(self) -> str:
         return f"{self.enrollment.student} got {self.number} for {self.term} of {self.enrollment.subject}"
+    
+    @property
+    def rating_points(self):
+        return self.number * self.TERM_MARK_RATING_MULTIPLIER
     
     def clean(self) -> None:
         errors = ResponseDetails()
@@ -104,6 +110,8 @@ class YearMark(CustomModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    YEAR_MARK_RATING_MULTIPLIER = 5
+    
     non_updatable_fields = ["id", "enrollment", "created_at"]
     
     related_fields = [
@@ -123,12 +131,16 @@ class YearMark(CustomModel):
     def __str__(self) -> str:
         return f"{self.enrollment.student} got {self.number} for {self.enrollment.subject}"
     
+    @property
+    def rating_points(self):
+        return self.number * self.YEAR_MARK_RATING_MULTIPLIER
+    
     def clean(self) -> None:
         errors = ResponseDetails()
         errors.clear()
         
         if not self.enrollment.year.is_opened_to_marks:
-            errors.add_field_message('year', "Year is not opened to evaluation")
+            errors.add_field_message('number', "Year is not opened to evaluation")
 
         if errors:
             raise ValidationError(errors.map)

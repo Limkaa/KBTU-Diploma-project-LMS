@@ -37,6 +37,44 @@ const InputStyled = styled(Input)`
   }
 `;
 
+const InputDes = styled(Input.TextArea)`
+  &.ant-input[disabled] {
+    font-size: 13px;
+    font-weight: 400;
+    font-family: "Open Sans";
+    color: #9699a5;
+    border: none;
+    background-color: white;
+    padding: 0;
+    cursor: default;
+    border-radius: 0px;
+    resize: none;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    overflow: hidden;
+  }
+`;
+
+const InputTitle = styled(Input)`
+  &.ant-input[disabled] {
+    border: none;
+    background-color: white;
+    padding: 0;
+    cursor: default;
+    border-radius: 0px;
+    resize: none;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    overflow: hidden;
+  }
+`;
+
+const CardStyled = styled(Card)`
+  &.ant-card .ant-card-body {
+    padding: 0;
+  }
+`;
+
 const CourseAwards = () => {
   const { id: courseId } = useParams();
   const [search, setSearch] = React.useState("");
@@ -184,8 +222,8 @@ const CourseAwards = () => {
           {courseAwards?.length > 0 ? (
             courseAwards?.map((item) => (
               <Grid item key={item.id} xs={6} sm={8} md={4}>
-                <Card
-                  className="card"
+                <CardStyled
+                  style={styles.card}
                   key={item.id}
                   actions={
                     user?.role === "manager"
@@ -218,35 +256,53 @@ const CourseAwards = () => {
                         ]
                   }
                 >
-                  <div style={styles.title}>{item?.name}</div>
-                  <div style={styles.des}>{item?.description}</div>
-                  <div style={styles.recentCont}>
-                    {item?.recent_winners?.length > 0 && (
-                      <>
-                        <div style={styles.recentTitle}>Recent winnners</div>
-                        {item?.recent_winners?.slice(0, 5).map((winner) => (
-                          <div style={styles.recent} key={winner.id}>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <img style={styles.img} />
-                              <div style={styles.name}>
-                                {winner.student?.user?.first_name}{" "}
-                                {winner.student?.user?.last_name}
+                  <div style={styles.total}>
+                    <div style={styles.totalTitle}>
+                      Total winners: {item.issued_total}
+                    </div>
+                    <InputTitle
+                      style={styles.title}
+                      value={item?.name}
+                      disabled
+                    />
+                  </div>
+
+                  <div style={{ padding: "5px 20px" }}>
+                    <InputDes
+                      value={item?.description}
+                      disabled
+                      style={{
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 2,
+                      }}
+                    />
+
+                    <div style={styles.recentCont}>
+                      {item?.recent_winners?.length > 0 && (
+                        <>
+                          <div style={styles.recentTitle}>Recent winnners</div>
+                          {item?.recent_winners?.slice(0, 5).map((winner) => (
+                            <div style={styles.recent} key={winner.id}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <img style={styles.img} />
+                                <div style={styles.name}>
+                                  {winner.student?.user?.first_name}{" "}
+                                  {winner.student?.user?.last_name}
+                                </div>
                               </div>
                             </div>
-                            <div style={styles.rating}>
-                              {winner?.student?.user?.rating}
-                            </div>
-                          </div>
-                        ))}
-                      </>
-                    )}
+                          ))}
+                        </>
+                      )}
+                    </div>
                   </div>
-                </Card>
+                </CardStyled>
               </Grid>
             ))
           ) : (
@@ -294,10 +350,22 @@ const styles = {
     justifyContent: "flex-end",
     display: "flex",
   },
+  totalTitle: {
+    fontSize: 13,
+    fontWeight: 500,
+    color: "rgba(22, 58, 97, 0.7)",
+  },
   title: {
-    fontSize: 15,
-    fontWeight: 600,
+    fontSize: 16,
+    fontWeight: 500,
     color: "#4A4D58",
+    backgroundColor: "rgba(240, 247, 255, 1)",
+  },
+  card: {
+    minHeight: 475,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   des: {
     fontSize: 14,
@@ -307,6 +375,13 @@ const styles = {
   recentCont: {
     marginTop: 10,
   },
+  total: {
+    fontSize: 15,
+    fontWeight: 500,
+    color: "rgba(74, 77, 88, 1)",
+    backgroundColor: "rgba(240, 247, 255, 1)",
+    padding: "12px 20px",
+  },
   recentTitle: {
     fontSize: 14,
     fontWeight: 600,
@@ -314,7 +389,7 @@ const styles = {
   },
   name: {
     fontSize: 13,
-    fontWeight: 500,
+    fontWeight: 400,
     color: "#4A4D58",
     marginLeft: 7,
   },
@@ -324,8 +399,8 @@ const styles = {
     color: "#4A4D58",
   },
   img: {
-    width: 30,
-    height: 30,
+    width: 28,
+    height: 28,
     borderRadius: 120,
     border: "none",
     backgroundColor: "rgba(0, 0, 0, 0.1)",

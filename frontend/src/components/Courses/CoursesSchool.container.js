@@ -189,7 +189,7 @@ const CoursesSchoolContainer = () => {
     },
     {
       title: "Status",
-      width: "15%",
+      width: "10%",
       render: (item) => (
         <Tag
           style={{ minWidth: 70, textAlign: "center" }}

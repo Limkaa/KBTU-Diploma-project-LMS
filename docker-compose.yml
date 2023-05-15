@@ -5,12 +5,42 @@ services:
         build:
             context: ./backend
             dockerfile: Dockerfile
-
+        command: python src/manage.py runserver 0.0.0.0:8000
         ports:
             - '8000:8000'
-
         volumes:
             - ./backend:/app/backend
+        restart: always
+
+    redis:
+        image: redis:alpine
+        ports:
+            - '0.0.0.0:6379:6379'
+        command: redis-server
+        restart: always
+
+    celery:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        command: bash -c "cd src && celery -A project worker --loglevel=INFO"
+        depends_on:
+            - redis
+            - django
+        volumes:
+            - ./backend:/app/backend
+        restart: always
+
+    tgbot:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        command: bash -c "cd src && python manage.py bot_polling"
+        depends_on:
+            - django
+        volumes:
+            - ./backend:/app/backend
+        restart: always
 
     frontend:
         build:
@@ -25,3 +55,4 @@ services:
 
         depends_on:
             - 'django'
+        restart: always

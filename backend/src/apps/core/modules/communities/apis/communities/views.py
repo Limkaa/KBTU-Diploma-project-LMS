@@ -46,13 +46,18 @@ class SchoolCommunitiesListCreateAPI(generics.ListCreateAPIView):
 
 class CommunityDetailAPI(generics.RetrieveUpdateAPIView):
     serializer_class = CommunityModelSerializer
-    queryset = Community.objects.select_related('school')
     
     def get_permissions(self):
         self.permission_classes = [OnlyOwnSchool]
         if self.request.method == 'PUT':
             self.permission_classes = [OnlyOwnSchool, IsManager]
         return super().get_permissions()
+
+    def get_queryset(self):
+        qs = Community.objects.select_related('school')
+        qs = qs.prefetch_related('members')
+        qs = qs.annotate(members_count=Count('members'))
+        return qs
 
 
 __all__ = [

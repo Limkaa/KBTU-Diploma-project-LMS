@@ -71,6 +71,21 @@ function App() {
             path="/courses/:id/syllabus"
             element={<SyllabusContainer />}
           />
+          <Route
+              exact
+              path="/todo"
+              element={<TodoPage />}
+          />
+          <Route
+              exact
+              path="/communities"
+              element={<CommunitiesPage />}
+          />
+          <Route
+              exact
+              path="/communities/:commId"
+              element={<CommunityPage />}
+          />
           <Route exact path="/awards" element={<AwardsContainer />} />
           <Route exact path="/awards/:id/winners" element={<Award />} />
           <Route exact path="/courses/:id/winners" element={<CourseAward />} />
@@ -85,21 +100,6 @@ function App() {
             exact
             path="assignments/:id"
             element={<AssignmentContainer />}
-          />
-          <Route
-              exact
-              path="/communities"
-              element={<CommunitiesPage />}
-          />
-          <Route
-              exact
-              path="/communities/:commId"
-              element={<CommunityPage />}
-          />
-          <Route
-              exact
-              path="/todo"
-              element={<TodoPage />}
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher"]} />}>

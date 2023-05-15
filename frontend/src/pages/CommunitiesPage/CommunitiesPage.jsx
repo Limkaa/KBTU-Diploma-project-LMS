@@ -7,7 +7,7 @@ import {selectCurrentUser} from "../../redux/auth/authSlice";
 import {
     useGetSchoolCommunitiesQuery,
     useGetStudentMembershipsQuery,
-    useJoinCommunityMutation
+    useJoinCommunityMutation, useLeaveCommunityMutation
 } from "../../redux/communities/communitiesApiSlice";
 import "./CommunitiesPage.css";
 import {CheckCircleTwoTone, CloseCircleTwoTone, EditOutlined} from "@ant-design/icons";
@@ -42,6 +42,7 @@ const CommunitiesPage = () => {
     const [communities, setCommunities] = useState([]);
     const [myCommunities, setMyCommunities] = useState([]);
     const [joinCommunity] = useJoinCommunityMutation();
+    const [leaveCommunity] = useLeaveCommunityMutation();
     const [student, setStudent] = useState();
     const {data: myCommunitiesData, isSuccess: isMyCommSuccess, isLoading: isMyCommsLoading, refetch: myCommRefetch}
         = useGetStudentMembershipsQuery(student?.id);
@@ -58,7 +59,7 @@ const CommunitiesPage = () => {
         if (user.role === "student" && isMyCommSuccess) {
             let arr = [];
             for (let comm of myCommunitiesData.results) {
-                arr.push(comm.community.id);
+                arr.push({community: comm.community.id, membership: comm.id});
             }
             setMyCommunities(arr);
         }
@@ -75,6 +76,19 @@ const CommunitiesPage = () => {
             .unwrap()
             .then(() => {
                 toastify("success", "You joined community");
+                refetch();
+                myCommRefetch();
+            })
+            .catch(err => {
+                toastify("error", err.data.detail.__all__[0]);
+            })
+    }
+
+    const handleLeave = (memId) => {
+        leaveCommunity(memId)
+            .unwrap()
+            .then(() => {
+                toastify("success", "You leaved community");
                 refetch();
                 myCommRefetch();
             })
@@ -129,7 +143,8 @@ const CommunitiesPage = () => {
                     <div className="comm-cards">
                         {
                             communities.map((comm) => {
-                                const isJoined = myCommunities.includes(comm.id);
+                                const match = myCommunities.find((item) => item.community === comm.id);
+                                const isJoined = match !== undefined;
                                 return (
                                     <Card
                                         className="comm-card"
@@ -157,13 +172,23 @@ const CommunitiesPage = () => {
                                                 <p className="description">{comm.description}</p>
                                             </div>
                                             {user.role === "student" && (
-                                                <Button
-                                                    className={isJoined ? "joined" : "join"}
-                                                    onClick={() => handleJoin(comm.id)}
-                                                    loading={isMyCommsLoading}
-                                                >
-                                                    {isJoined ? "Joined" : "Join"}
-                                                </Button>
+                                                isJoined ? (
+                                                    <Button
+                                                        className="joined"
+                                                        onClick={() => handleLeave(match.membership)}
+                                                        loading={isMyCommsLoading}
+                                                    >
+                                                        Joined
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        className="join"
+                                                        onClick={() => handleJoin(comm.id)}
+                                                        loading={isMyCommsLoading}
+                                                    >
+                                                        Join
+                                                    </Button>
+                                                )
                                             )}
                                             {user.role === "manager" && (
                                                 <Button

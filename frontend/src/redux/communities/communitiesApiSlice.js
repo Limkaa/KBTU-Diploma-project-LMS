@@ -30,6 +30,12 @@ export const communitiesApiSlice = authApi.injectEndpoints({
                 method: "POST",
             })
         }),
+        leaveCommunity: builder.mutation({
+            query: (memId) => ({
+                url: `/api/memberships/${memId}`,
+                method: "DELETE",
+            })
+        }),
         getStudentMemberships: builder.query({
             query: (studentId) => `/api/students/${studentId}/memberships`
         }),
@@ -54,4 +60,5 @@ export const {
     useGetStudentMembershipsQuery,
     useGetCommunityQuery,
     useGetCommunityMembersQuery,
+    useLeaveCommunityMutation
 } = communitiesApiSlice;

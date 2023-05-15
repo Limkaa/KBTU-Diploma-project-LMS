@@ -213,3 +213,7 @@
     display: block;
 }
 
+#communities #add-modal * {
+    box-sizing: content-box;
+}
+

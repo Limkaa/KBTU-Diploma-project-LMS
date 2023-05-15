@@ -6,7 +6,7 @@ import {
     useGetCommunityMembersQuery,
     useGetCommunityQuery,
     useGetStudentMembershipsQuery,
-    useJoinCommunityMutation
+    useJoinCommunityMutation, useLeaveCommunityMutation
 } from "../../redux/communities/communitiesApiSlice";
 import {Alert, Button, Input, Radio, Spin, Table, Tag} from "antd";
 import './CommunitiesPage.css';
@@ -38,6 +38,7 @@ const CommunityPage = () => {
     const {data: communityMembersData, isLoading: isMembersLoading, isSuccess: isMembersSuccess, refetch: membersRefetch}
         = useGetCommunityMembersQuery({commId, page, search, order});
     const [members, setMembers] = useState();
+    const [leaveCommunity] = useLeaveCommunityMutation();
 
     useEffect(() => {
         if (isSuccess) {
@@ -56,7 +57,7 @@ const CommunityPage = () => {
         if (user.role === "student" && isMyCommSuccess) {
             let arr = [];
             for (let comm of myCommunitiesData.results) {
-                arr.push(comm.community.id);
+                arr.push({community: comm.community.id, membership: comm.id});
             }
             setMyCommunities(arr);
         }
@@ -79,6 +80,19 @@ const CommunityPage = () => {
             .unwrap()
             .then(() => {
                 toastify("success", "You joined community");
+                refetch();
+                membersRefetch();
+            })
+            .catch(err => {
+                toastify("error", err.data.detail.__all__[0]);
+            })
+    }
+
+    const handleLeave = (memId) => {
+        leaveCommunity(memId)
+            .unwrap()
+            .then(() => {
+                toastify("success", "You leaved community");
                 refetch();
                 membersRefetch();
             })
@@ -191,18 +205,38 @@ const CommunityPage = () => {
                                 <Spin spinning={isLoading}>
                                     <div>
                                         <h2>{community?.name}</h2>
+                                        <p>{community?.members_count} members</p>
                                         <p className="description">{community?.description}</p>
                                         <p className="link"><a href={community?.link}>Link</a></p>
                                     </div>
-                                    {user.role === "student" && (
-                                        <Button
-                                            className={myCommunities.includes(community?.id) ? "joined" : "join"}
-                                            onClick={() => handleJoin(community?.id)}
-                                            loading={isMyCommsLoading}
-                                        >
-                                            {myCommunities.includes(community?.id) ? "Joined" : "Join"}
-                                        </Button>
-                                    )}
+                                    {
+                                        user.role === "student" && (
+                                            (() => {
+                                                const match = myCommunities.find((item) => item.community === community.id);
+                                                return (
+                                                    <React.Fragment>
+                                                        {match !== undefined ? (
+                                                            <Button
+                                                                className="joined"
+                                                                onClick={() => handleLeave(match.membership)}
+                                                                loading={isMyCommsLoading}
+                                                            >
+                                                                Joined
+                                                            </Button>
+                                                        ) : (
+                                                            <Button
+                                                                className="join"
+                                                                onClick={() => handleJoin(community.id)}
+                                                                loading={isMyCommsLoading}
+                                                            >
+                                                                Join
+                                                            </Button>
+                                                        )}
+                                                    </React.Fragment>
+                                                );
+                                            })()
+                                        )
+                                    }
                                 </Spin>
                             </div>
                         </div>

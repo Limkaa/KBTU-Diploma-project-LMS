@@ -8,6 +8,7 @@ import {toastify} from "../../components/shared/Toast/Toast";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
 import {styles} from "../../components/Users/AddingUserModal";
+import "./CommunitiesPage.css";
 
 const InputStyled = styled(TextField)(() => ({
     "& fieldset": {
@@ -37,7 +38,7 @@ const AddCommunityModal = ({ show, setShow, refetch }) => {
     }
 
     return (
-        <div style={{ ...styles.wrapper, right: show ? "0" : "-30%" }}>
+        <div id="add-modal" style={{ ...styles.wrapper, right: show ? "0" : "-30%" }}>
             <div style={styles.header}>
                 <div style={styles.headerTitle}>New Community</div>
                 <img
@@ -64,6 +65,9 @@ const AddCommunityModal = ({ show, setShow, refetch }) => {
                     if (values.description === "") {
                         errors.description = "Description is required";
                     }
+                    if (values.link !== "" && !/^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(:\d{2,5})?([\/\w.-]*)*$/.test(values.link)) {
+                        errors.link = "Invalid url";
+                    }
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -75,7 +79,7 @@ const AddCommunityModal = ({ show, setShow, refetch }) => {
             >
                 {({ isSubmitting }) => (
                     <Form className="modal" style={styles.form}>
-                        <p style={styles.contentTitle}>Name</p>
+                        <br/>
                         <Field name="name">
                             {({ field, form: { touched, errors } }) => (
                                 <>

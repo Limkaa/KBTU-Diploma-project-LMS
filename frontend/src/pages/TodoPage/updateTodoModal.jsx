@@ -61,7 +61,7 @@ const UpdateTodoModal = ({show, setShow, refetch, todo }) => {
     return (
         <div id="update-todo" style={{ ...styles.wrapper, right: show ? "0" : "-30%" }}>
             <div style={styles.header}>
-                <div style={styles.headerTitle}>New Community</div>
+                <div style={styles.headerTitle}>Update Todo</div>
                 <img
                     alt="cancel"
                     src={Cancel}
@@ -135,7 +135,7 @@ const UpdateTodoModal = ({show, setShow, refetch, todo }) => {
                     Is active
                 </Checkbox>
                 <button type="submit" style={styles.btn} onClick={handleSubmit}>
-                    Update community
+                    Update todo
                 </button>
             </div>
         </div>

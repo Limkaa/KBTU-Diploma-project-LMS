@@ -59,7 +59,7 @@ const AddTodoModal = ({ show, setShow, refetch }) => {
     return (
         <div id="add-modal" style={{ ...styles.wrapper, right: show ? "0" : "-30%" }}>
             <div style={styles.header}>
-                <div style={styles.headerTitle}>New Community</div>
+                <div style={styles.headerTitle}>New Todo</div>
                 <img
                     alt="cancel"
                     src={Cancel}
@@ -91,7 +91,7 @@ const AddTodoModal = ({ show, setShow, refetch }) => {
             >
                 {({ isSubmitting }) => (
                     <Form className="modal" style={styles.form}>
-                        <p style={styles.contentTitle}>Name</p>
+                        <br/>
                         <Field name="name">
                             {({ field, form: { touched, errors } }) => (
                                 <>
@@ -158,7 +158,7 @@ const AddTodoModal = ({ show, setShow, refetch }) => {
                             Is done
                         </label>
                         <button type="submit" disabled={isSubmitting} style={styles.btn}>
-                            Create community
+                            Create todo
                         </button>
                     </Form>
                 )}

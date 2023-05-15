@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {styles} from "../../components/Users/AddingUserModal";
 import Cancel from "../../assets/icons/close.svg";
 import {InputStyled} from "../GroupsPage/UpdateGroupModal";
-import {Checkbox} from "antd";
+import {Checkbox, Button} from "antd";
 import {useUpdateCommunityMutation} from "../../redux/communities/communitiesApiSlice";
 import {toastify} from "../../components/shared/Toast/Toast";
 
@@ -13,6 +13,7 @@ const UpdateCommunityModal = ({show, setShow, refetch, community }) => {
     const [link, setLink] = useState("");
     const [nameError, setNameError] = useState(false);
     const [descError, setDescError] = useState(false);
+    const [linkError, setLinkError] = useState(false);
 
     const [updateCommunity] = useUpdateCommunityMutation();
 
@@ -26,7 +27,7 @@ const UpdateCommunityModal = ({show, setShow, refetch, community }) => {
     }, [community, show])
 
     const handleSubmit = () => {
-        console.log(community.id,name, desc, isActive, link);
+        if (!linkError && !nameError && !descError)
         updateCommunity({commId: community.id, name, description: desc, link, is_active: isActive})
             .then(() => {
                 refetch();
@@ -39,9 +40,9 @@ const UpdateCommunityModal = ({show, setShow, refetch, community }) => {
     }
 
     return (
-        <div style={{ ...styles.wrapper, right: show ? "0" : "-30%" }}>
+        <div id="add-modal" style={{ ...styles.wrapper, right: show ? "0" : "-30%" }}>
             <div style={styles.header}>
-                <div style={styles.headerTitle}>New Community</div>
+                <div style={styles.headerTitle}>Update Community</div>
                 <img
                     alt="cancel"
                     src={Cancel}
@@ -54,7 +55,7 @@ const UpdateCommunityModal = ({show, setShow, refetch, community }) => {
                 />
             </div>
             <div className="modal" style={styles.form}>
-                <p style={styles.contentTitle}>Name</p>
+                <br/>
                 <InputStyled
                     InputLabelProps={{
                         shrink: true,
@@ -88,9 +89,18 @@ const UpdateCommunityModal = ({show, setShow, refetch, community }) => {
                     className="input"
                     size="small"
                     value={link}
-                    onChange={(e) => setLink(e.target.value)}
+                    onChange={(e) => {
+                        setLink(e.target.value);
+                        if (e.target.value !== "" && !/^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(:\d{2,5})?([\/\w.-]*)*$/.test(e.target.value)) {
+                            setLinkError(true);
+                        } else {
+                            setLinkError(false);
+                        }
+                    }}
                 />
-                <div className="hidden"></div>
+                <div className={linkError ? "error" : "hidden"}>
+                    Invalid url
+                </div>
                 <InputStyled
                     InputLabelProps={{
                         shrink: desc !== "",
@@ -126,7 +136,8 @@ const UpdateCommunityModal = ({show, setShow, refetch, community }) => {
                 >
                     Is active
                 </Checkbox>
-                <button type="submit" style={styles.btn} onClick={handleSubmit}>
+                <button type="submit" style={styles.btn} onClick={handleSubmit}
+                        disabled={linkError || nameError || descError}>
                     Update community
                 </button>
             </div>

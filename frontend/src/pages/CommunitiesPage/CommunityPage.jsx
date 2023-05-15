@@ -57,7 +57,7 @@ const CommunityPage = () => {
         if (user.role === "student" && isMyCommSuccess) {
             let arr = [];
             for (let comm of myCommunitiesData.results) {
-                arr.push({community: comm.community.id, membership: comm.id});
+                arr.push({community: comm.community?.id, membership: comm?.id});
             }
             setMyCommunities(arr);
         }
@@ -212,7 +212,7 @@ const CommunityPage = () => {
                                     {
                                         user.role === "student" && (
                                             (() => {
-                                                const match = myCommunities.find((item) => item.community === community.id);
+                                                const match = myCommunities.find((item) => item.community === community?.id);
                                                 return (
                                                     <React.Fragment>
                                                         {match !== undefined ? (
@@ -226,7 +226,7 @@ const CommunityPage = () => {
                                                         ) : (
                                                             <Button
                                                                 className="join"
-                                                                onClick={() => handleJoin(community.id)}
+                                                                onClick={() => handleJoin(community?.id)}
                                                                 loading={isMyCommsLoading}
                                                             >
                                                                 Join

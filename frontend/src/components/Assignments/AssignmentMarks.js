@@ -1,11 +1,17 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetAssignmentMarksByEnrollmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
-import { Table, Input, Button, Space, Tooltip } from "antd";
+import { Table, Input, Button, Space, Tooltip, Alert } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import styled from "styled-components";
 import { CheckOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  useCreateMarkMutation,
+  useDeleteMarkMutation,
+  useUpdateMarkMutation,
+} from "../../redux/marks/marksApiSlice";
+import { toastify } from "../shared/Toast/Toast";
 
 const InputComment = styled(Input)`
   &.ant-input {
@@ -28,7 +34,7 @@ const InputMark = styled(Input)`
   &.ant-input {
     padding: 15px;
     height: 40px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
     color: #163a61;
     border: none;
@@ -47,32 +53,130 @@ const AssignmentMarks = () => {
   const { id: assignment_id } = useParams();
   const [assignmentMarks, setAssignmentMarks] = React.useState([]);
   const [search, setSearch] = React.useState("");
-  const [changedRows, setChangedRows] = React.useState([]);
-  const [newComment, setNewComment] = React.useState();
-  const [newMark, setNewMark] = React.useState();
+  const [updatedMarks, setUpdatedMarks] = React.useState([]);
+
+  const [createMark] = useCreateMarkMutation();
+  const [updateMark] = useUpdateMarkMutation();
+  const [deleteMark] = useDeleteMarkMutation();
 
   const { data, isLoading, refetch } = useGetAssignmentMarksByEnrollmentsQuery({
     assignment_id: assignment_id,
+    search,
   });
 
   React.useEffect(() => {
     if (data && !isLoading) {
+      let arr = [];
       setAssignmentMarks(data.results);
+      data?.results?.forEach((el) => {
+        arr.push({
+          id: el?.id,
+          mark_id: el?.marks[0]?.id,
+          number: el?.marks[0]?.number,
+          comment: el?.marks[0]?.comment,
+        });
+      });
+      setUpdatedMarks(arr);
     }
   }, [data, isLoading]);
 
-  // const handleDataChange = (id, data) => {
-  //   console.log(id, data);
-  //   // const changedRowKeys = newData.map((row) => row.key);
-  //   // setChangedRows([...changedRows, { id, comment, mark }]);
-  //   // setAssignmentMarks(newData);
-  // };
+  const handleCreateMark = async (id) => {
+    const item = updatedMarks.find((item) => item.id === id);
+    try {
+      await createMark({
+        assignment_id: assignment_id,
+        enrollment: item.id,
+        number: item.number,
+        comment: item.comment,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Mark created");
+          refetch();
+        });
+    } catch (err) {
+      console.log(err);
+      if (err?.data?.detail?.number[0]) {
+        toastify("error", err?.data?.detail?.number[0]);
+      }
+      if (err.data.detail?.__all__[0]) {
+        toastify("error", err.data.detail?.__all__[0]);
+      }
+      if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
 
-  const handleSave = () => {
-    const changedData = assignmentMarks.filter((row) =>
-      changedRows.includes(row.key)
-    );
-    // Send changedData to query
+  const handleUpdateMark = async (id) => {
+    const item = updatedMarks.find((item) => item.id === id);
+    try {
+      await updateMark({
+        mark_id: item.mark_id,
+        number: item.number,
+        comment: item.comment,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Mark update");
+          refetch();
+        });
+    } catch (err) {
+      if (err?.data?.detail?.number[0]) {
+        toastify("error", err?.data?.detail?.number[0]);
+      }
+      if (err.data.detail?.__all__[0]) {
+        toastify("error", err.data.detail?.__all__[0]);
+      }
+      if (err.data.detail?.non_field_errors[0]) {
+        toastify("error", err.data.detail?.non_field_errors[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
+
+  const handleDeleteMark = async (id) => {
+    const item = updatedMarks.find((item) => item.id === id);
+    try {
+      await deleteMark({
+        mark_id: item.mark_id,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Mark deleted");
+          refetch();
+        });
+    } catch (err) {
+      if (err.data.detail?.__all__[0]) {
+        toastify("error", err.data.detail?.__all__[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
+
+  const handleCommentChange = (id, event) => {
+    const value = event.target.value;
+    const updatedData = updatedMarks.map((item) => {
+      if (item.id === id) {
+        return { ...item, comment: value };
+      }
+      return item;
+    });
+    setUpdatedMarks(updatedData);
+  };
+
+  const handleMarkChange = (id, value) => {
+    const updatedData = updatedMarks.map((item) => {
+      if (item.id === id) {
+        return { ...item, number: value };
+      }
+      return item;
+    });
+    setUpdatedMarks(updatedData);
   };
 
   const columns = [
@@ -82,16 +186,38 @@ const AssignmentMarks = () => {
       },
       width: "15%",
       render: (item) => (
-        <div>
-          {item?.student?.user?.first_name} {item?.student?.user?.last_name}
-        </div>
+        <>
+          <div
+            style={{
+              textDecoration: "none",
+              fontWeight: 500,
+              color: "#00889D",
+              fontSize: 13,
+            }}
+          >
+            {item?.student?.user?.first_name} {item?.student?.user?.last_name}
+          </div>
+          <div
+            style={{
+              color: "rgba(74, 77, 88, 1)",
+              textDecoration: "none",
+              fontWeight: 400,
+              fontSize: 13,
+            }}
+          >
+            {item?.student?.user?.email}
+          </div>
+        </>
       ),
     },
     {
       title: "Comment",
       width: "20%",
       render: (_, record) => (
-        <InputMark defaultValue={record?.marks[0]?.comment} />
+        <InputMark
+          defaultValue={record?.marks[0]?.comment}
+          onChange={(event) => handleCommentChange(record.id, event)}
+        />
       ),
     },
     {
@@ -100,15 +226,10 @@ const AssignmentMarks = () => {
       width: "20%",
       render: (_, record) => (
         <InputMark
+          max={5}
           type="number"
           defaultValue={record?.marks[0]?.number}
-          // onChange={(e) =>
-          //   handleDataChange(
-          //     assignmentMarks.map((row) =>
-          //       row.key === record.key ? { ...row, mark: e.target.value } : row
-          //     )
-          //   )
-          // }
+          onChange={(event) => handleMarkChange(record.id, event.target.value)}
         />
       ),
     },
@@ -119,14 +240,17 @@ const AssignmentMarks = () => {
       render: (_, record) => (
         <Space size="middle">
           <Tooltip title="Create Mark">
-            <CheckOutlined />
+            <CheckOutlined
+              className="check"
+              onClick={() => handleCreateMark(record.id)}
+            />
           </Tooltip>
           <Tooltip title="Update Mark">
             <EditOutlined
               key="edit"
+              className="edit"
               onClick={() => {
-                // setSelectedRoom(room);
-                // setShowModal(true);
+                handleUpdateMark(record.id);
               }}
             />
           </Tooltip>
@@ -134,7 +258,7 @@ const AssignmentMarks = () => {
             <DeleteOutlined
               className="delete"
               key="delete"
-              // onClick={() => handleDeleteRoom(room.id)}
+              onClick={() => handleDeleteMark(record.id)}
             />
           </Tooltip>
         </Space>

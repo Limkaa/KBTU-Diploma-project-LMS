@@ -189,7 +189,15 @@ const CourseEnrollment = () => {
       render: (item) => (
         <Tag
           style={{ minWidth: 50, textAlign: "center" }}
-          color={item?.student?.user?.gender === "male" ? "blue" : "pink"}
+          color={
+            select === "notEnrolled"
+              ? item?.user?.gender === "male"
+                ? "blue"
+                : "pink"
+              : item?.student?.user?.gender === "male"
+              ? "blue"
+              : "pink"
+          }
         >
           {select === "notEnrolled"
             ? item?.user?.gender

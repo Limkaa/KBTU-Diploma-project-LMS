@@ -16,7 +16,7 @@ import {useGetSchoolGradesWithoutPageQuery} from "../../redux/schoolGrades/schoo
 import {toastify} from "../../components/shared/Toast/Toast";
 
 
-const InputStyled = styled(TextField)(() => ({
+export const InputStyled = styled(TextField)(() => ({
     "& fieldset": {
         borderRadius: "10px",
     },
@@ -51,14 +51,6 @@ const UpdateGroupModal = ({show, setShow, selectedGroup, setSelectedGroup, refet
     const [updateGroup] = useUpdateGroupMutation();
 
     const handleUpdateGroup = async () => {
-        console.log({
-            groupId: group.id,
-            school: user.school_id,
-            grade: grade,
-            teacher: teacher,
-            code: code,
-            is_active: isActive,
-        });
         try {
             updateGroup({
                 groupId: group.id,
@@ -128,8 +120,6 @@ const UpdateGroupModal = ({show, setShow, selectedGroup, setSelectedGroup, refet
                     <Select
                         labelId="grade"
                         id="grade"
-                        // defaultValue={teacherOptions[0]}
-                        // defaultValue={group?.grade.id}
                         value={`${group?.grade.id}`}
                         label="Grade"
                         onChange={(e) => {

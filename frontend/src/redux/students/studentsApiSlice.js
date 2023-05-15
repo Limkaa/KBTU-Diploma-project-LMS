@@ -24,7 +24,10 @@ export const studentsApiSlice = authApi.injectEndpoints({
                 method: "PUT",
                 body: data,
             }),
-        })
+        }),
+        getStudent: builder.query({
+            query: (studentId) => `/api/students/${studentId}`
+        }),
     }),
 });
 
@@ -32,4 +35,5 @@ export const {
     useGetGroupStudentsQuery,
     useGetSchoolStudentsQuery,
     useUpdateStudentGroupMutation,
+    useGetStudentQuery,
 } = studentsApiSlice;

@@ -28,7 +28,6 @@ const InputStyled = styled(TextField)(() => ({
 
 const CreateGroupModal = ({ show, setShow, refetch }) => {
   const user = useSelector(selectCurrentUser);
-  // const [isActive, setIsActive] = useState(false);
   const { data: teachers } = useGetTeachersQuery(user.school_id);
   const { data: grades } = useGetSchoolGradesWithoutPageQuery({
     school_id: user.school_id,

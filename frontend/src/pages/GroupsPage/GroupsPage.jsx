@@ -21,6 +21,7 @@ const GroupsPage = () => {
   const [teacher, setTeacher] = useState();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [isActive, setIsActive] = useState("");
   const {
     data: groupsData,
     isLoading,
@@ -31,7 +32,8 @@ const GroupsPage = () => {
     grade_id: grade,
     teacher_id: teacher,
     page,
-    search
+    search,
+    isActive,
   });
   const { data: grades, isSuccess: isGradesLoaded } =
     useGetSchoolGradesWithoutPageQuery({ school_id: user.school_id });
@@ -255,7 +257,7 @@ const GroupsPage = () => {
               style={{
                 alignItems: "center",
                 display: "flex",
-                fontWeight: 500,
+                fontWeight: 400,
                 marginLeft: 16,
               }}
               icon={<img alt="" src={Plus} style={{ paddingRight: 5 }} />}

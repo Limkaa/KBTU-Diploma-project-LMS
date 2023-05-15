@@ -18,7 +18,6 @@ const TimeTablePage = () => {
                     <TimeTable/>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Schedule" key="2">
-                    {/*time schedule*/}
                     <TimeSchedule type="course"/>
                 </Tabs.TabPane>
             </Tabs>

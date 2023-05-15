@@ -30,6 +30,9 @@ import RoomPage from "./pages/RoomPage/RoomPage";
 import TimeBoundsPage from "./pages/TimeBoundsPage/TimeBoundsPage";
 import TimeTablePage from "./pages/TimeTablePage/TimeTablePage";
 import TimeCalendar from "./pages/TimeTablePage/TimeCalendar";
+import CommunitiesPage from "./pages/CommunitiesPage/CommunitiesPage";
+import CommunityPage from "./pages/CommunitiesPage/CommunityPage";
+import TodoPage from "./pages/TodoPage/TodoPage";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -59,6 +62,21 @@ function App() {
             exact
             path="/courses/:id/syllabus"
             element={<SyllabusContainer />}
+          />
+          <Route
+              exact
+              path="/communities"
+              element={<CommunitiesPage />}
+          />
+          <Route
+              exact
+              path="/communities/:commId"
+              element={<CommunityPage />}
+          />
+          <Route
+              exact
+              path="/todo"
+              element={<TodoPage />}
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher"]} />}>

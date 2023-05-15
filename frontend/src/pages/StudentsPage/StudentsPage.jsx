@@ -16,6 +16,7 @@ import {useGetSchoolGradesWithoutPageQuery} from "../../redux/schoolGrades/schoo
 import {useGetTeachersQuery} from "../../redux/users/usersApiSlice";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
+import {MinusOutlined} from "@ant-design/icons";
 
 const StudentsPage = () => {
     const user = useSelector(selectCurrentUser);
@@ -103,7 +104,7 @@ const StudentsPage = () => {
             key: 'student',
             width: "35%",
             render: (student) => (
-                <div className="rating">
+                <div>
                         <span className="name">
                             {student.user.first_name} {student.user.last_name}
                         </span>
@@ -119,7 +120,7 @@ const StudentsPage = () => {
             width: "15%",
             render: (student) => (
                 <span>
-                    {student.group.grade.name}
+                    {student.group?.grade?.name ? student.group?.grade?.name : <MinusOutlined />}
                 </span>
             ),
         },
@@ -141,7 +142,7 @@ const StudentsPage = () => {
             width: "15%",
             render: (student) => {
                 if (student.group === null) {
-                    return "-";
+                    return <MinusOutlined />;
                 }
                 else {
                     return (
@@ -227,7 +228,7 @@ const StudentsPage = () => {
                         <Input
                             placeholder="Search code"
                             prefix={
-                                <img alt="" src={Search} style={{ height: 15, width: 15 }} />
+                                <img alt="" src={Search} style={{ height: 25, width: 15 }} />
                             }
                             value={search}
                             onChange={(e) => setSearch(e.target.value.toLowerCase())}
@@ -253,7 +254,7 @@ const StudentsPage = () => {
                                     groups.map(group =>
                                         <MenuItem key={group.id} value={group.id}>
                                             <Tag style={{minWidth: "20%", textAlign: 'center'}}>{group.code}</Tag>
-                                            {group.grade.name} | {group.teacher.first_name} {group.teacher.last_name}
+                                            {group.grade?.name} | {group.teacher?.first_name} {group.teacher?.last_name}
                                         </MenuItem>
                                     )
                                 }

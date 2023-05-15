@@ -12,6 +12,7 @@ import {useGetAllRoomsQuery} from "../../redux/timeline/roomsApiSlice";
 import {Button, Radio, Select, Select as AntSelect, Spin} from "antd";
 import {useGetAllActiveGroupsQuery} from "../../redux/groups/groupsApiSlice";
 import {useGetTeachersQuery} from "../../redux/users/usersApiSlice";
+import {SyncOutlined} from "@ant-design/icons";
 
 const TimeSchedule = (props) => {
     const user = useSelector(selectCurrentUser);
@@ -29,7 +30,7 @@ const TimeSchedule = (props) => {
     const [groupId, setGroupId] = useState();
     const [teacherId, setTeacherId] = useState();
 
-    const {data: timetableData, isSuccess, isLoading} = useGetTimeTableQuery(
+    const {data: timetableData, isSuccess, isLoading, refetch} = useGetTimeTableQuery(
         {type: tbType, schoolId: user.school_id,
             courseId,
             roomId,
@@ -158,7 +159,6 @@ const TimeSchedule = (props) => {
         <section className="schedule">
                 <div className="filters">
                     <Radio.Group
-                        size={"small"}
                         style={{ marginRight: 10 }}
                         value={tbType}
                         onChange={handleTypeChange}
@@ -171,7 +171,6 @@ const TimeSchedule = (props) => {
                     <div>
                         {tbType === "teacher" && (
                             <AntSelect
-                                size={"small"}
                                 style={{width: '150px'}}
                                 showSearch
                                 style={{ width: 200 }}
@@ -188,7 +187,6 @@ const TimeSchedule = (props) => {
                         )}
                         {tbType === "course" && (
                             <AntSelect
-                                size={"small"}
                                 style={{width: '150px'}}
                                 showSearch
                                 filterOption={(input, option) =>
@@ -202,7 +200,6 @@ const TimeSchedule = (props) => {
                         )}
                         {tbType === "room" &&
                             <AntSelect
-                                size={"small"}
                                 style={{width: '150px'}}
                                 showSearch
                                 filterOption={(input, option) =>
@@ -216,7 +213,6 @@ const TimeSchedule = (props) => {
                         }
                         {tbType === "group" &&
                             <AntSelect
-                                size={"small"}
                                 style={{width: '150px'}}
                                 showSearch
                                 filterOption={(input, option) =>
@@ -229,6 +225,11 @@ const TimeSchedule = (props) => {
                             />
                         }
                     </div>
+                    <Button style={{marginLeft: 10}}
+                        onClick={() => refetch()}
+                    >
+                        <SyncOutlined spin={isLoading} />
+                    </Button>
                 </div>
             <div className="calendar">
                 <Spin spinning={isLoading}>

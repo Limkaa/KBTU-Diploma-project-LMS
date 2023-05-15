@@ -16,6 +16,8 @@ import GroupSvg from "../../assets/icons/GroupIcon";
 import StudentSvg from "../../assets/icons/StudentIcon";
 import TimelineSvg from "../../assets/icons/TimelineIcon";
 import RoomSvg from "../../assets/icons/RoomIcon";
+import CommunitySvg from "../../assets/icons/CommunityIcon";
+import TodoSvg from "../../assets/icons/TodoIcon";
 
 export const managerMenu = [
   {
@@ -97,6 +99,16 @@ export const managerMenu = [
       },
     ],
   },
+  {
+    title: "Communities",
+    path: `/communities`,
+    icon: CommunitySvg,
+  },
+  {
+    title: "ToDo",
+    path: `/todo`,
+    icon: TodoSvg,
+  },
 ];
 
 export const studentMenu = [
@@ -117,7 +129,7 @@ export const studentMenu = [
   },
   {
     title: "Schedule",
-    path: "/schedule",
+    path: "/timeline",
     icon: ScheduleSvg,
   },
   {
@@ -125,11 +137,11 @@ export const studentMenu = [
     path: "/materials",
     icon: MaterialsSvg,
   },
-  {
-    title: "Timeline",
-    path: "/timeline",
-    icon: TimelineSvg,
-  },
+  // {
+  //   title: "Timeline",
+  //   path: "/timeline",
+  //   icon: TimelineSvg,
+  // },
   {
     title: "Classroom",
     path: "/classroom",
@@ -145,11 +157,16 @@ export const studentMenu = [
     path: `/school`,
     icon: SubjectsSvg,
   },
-  // {
-  //   title: "Timetable",
-  //   path: `/schedule`,
-  //   icon: ScheduleSvg,
-  // },
+  {
+    title: "Communities",
+    path: `/communities`,
+    icon: CommunitySvg,
+  },
+  {
+    title: "ToDo",
+    path: `/todo`,
+    icon: TodoSvg,
+  },
 ];
 
 export const teacherMenu = [
@@ -170,7 +187,7 @@ export const teacherMenu = [
   },
   {
     title: "Schedule",
-    path: "/schedule",
+    path: "/timetable",
     icon: ScheduleSvg,
   },
   {
@@ -203,9 +220,19 @@ export const teacherMenu = [
     path: `/my-groups`,
     icon: GroupSvg,
   },
+  // {
+  //   title: "Timetable",
+  //   path: `/timetable`,
+  //   icon: ScheduleSvg,
+  // },
   {
-    title: "Timetable",
-    path: `/timetable`,
-    icon: ScheduleSvg,
+    title: "Communities",
+    path: `/communities`,
+    icon: CommunitySvg,
+  },
+  {
+    title: "ToDo",
+    path: `/todo`,
+    icon: TodoSvg,
   },
 ];

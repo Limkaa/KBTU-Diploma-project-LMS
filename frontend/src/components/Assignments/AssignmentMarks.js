@@ -54,6 +54,9 @@ const AssignmentMarks = () => {
   const [assignmentMarks, setAssignmentMarks] = React.useState([]);
   const [search, setSearch] = React.useState("");
   const [updatedMarks, setUpdatedMarks] = React.useState([]);
+  const [error, setError] = React.useState(false);
+  const [errorText, setErrorText] = React.useState();
+  const [mark, setMark] = React.useState();
 
   const [createMark] = useCreateMarkMutation();
   const [updateMark] = useUpdateMarkMutation();
@@ -74,6 +77,9 @@ const AssignmentMarks = () => {
           mark_id: el?.marks[0]?.id,
           number: el?.marks[0]?.number,
           comment: el?.marks[0]?.comment,
+          first_name: el?.student?.user?.first_name,
+          last_name: el?.student?.user?.last_name,
+          email: el?.student?.user?.email,
         });
       });
       setUpdatedMarks(arr);
@@ -82,6 +88,21 @@ const AssignmentMarks = () => {
 
   const handleCreateMark = async (id) => {
     const item = updatedMarks.find((item) => item.id === id);
+    if (!item?.number) {
+      setError(true);
+      setErrorText("This field is required");
+      return;
+    }
+    if (item.number > 5) {
+      setError(true);
+      setErrorText("Ensure this value is less than or equal to 5.");
+      return;
+    }
+    if (item?.number < 1) {
+      setError(true);
+      setErrorText("Ensure this value is greater than or equal to 1.");
+      return;
+    }
     try {
       await createMark({
         assignment_id: assignment_id,
@@ -96,9 +117,6 @@ const AssignmentMarks = () => {
         });
     } catch (err) {
       console.log(err);
-      if (err?.data?.detail?.number[0]) {
-        toastify("error", err?.data?.detail?.number[0]);
-      }
       if (err.data.detail?.__all__[0]) {
         toastify("error", err.data.detail?.__all__[0]);
       }
@@ -112,6 +130,21 @@ const AssignmentMarks = () => {
 
   const handleUpdateMark = async (id) => {
     const item = updatedMarks.find((item) => item.id === id);
+    if (!item?.number) {
+      setError(true);
+      setErrorText("This field is required");
+      return;
+    }
+    if (item.number > 5) {
+      setError(true);
+      setErrorText("Ensure this value is less than or equal to 5.");
+      return;
+    }
+    if (item?.number < 1) {
+      setError(true);
+      setErrorText("Ensure this value is greater than or equal to 1.");
+      return;
+    }
     try {
       await updateMark({
         mark_id: item.mark_id,
@@ -120,7 +153,7 @@ const AssignmentMarks = () => {
       })
         .unwrap()
         .then((payload) => {
-          toastify("success", "Mark update");
+          toastify("success", "Mark updated");
           refetch();
         });
     } catch (err) {
@@ -195,7 +228,7 @@ const AssignmentMarks = () => {
               fontSize: 13,
             }}
           >
-            {item?.student?.user?.first_name} {item?.student?.user?.last_name}
+            {item?.first_name} {item?.last_name}
           </div>
           <div
             style={{
@@ -205,7 +238,7 @@ const AssignmentMarks = () => {
               fontSize: 13,
             }}
           >
-            {item?.student?.user?.email}
+            {item?.email}
           </div>
         </>
       ),
@@ -215,8 +248,11 @@ const AssignmentMarks = () => {
       width: "20%",
       render: (_, record) => (
         <InputMark
-          defaultValue={record?.marks[0]?.comment}
-          onChange={(event) => handleCommentChange(record.id, event)}
+          value={record?.comment}
+          onChange={(event) => {
+            handleCommentChange(record.id, event);
+            setError(false);
+          }}
         />
       ),
     },
@@ -225,12 +261,28 @@ const AssignmentMarks = () => {
       key: "mark",
       width: "20%",
       render: (_, record) => (
-        <InputMark
-          max={5}
-          type="number"
-          defaultValue={record?.marks[0]?.number}
-          onChange={(event) => handleMarkChange(record.id, event.target.value)}
-        />
+        <>
+          <InputMark
+            max={5}
+            min={1}
+            type="number"
+            value={record?.number}
+            style={{
+              boxShadow:
+                error && mark === record.id
+                  ? "inset 0px 4px 4px  rgba(231, 76, 60, 0.5)"
+                  : "inset 0px 2px 2px rgba(0, 0, 0, 0.05)",
+            }}
+            required
+            onChange={(event) => {
+              handleMarkChange(record.id, event.target.value);
+              setError(false);
+            }}
+          />
+          {error && mark === record.id && (
+            <div style={{ color: "#E74C3C" }}>{errorText}</div>
+          )}
+        </>
       ),
     },
     {
@@ -242,7 +294,10 @@ const AssignmentMarks = () => {
           <Tooltip title="Create Mark">
             <CheckOutlined
               className="check"
-              onClick={() => handleCreateMark(record.id)}
+              onClick={() => {
+                handleCreateMark(record.id);
+                setMark(record.id);
+              }}
             />
           </Tooltip>
           <Tooltip title="Update Mark">
@@ -251,6 +306,7 @@ const AssignmentMarks = () => {
               className="edit"
               onClick={() => {
                 handleUpdateMark(record.id);
+                setMark(record.id);
               }}
             />
           </Tooltip>
@@ -279,7 +335,7 @@ const AssignmentMarks = () => {
         </div>
       </div>
       <Table
-        dataSource={assignmentMarks}
+        dataSource={updatedMarks}
         columns={columns}
         rowKey={(item) => item?.id}
         pagination={false}

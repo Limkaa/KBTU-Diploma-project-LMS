@@ -19,6 +19,7 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
     getAssignmentMarksByEnrollments: builder.query({
       query: ({ assignment_id, search }) =>
         `api/assignments/${assignment_id}/marks-grouped?search=${search}`,
+      keepUnusedDataFor: 5,
     }),
     addAssignment: builder.mutation({
       query: ({ course_id, ...data }) => ({
@@ -52,4 +53,5 @@ export const {
   useAddAssignmentMutation,
   useUpdateAssignmentMutation,
   useDeleteAssignmentMutation,
+  useLazyGetAssignmentMarksByEnrollmentsQuery,
 } = assignmentsApiSlice;

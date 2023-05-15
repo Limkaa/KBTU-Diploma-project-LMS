@@ -9,13 +9,17 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import os
+import os, sys
 import environ
+import logging
 from pathlib import Path
 
 env = environ.Env(
-    # set casting, default value
-    DJANGO_DEBUG=(bool, False)
+    # set casting, default value if not provided in .env file
+    DJANGO_DEBUG=(bool, False),
+    DJANGO_SECRET=(str, "django-insecure-&bx1=h##%-7#&9t!ppwiq9)a(v=7=fa#!n3p$g)x0xl2k2fic$"),
+    REDIS_URL=(str, "redis://localhost:6379/0"),
+    TELEGRAM_TOKEN=(str, None)
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,10 +32,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-&bx1=h##%-7#&9t!ppwiq9)a(v=7=fa#!n3p$g)x0xl2k2fic$"
+SECRET_KEY = env('DJANGO_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DJANGO_DEBUG')
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
@@ -42,6 +46,7 @@ PROJECT_APPS = [
     "apps",
     "apps.api",
     "apps.authentication",
+    "apps.tgbot",
     # Core modules
     "apps.core.modules.schools",
     "apps.core.modules.users",
@@ -200,6 +205,28 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "apps.authentication.serializers.CustomTokenObtainPairSerializer"
 }
+
+# -----> CELERY
+REDIS_URL = env('REDIS_URL')
+BROKER_URL = REDIS_URL
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+
+
+# -----> TELEGRAM
+TELEGRAM_TOKEN = env("TELEGRAM_TOKEN")
+if TELEGRAM_TOKEN is None:
+    logging.error(
+        "Please provide TELEGRAM_TOKEN in .env file.\n"
+        "Example of .env file you can view in same directory - .env.example.\n"
+        "But you must create .env file by yourself and specify all settings"
+    )
+    sys.exit(1)
 
 
 # Debug toolbar setup

@@ -94,14 +94,21 @@ const Course = () => {
   const [updatePost] = useUpdateCoursePostMutation();
   const [deletePost] = useDeleteCoursePostMutation();
 
-  const { data: dataAssignments, isLoading: isLoadingAssignments } =
-    useGetCourseAssignmentsQuery({ course_id: courseId, search: "" });
+  const {
+    data: dataAssignments,
+    isLoading: isLoadingAssignments,
+    refetch: refetchAssignments,
+  } = useGetCourseAssignmentsQuery({ course_id: courseId, search: "" });
 
   React.useEffect(() => {
     if (data && !isLoading) {
       setCourse(data);
     }
   }, [data, isLoading]);
+
+  React.useEffect(() => {
+    refetchAssignments();
+  }, [dataAssignments]);
 
   React.useEffect(() => {
     if (dataSyllabus && !isLoadingSyllabus) {

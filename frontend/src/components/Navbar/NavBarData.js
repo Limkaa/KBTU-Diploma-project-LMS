@@ -35,8 +35,8 @@ export const managerMenu = [
     icon: SchoolSvg,
   },
   {
-    title: "Grades",
-    path: `/school/grades`,
+    title: "Marks",
+    path: `/students/:id/marks`,
     icon: SchoolGradesSvg,
   },
   {
@@ -200,9 +200,9 @@ export const teacherMenu = [
     icon: ClassroomSvg,
   },
   {
-    title: "Grades",
-    path: "/grades",
-    icon: GradesSvg,
+    title: "Marks",
+    path: `/students/:id/marks`,
+    icon: SchoolGradesSvg,
   },
   {
     title: "School",

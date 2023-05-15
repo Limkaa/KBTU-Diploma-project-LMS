@@ -6,6 +6,7 @@ import { Tabs } from "antd";
 import CourseAwards from "./CourseAwards";
 import Course from "./Course";
 import CourseEnrollment from "./CourseEnrollment";
+import CourseMarks from "./CourseMarks";
 
 const CourseContainer = () => {
   const items = [
@@ -13,6 +14,11 @@ const CourseContainer = () => {
       key: "1",
       label: `General`,
       children: <Course />,
+    },
+    {
+      key: "4",
+      label: `Marks`,
+      children: <CourseMarks />,
     },
     {
       key: "2",

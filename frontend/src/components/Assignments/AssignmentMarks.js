@@ -220,26 +220,10 @@ const AssignmentMarks = () => {
       width: "15%",
       render: (item) => (
         <>
-          <div
-            style={{
-              textDecoration: "none",
-              fontWeight: 500,
-              color: "#00889D",
-              fontSize: 13,
-            }}
-          >
+          <div style={styles.name}>
             {item?.first_name} {item?.last_name}
           </div>
-          <div
-            style={{
-              color: "rgba(74, 77, 88, 1)",
-              textDecoration: "none",
-              fontWeight: 400,
-              fontSize: 13,
-            }}
-          >
-            {item?.email}
-          </div>
+          <div style={styles.email}>{item?.email}</div>
         </>
       ),
     },
@@ -381,6 +365,18 @@ const styles = {
   status: {
     fontWeight: 600,
     fontSize: 14,
+  },
+  name: {
+    textDecoration: "none",
+    fontWeight: 500,
+    color: "#00889D",
+    fontSize: 13,
+  },
+  email: {
+    color: "rgba(74, 77, 88, 1)",
+    textDecoration: "none",
+    fontWeight: 400,
+    fontSize: 13,
   },
 };
 

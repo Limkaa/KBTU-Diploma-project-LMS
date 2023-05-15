@@ -39,7 +39,7 @@ class UserAdmin(admin.ModelAdmin):
         ("Timestamps", {"fields": ("date_joined",)}),
     )
 
-    readonly_fields = ("date_joined", "rating", "telegram_id")
+    readonly_fields = ("date_joined", "rating")
 
     def get_readonly_fields(self, request, obj=None):
         if obj:

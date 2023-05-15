@@ -7,3 +7,4 @@ class AwardsConfig(AppConfig):
     
     def ready(self) -> None:
         from . import signals
+        from .notifications import signals

@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user14@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user11@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -700,13 +700,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/users/9",
+							"raw": "{{BASE_URL}}/users/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"9"
+								"3"
 							]
 						}
 					},
@@ -1335,13 +1335,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/students/8",
+							"raw": "{{BASE_URL}}/students/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"students",
-								"8"
+								"3"
 							]
 						}
 					},
@@ -1380,7 +1380,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/schools/1/students?page=1&no_group=True",
+							"raw": "{{BASE_URL}}/schools/1/students?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1396,8 +1396,8 @@
 								},
 								{
 									"key": "ordering",
-									"value": null,
-									"description": "rating, created_at, updated_at",
+									"value": "-user__rating",
+									"description": "user__rating, created_at, updated_at",
 									"disabled": true
 								},
 								{
@@ -1429,7 +1429,8 @@
 								},
 								{
 									"key": "no_group",
-									"value": "True"
+									"value": "True",
+									"disabled": true
 								}
 							]
 						}

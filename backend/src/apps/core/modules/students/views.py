@@ -32,25 +32,18 @@ class StudentCardRetrieveUpdateAPI(generics.RetrieveUpdateAPIView):
         elif method == "GET":
             self.permission_classes = [
                 OnlyOwnSchool, 
-                CustomOperandHolder(
-                    operand = CustomOR,
-                    message = "This view can be accessed only by manager, group teacher or student itself",
-                    permissions = [IsManager, IsGroupTeacher, IsUserItself]
-                )       
+                # CustomOperandHolder(
+                #     operand = CustomOR,
+                #     message = "This view can be accessed only by manager, group teacher or student itself",
+                #     permissions = [IsManager, IsGroupTeacher, IsUserItself]
+                # )       
             ]
 
         return super().get_permissions()
 
 
 class SchoolStudentsListAPI(OptionalPaginationListAPIView):
-    permission_classes = [
-        OnlyOwnSchool, 
-        CustomOperandHolder(
-            operand=CustomOR,   
-            permissions=[IsManager, IsStudent],
-            message="This view can be accessed only by school manager or teacher"
-        )
-    ]
+    permission_classes = [OnlyOwnSchool]
     serializer_class = StudentModelNestedSerializer
     filterset_class = StudentFilter
     ordering_fields = ['user__rating', 'created_at', 'updated_at']

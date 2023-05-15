@@ -12,6 +12,7 @@ class UserAdmin(admin.ModelAdmin):
         "role",
         "is_active",
         "date_joined",
+        "rating"
     )
 
     search_fields = ("email", "fullname")

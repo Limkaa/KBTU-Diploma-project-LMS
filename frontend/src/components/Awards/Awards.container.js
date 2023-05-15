@@ -9,7 +9,7 @@ import Plus from "../../assets/icons/plus.svg";
 import Search from "../../assets/icons/search.svg";
 import { styled as styledmui } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { Input, Empty, Spin, Button, Card } from "antd";
+import { Input, Empty, Spin, Button, Card, Tag } from "antd";
 import AwardAdd from "./AwardAdd";
 import {
   useCreateAwardMutation,
@@ -45,6 +45,44 @@ const InputStyled = styled(Input)`
     border-radius: 10px;
     background-color: #fafafa;
     margin-right: 15px;
+  }
+`;
+
+const InputDes = styled(Input.TextArea)`
+  &.ant-input[disabled] {
+    font-size: 13px;
+    font-weight: 400;
+    font-family: "Open Sans";
+    color: #9699a5;
+    border: none;
+    background-color: white;
+    padding: 0;
+    cursor: default;
+    border-radius: 0px;
+    resize: none;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    overflow: hidden;
+  }
+`;
+
+const InputTitle = styled(Input)`
+  &.ant-input[disabled] {
+    border: none;
+    background-color: white;
+    padding: 0;
+    cursor: default;
+    border-radius: 0px;
+    resize: none;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    overflow: hidden;
+  }
+`;
+
+const CardStyled = styled(Card)`
+  &.ant-card .ant-card-body {
+    padding: 0;
   }
 `;
 const AwardsContainer = () => {
@@ -156,8 +194,9 @@ const AwardsContainer = () => {
             {schoolAwards?.length > 0 ? (
               schoolAwards?.map((item) => (
                 <Grid item key={item.id} xs={6} sm={8} md={4}>
-                  <Card
-                    className="card"
+                  <CardStyled
+                    // className="card"
+                    style={styles.card}
                     key={item.id}
                     actions={
                       user?.role === "manager"
@@ -172,9 +211,7 @@ const AwardsContainer = () => {
                             <RightOutlined
                               key="winners"
                               onClick={() =>
-                                navigate(`/awards/${item?.id}/winners`, {
-                                  state: { awardId: item?.id },
-                                })
+                                navigate(`/awards/${item?.id}/winners`)
                               }
                             />,
                           ]
@@ -190,35 +227,55 @@ const AwardsContainer = () => {
                           ]
                     }
                   >
-                    <div style={styles.title}>{item?.name}</div>
-                    <div style={styles.des}>{item?.description}</div>
-                    <div style={styles.recentCont}>
-                      {item?.recent_winners?.length > 0 && (
-                        <>
-                          <div style={styles.recentTitle}>Recent winnners</div>
-                          {item?.recent_winners?.map((winner) => (
-                            <div style={styles.recent} key={winner.id}>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <img style={styles.img} />
-                                <div style={styles.name}>
-                                  {winner.student?.user?.first_name}{" "}
-                                  {winner.student?.user?.last_name}
+                    <div style={styles.total}>
+                      <div style={styles.totalTitle}>
+                        Total winners: {item.issued_total}
+                      </div>
+                      <InputTitle
+                        style={styles.title}
+                        value={item?.name}
+                        disabled
+                      />
+                    </div>
+
+                    <div style={{ padding: "5px 20px" }}>
+                      <InputDes
+                        value={item?.description}
+                        disabled
+                        style={{
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 2,
+                        }}
+                      />
+
+                      <div style={styles.recentCont}>
+                        {item?.recent_winners?.length > 0 && (
+                          <>
+                            <div style={styles.recentTitle}>
+                              Recent winnners
+                            </div>
+                            {item?.recent_winners?.map((winner) => (
+                              <div style={styles.recent} key={winner.id}>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <img style={styles.img} />
+                                  <div style={styles.name}>
+                                    {winner.student?.user?.first_name}{" "}
+                                    {winner.student?.user?.last_name}
+                                  </div>
                                 </div>
                               </div>
-                              <div style={styles.rating}>
-                                {winner?.student?.user?.rating}
-                              </div>
-                            </div>
-                          ))}
-                        </>
-                      )}
+                            ))}
+                          </>
+                        )}
+                      </div>
                     </div>
-                  </Card>
+                  </CardStyled>
                 </Grid>
               ))
             ) : (
@@ -259,15 +316,34 @@ const styles = {
     justifyContent: "flex-end",
     display: "flex",
   },
-  title: {
+  total: {
     fontSize: 15,
-    fontWeight: 600,
-    color: "#4A4D58",
+    fontWeight: 500,
+    color: "rgba(74, 77, 88, 1)",
+    backgroundColor: "rgba(240, 247, 255, 1)",
+    padding: "12px 20px",
   },
-  des: {
-    fontSize: 14,
-    fontWeight: 400,
-    color: "#9699A5",
+  totalTitle: {
+    fontSize: 13,
+    fontWeight: 500,
+    color: "rgba(22, 58, 97, 0.7)",
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 500,
+    color: "#4A4D58",
+    backgroundColor: "rgba(240, 247, 255, 1)",
+  },
+  // title: {
+  //   fontSize: 15,
+  //   fontWeight: 600,
+  //   color: "#4A4D58",
+  // },
+  card: {
+    minHeight: 450,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   recentCont: {
     marginTop: 10,
@@ -279,18 +355,18 @@ const styles = {
   },
   name: {
     fontSize: 13,
-    fontWeight: 500,
+    fontWeight: 400,
     color: "#4A4D58",
     marginLeft: 7,
   },
   rating: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 600,
     color: "#4A4D58",
   },
   img: {
-    width: 30,
-    height: 30,
+    width: 28,
+    height: 28,
     borderRadius: 120,
     border: "none",
     backgroundColor: "rgba(0, 0, 0, 0.1)",

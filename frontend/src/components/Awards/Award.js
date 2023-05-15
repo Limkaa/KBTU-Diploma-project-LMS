@@ -2,9 +2,9 @@ import React from "react";
 import Header from "../shared/Header/Header";
 import styled from "styled-components";
 import Profile from "../Dashboard/Profile";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useGetWinnersOfAwardQuery } from "../../redux/winners/winnersApiSlice";
-import { Spin, Table } from "antd";
+import { Spin, Table, Input } from "antd";
 import { useGetAwardQuery } from "../../redux/awards/awardsApiSlice";
 import { Paper } from "@mui/material";
 import { styled as styledmui } from "@mui/material/styles";
@@ -27,7 +27,7 @@ const TableStyled = styled(Table)`
   &.ant-table-wrapper .ant-table-thead > tr > th {
     background-color: rgba(22, 58, 97, 1);
     color: white;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
   }
   &.ant-input-affix-wrapper {
@@ -41,9 +41,38 @@ const TableStyled = styled(Table)`
   }
 `;
 
+const InputDes = styled(Input.TextArea)`
+  &.ant-input[disabled] {
+    font-size: 13px;
+    font-weight: 500;
+    font-family: "Open Sans";
+    color: #9699a5;
+    border: none;
+    background-color: white;
+    padding: 0;
+    cursor: default;
+    border-radius: 0px;
+    resize: none;
+    padding-right: 10%;
+    padding-left: 10%;
+  }
+`;
+
+const InputTitle = styled(Input.TextArea)`
+  &.ant-input[disabled] {
+    border: none;
+    background-color: white;
+    padding: 0;
+    cursor: default;
+    border-radius: 0px;
+    resize: none;
+    padding-right: 15%;
+    padding-left: 15%;
+  }
+`;
+
 const Award = () => {
-  const location = useLocation();
-  let awardId = location?.state?.awardId;
+  const { id: awardId } = useParams();
   const [winners, setWinners] = React.useState([]);
   const [award, setAward] = React.useState([]);
   const [page, setPage] = React.useState(1);
@@ -54,9 +83,17 @@ const Award = () => {
     page,
   });
 
-  const { data: dataAward, isLoading: isLoadingAward } = useGetAwardQuery({
+  const {
+    data: dataAward,
+    isLoading: isLoadingAward,
+    refetch,
+  } = useGetAwardQuery({
     award_id: awardId,
   });
+
+  React.useEffect(() => {
+    refetch();
+  }, []);
 
   React.useEffect(() => {
     if (data && !isLoading) {
@@ -136,8 +173,19 @@ const Award = () => {
             src={require("../../assets/icons/success.png")}
             style={styles.imgReward}
           />
-          <div style={styles.title}>{award?.name}</div>
-          <div style={styles.des}>{award?.description}</div>
+
+          <InputTitle
+            style={styles.title}
+            value={award?.name}
+            disabled
+            autoSize
+          />
+          <InputDes
+            style={styles.des}
+            value={award?.description}
+            disabled
+            autoSize
+          />
           <div style={styles.coinCont}>
             <img
               src={require("../../assets/icons/coin2.png")}
@@ -193,12 +241,13 @@ const styles = {
     fontWeight: 700,
     color: "#4A4D58",
     marginTop: 10,
+    textAlign: "center",
   },
   des: {
     fontSize: 14,
     fontWeight: 500,
     color: "#9699A5",
-    marginTop: 4,
+    textAlign: "center",
   },
   point: {
     padding: "8px 10px",
@@ -210,8 +259,8 @@ const styles = {
     alignSelf: "center",
   },
   coin: {
-    width: 50,
-    heigth: 50,
+    width: 48,
+    heigth: 48,
   },
   pointCnt: {
     fontSize: 17,
@@ -238,8 +287,8 @@ const styles = {
     color: "#4A4D58",
   },
   img: {
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
     borderRadius: 120,
     border: "none",
     backgroundColor: "rgba(0, 0, 0, 0.1)",

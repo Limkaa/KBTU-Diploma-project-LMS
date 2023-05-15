@@ -16,7 +16,14 @@ const ProfileContainer = () => {
         <Header text={"My profile"} visible={false} />
         <Profile />
       </div>
-      <div style={{ backgroundColor: "white", padding: 16, borderRadius: 12 }}>
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: 16,
+          borderRadius: 12,
+          marginTop: 20,
+        }}
+      >
         <p style={styles.userInfo}>USER INFORMATION</p>
         <div style={{ flex: 1, display: "flex", gap: 16 }}>
           <div style={{ flex: 2 }}>

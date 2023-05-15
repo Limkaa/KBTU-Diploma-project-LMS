@@ -28,7 +28,7 @@ const GroupsPage = () => {
     refetch,
   } = useGetGroupsQuery({
     groupType,
-    school_id: user.school_id,
+    school_id: user?.school_id,
     grade_id: grade,
     teacher_id: teacher,
     page,
@@ -36,9 +36,9 @@ const GroupsPage = () => {
     isActive,
   });
   const { data: grades, isSuccess: isGradesLoaded } =
-    useGetSchoolGradesWithoutPageQuery({ school_id: user.school_id });
+    useGetSchoolGradesWithoutPageQuery({ school_id: user?.school_id });
   const { data: teachers, isSuccess: isTeachersLoaded } = useGetTeachersQuery(
-    user.school_id
+    user?.school_id
   );
   const [groups, setGroups] = useState();
   const [gradesOptions, setGradesOptions] = useState([]);
@@ -58,7 +58,7 @@ const GroupsPage = () => {
   useEffect(() => {
     let arr = [];
     if (isGradesLoaded) {
-      grades.forEach((grade) => {
+      grades?.forEach((grade) => {
         arr.push({ value: grade.id, label: grade.name });
       });
       setGradesOptions(arr);
@@ -110,14 +110,14 @@ const GroupsPage = () => {
     {
       title: "Grade",
       width: "15%",
-      render: (group) => <span>{group.grade.name}</span>,
+      render: (group) => <span>{group?.grade?.name}</span>,
     },
     {
       title: "Teacher",
       width: "15%",
       render: (group) => (
         <span>
-          {group.teacher.first_name} {group.teacher.last_name}
+          {group?.teacher?.first_name} {group?.teacher?.last_name}
         </span>
       ),
     },
@@ -127,9 +127,9 @@ const GroupsPage = () => {
       render: (group) => (
         <Tag
           style={{ minWidth: 70, textAlign: "center" }}
-          color={group.is_active ? "green" : "volcano"}
+          color={group?.is_active ? "green" : "volcano"}
         >
-          {group.is_active ? "active" : "inactive"}
+          {group?.is_active ? "active" : "inactive"}
         </Tag>
       ),
     },

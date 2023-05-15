@@ -9,7 +9,7 @@ import UpdateUserModal from "./UpdateUserModal";
 import "react-toastify/dist/ReactToastify.css";
 import {
   useUpdateUserMutation,
-  useLazyGetUsersQuery,
+  useGetUsersQuery,
 } from "../../redux/users/usersApiSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import { toastify } from "../shared/Toast/Toast";
@@ -27,15 +27,9 @@ const UsersContainer = () => {
   const [search, setSearch] = React.useState("");
   const { data: user, refetch: refetchUser } = useGetAuthUserQuery();
 
-  const [getUsers, { data, isLoading, isSuccess, isError, error, refetch }] =
-    useLazyGetUsersQuery();
-
-  React.useEffect(() => {
-    if (user?.school_id) {
-      getUsers({ school_id: user?.school_id, page, search });
-    }
-  }, [user, page, search]);
-
+  const { data, isLoading, isSuccess, isError, error, refetch } =
+    useGetUsersQuery({ school_id: user?.school_id, page, search });
+    
   const roleColor = {
     manager: "orange",
     teacher: "purple",
@@ -71,7 +65,7 @@ const UsersContainer = () => {
       })
         .unwrap()
         .then((payload) => {
-          getUsers({ school_id: user?.school_id, page, search });
+          refetch();
           refetchUser();
           toastify("success", "User Updated");
         });

@@ -7,6 +7,7 @@ import datetime
 from django.core.management.base import BaseCommand
 import pytz
 from django.conf import settings
+from django.db.models import Count, Sum, F
 
 from apps.core.modules.users.models import User
 from apps.core.modules.schools.models import School
@@ -26,6 +27,7 @@ from apps.core.modules.awards.models import Award, Winner
 from apps.core.modules.todos.models import Todo
 from apps.core.modules.communities.models import Community, Membership
 from apps.core.modules.enrollments.models import Enrollment
+from apps.core.modules.final_marks.models import TermMark, YearMark
 
 
 from apps.api import mock_data
@@ -54,11 +56,14 @@ class Command(BaseCommand):
     groups = []
     subjects = []
     years = []
+    
+    def print_message(self, name, num):
+        message = f'{name} created ({num} objects)'
+        self.stdout.write(self.style.SUCCESS(message))
 
     def bulk_create(self, model, name, objects):
         model.objects.bulk_create(objects)
-        message = f'{name} created ({len(objects)} objects)'
-        self.stdout.write(self.style.SUCCESS(message))
+        self.print_message(name, len(objects))
 
     def _get_random_string_code(self, length=5):
         return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -400,8 +405,33 @@ class Command(BaseCommand):
                             comment=self._get_lorem(random.randint(0, 1))
                         ))
         
-        self.bulk_create(Mark, 'Marks', marks)
+        self.bulk_create(Mark, "Assignment marks", marks)
     
+    def _add_rating_to_student(self, function, object_name=''):
+        students = Student.objects.select_related('user')
+        
+        for student in students:
+            objects, total_rating = function(student)
+            
+            if objects and not total_rating:
+                self.stdout.write(self.style.ERROR(f'{object_name} objects not empty but total rating is 0 for student with pk {student.pk}'))
+            
+            if total_rating:
+                user = student.user
+                user.rating += total_rating
+                user.save()
+
+        message = f'Rating for {object_name} added'
+        self.stdout.write(self.style.SUCCESS(message))
+    
+    def _add_rating_for_assignment_marks(self):
+        def get_rating(student):
+            marks = Mark.objects.filter(enrollment__student=student)
+            total_rating = marks.aggregate(Sum('number')).get('number__sum', 0)
+            return marks, total_rating
+            
+        self._add_rating_to_student(get_rating, 'Assignment marks')
+        
     def _create_timetables(self):
         schools = School.objects.all()
         timetables = []
@@ -469,7 +499,7 @@ class Command(BaseCommand):
                 awards.append(Award(
                     school=school,
                     name=award.name,
-                    description = self._get_lorem(1),
+                    description = award.description,
                     points = random.randint(1, 50),
                 ))
     
@@ -483,7 +513,6 @@ class Command(BaseCommand):
         
         today = datetime.date.today()
         start_date = today - timedelta(days=360)
-        
         
         def _create_course_awards():
             for school in schools:
@@ -507,6 +536,14 @@ class Command(BaseCommand):
         
         Winner.objects.bulk_create(winners)
         self.stdout.write(self.style.SUCCESS(f'Winners created ({len(winners)} objects)'))
+    
+    def _add_rating_for_award_winners(self):
+        def get_winners(student):
+            nominations = Winner.objects.filter(student=student).select_related('award')
+            total_rating = nominations.aggregate(Sum(F('award__points'))).get('award__points__sum', 0)
+            return nominations, total_rating
+        
+        self._add_rating_to_student(get_winners, 'Award Winners')
     
     def _create_todos(self):
         todos = []
@@ -601,7 +638,80 @@ class Command(BaseCommand):
             student.save()
         
         self.stdout.write(self.style.SUCCESS(f"Students transferred ({transferred_student_count} students)"))
-        
+
+    def _create_term_marks(self):
+        marks = []
+    
+        for course in Course.objects.all():
+            enrollments = Enrollment.objects.filter(course=course)
+            teacher = course.teacher 
+            
+            if not teacher:
+                teacher = random.choice(User.objects.filter(school=course.school, role=User.Role.TEACHER))
+            
+            for term in Term.objects.filter(year=course.year):
+                if not term.is_finished:
+                    continue
+                enrollments_num = len(enrollments)
+                from_num = round(enrollments_num * 0.6)
+                to_num = round(enrollments_num)
+                random_num = random.randint(from_num, to_num)
+                enrollments_with_marks = random.sample(list(enrollments), random_num)
+                
+                for enrollment in enrollments_with_marks:
+                    marks.append(TermMark(
+                        enrollment = enrollment,
+                        term = term,
+                        last_edited_by = teacher,
+                        number = random.randint(1,5)
+                    ))
+    
+        self.bulk_create(TermMark, 'Terms marks', marks)
+    
+    def _add_rating_for_term_marks(self):
+        def get_rating(student):
+            marks = TermMark.objects.filter(enrollment__student=student)
+            total_rating = marks.aggregate(Sum('number')).get('number__sum', 0)
+            if total_rating:
+                total_rating *= TermMark.TERM_MARK_RATING_MULTIPLIER
+            return marks, total_rating
+            
+        self._add_rating_to_student(get_rating, 'Term marks')
+    
+    def _create_year_marks(self):
+        marks = []
+    
+        for course in Course.objects.all():
+            enrollments = Enrollment.objects.filter(course=course)
+            teacher = course.teacher 
+            
+            if not teacher:
+                teacher = random.choice(User.objects.filter(school=course.school, role=User.Role.TEACHER))
+            
+            enrollments_num = len(enrollments)
+            from_num = round(enrollments_num * 0.5)
+            to_num = round(enrollments_num)
+            random_num = random.randint(from_num, to_num)
+            enrollments_with_marks = random.sample(list(enrollments), random_num)
+            
+            for enrollment in enrollments_with_marks:
+                marks.append(YearMark(
+                    enrollment = enrollment,
+                    last_edited_by = teacher,
+                    number = random.randint(1,5)
+                ))
+    
+        self.bulk_create(YearMark, 'Year marks', marks)
+    
+    def _add_rating_for_year_marks(self):
+        def get_rating(student):
+            marks = YearMark.objects.filter(enrollment__student=student)
+            total_rating = marks.aggregate(Sum('number')).get('number__sum', 0)
+            if total_rating:
+                total_rating *= YearMark.YEAR_MARK_RATING_MULTIPLIER
+            return marks, total_rating
+            
+        self._add_rating_to_student(get_rating, 'Year marks')
     
     def handle(self, *args, **options):
         self.schools = self._create_schools()
@@ -621,19 +731,26 @@ class Command(BaseCommand):
         self._create_rooms()
         self._create_timebounds()
         self._create_timetables()
-        self._create_awards()
-        self._create_winners()
+        
         self._create_todos()
         self._create_communities()
         self._create_memberships()
+        
         self._create_enrollments()
+        
+        self._create_awards()
+        self._create_winners()
+        self._add_rating_for_award_winners()
+        
         self._create_assignment_marks()
+        self._add_rating_for_assignment_marks()
+        
+        self._create_term_marks()
+        self._add_rating_for_term_marks()
+        
+        self._create_year_marks()
+        self._add_rating_for_year_marks()
+        
         self._simulate_students_group_transfers()
         
         self._create_superuser()
-        
-        
-        
-
-    
-    

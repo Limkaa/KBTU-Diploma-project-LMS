@@ -13,6 +13,9 @@ export const groupsApiSlice = authApi.injectEndpoints({
         }
       },
     }),
+    getSchoolGroups: builder.query({
+      query: ({ school_id }) => `/api/schools/${school_id}/groups`,
+    }),
     getAllActiveGroups: builder.query({
       query: (schoolId) => `api/schools/${schoolId}/groups?is_active=true`
     }),
@@ -41,5 +44,6 @@ export const {
   useGetOneGroupQuery,
   useCreateGroupMutation,
   useUpdateGroupMutation,
+  useGetSchoolGroupsQuery,
   useGetAllActiveGroupsQuery
 } = groupsApiSlice;

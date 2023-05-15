@@ -11,7 +11,8 @@ import TodoList from "./TodoList";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 
 const DashboardContainer = () => {
-  const { data: user } = useGetAuthUserQuery();
+  const { data: user, refetch } = useGetAuthUserQuery();
+
   return (
     <div className="dashboard container">
       <div className="left-container">

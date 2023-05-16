@@ -93,10 +93,13 @@ const CoursesContainer = () => {
         });
       }
     } else if (user?.role === "teacher") {
-      getTeacherCourses({
-        teacher_id: user?.id,
-        search: search,
-      });
+      if (selectedYear) {
+        getTeacherCourses({
+          teacher_id: user?.id,
+          year_id: selectedYear,
+          search: search,
+        });
+      }
     }
   }, [user, student, selectedYear, search]);
 
@@ -126,6 +129,33 @@ const CoursesContainer = () => {
             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
+          <FormControl
+            sx={{
+              width: 220,
+              marginBottom: 3,
+              fieldset: { borderRadius: "10px" },
+            }}
+            size="small"
+          >
+            <InputLabel id="grade">Year</InputLabel>
+            <Select
+              labelId="grade"
+              id="grade"
+              label="Grade"
+              defaultValue={""}
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
+              <MenuItem value="" disabled>
+                <em>Choose year</em>
+              </MenuItem>
+              {years?.map((item) => (
+                <MenuItem value={item.id} key={item.id}>
+                  {item.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
         <Spin
           spinning={user?.role === "student" ? isLoading : teacherIsLoading}

@@ -11,8 +11,8 @@ export const coursesApiSlice = authApi.injectEndpoints({
         `/api/schools/${school_id}/courses?page=${page}&search=${search}`,
     }),
     getTeacherCourses: builder.query({
-      query: ({ teacher_id, search }) =>
-        `/api/teachers/${teacher_id}/courses?search=${search}`,
+      query: ({ teacher_id, search, year_id }) =>
+        `/api/teachers/${teacher_id}/courses?search=${search}&year=${year_id}`,
     }),
     getTeacherCoursesWithout: builder.query({
       query: ({ teacher_id, year_id }) =>

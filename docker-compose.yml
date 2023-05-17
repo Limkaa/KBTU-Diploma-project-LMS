@@ -8,8 +8,6 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         restart: always
-        ports:
-            - '5433:5432'
     django:
         build:
             context: ./backend

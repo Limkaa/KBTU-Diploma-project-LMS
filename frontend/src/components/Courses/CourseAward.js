@@ -118,7 +118,7 @@ const CourseAward = () => {
             style={styles.img}
             src={
               item?.student?.user?.avatar
-                ? "http://127.0.0.1:8000/static" + item?.student?.user?.avatar
+                ? item?.student?.user?.avatar
                 : item?.student?.user?.gender === "male"
                 ? require("../../assets/icons/boy.png")
                 : require("../../assets/icons/girl.png")

@@ -12,19 +12,6 @@ const Profile = () => {
     return user?.role.charAt(0).toUpperCase() + user?.role.slice(1);
   };
 
-  const renderAvatar = () => {
-    if (!user?.avatar) {
-      console.log("gooooooo");
-      if (user?.gender === "male") {
-        return require("../../assets/icons/boy.png");
-      } else {
-        return require("../../assets/icons/girl.png");
-      }
-    } else {
-      return "http://127.0.0.1:8000/static" + user?.avatar;
-    }
-  };
-
   return (
     <div onClick={() => navigate("/profile")} style={styles.container}>
       <div style={styles.left}>
@@ -37,7 +24,7 @@ const Profile = () => {
         style={styles.img}
         src={
           user?.avatar
-            ? "http://127.0.0.1:8000/static" + user?.avatar
+            ? user?.avatar
             : user?.gender === "male"
             ? require("../../assets/icons/boy.png")
             : require("../../assets/icons/girl.png")

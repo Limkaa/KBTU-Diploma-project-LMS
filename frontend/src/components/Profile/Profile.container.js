@@ -12,22 +12,6 @@ const ProfileContainer = () => {
   const { data: user } = useGetAuthUserQuery();
   const dispatch = useDispatch();
 
-  const renderAvatar = () => {
-    if (user) {
-      if (user?.avatar !== null) {
-        return "http://127.0.0.1:8000/static" + user?.avatar;
-      } else {
-        console.log("gooooooo");
-        if (user?.gender === "male") {
-          return "../../assets/icons/boy.png";
-        } else {
-          return "../../assets/icons/girl.png";
-        }
-      }
-    } else {
-      return "../../assets/icons/boy.png";
-    }
-  };
   return (
     <div style={styles.container}>
       <div style={{ display: "flex" }}>
@@ -92,7 +76,7 @@ const ProfileContainer = () => {
               style={styles.img}
               src={
                 user?.avatar
-                  ? "http://127.0.0.1:8000/static" + user?.avatar
+                  ? user?.avatar
                   : user?.gender === "male"
                   ? require("../../assets/icons/boy.png")
                   : require("../../assets/icons/girl.png")

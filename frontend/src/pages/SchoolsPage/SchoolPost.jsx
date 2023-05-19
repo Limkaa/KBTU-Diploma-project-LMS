@@ -394,8 +394,7 @@ const SchoolPost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
                     style={styles.avatar}
                     src={
                       item?.user?.avatar
-                        ? "http://127.0.0.1:8000/static" +
-                          item?.user?.avatar
+                        ? item?.user?.avatar
                         : item?.user?.gender === "male"
                         ? require("../../assets/icons/boy.png")
                         : require("../../assets/icons/girl.png")

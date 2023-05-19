@@ -263,7 +263,18 @@ const AwardsContainer = () => {
                                     alignItems: "center",
                                   }}
                                 >
-                                  <img style={styles.img} />
+                                  <img
+                                    style={styles.img}
+                                    src={
+                                      winner.student?.user?.avatar
+                                        ? "http://127.0.0.1:8000/static" +
+                                          winner.student?.user?.avatar
+                                        : winner.student?.user?.gender ===
+                                          "male"
+                                        ? require("../../assets/icons/boy.png")
+                                        : require("../../assets/icons/girl.png")
+                                    }
+                                  />
                                   <div style={styles.name}>
                                     {winner.student?.user?.first_name}{" "}
                                     {winner.student?.user?.last_name}

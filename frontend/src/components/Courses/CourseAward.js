@@ -114,7 +114,16 @@ const CourseAward = () => {
       width: "13%",
       render: (item) => (
         <div style={{ display: "flex", alignItems: "center" }}>
-          <img style={styles.img} />
+          <img
+            style={styles.img}
+            src={
+              item?.student?.user?.avatar
+                ? "http://127.0.0.1:8000/static" + item?.student?.user?.avatar
+                : item?.student?.user?.gender === "male"
+                ? require("../../assets/icons/boy.png")
+                : require("../../assets/icons/girl.png")
+            }
+          />
           <div style={styles.name}>
             {item?.student?.user?.first_name} {item?.student?.user?.last_name}
           </div>

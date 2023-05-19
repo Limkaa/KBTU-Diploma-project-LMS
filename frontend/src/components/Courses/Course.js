@@ -162,6 +162,8 @@ const Course = () => {
     }
   };
 
+  console.log(course);
+
   const handleUpdatePost = async ({ values }) => {
     try {
       await updatePost({
@@ -252,8 +254,13 @@ const Course = () => {
                     {course?.teacher && (
                       <div style={styles.teachCont}>
                         <img
-                          // src={course?.teacher?.avatar}
-                          // alt="teacher"
+                          src={
+                            course?.teacher?.avatar
+                              ? course?.teacher?.avatar
+                              : course?.teacher?.gender === "male"
+                              ? require("../../assets/icons/boy.png")
+                              : require("../../assets/icons/girl.png")
+                          }
                           style={styles.img}
                         />
                         <div>
@@ -493,7 +500,7 @@ const styles = {
   },
   teacher: {
     fontSize: 14,
-    fontWeight: 400,
+    fontWeight: 500,
   },
   podtext: {
     fontSize: 14,

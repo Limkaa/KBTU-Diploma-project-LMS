@@ -356,7 +356,7 @@ const AddingUserModal = ({
   );
 };
 
-const styles = {
+export const styles = {
   wrapper: {
     backgroundColor: "white",
     padding: "20px 0 0 0",
@@ -367,6 +367,7 @@ const styles = {
     height: "100%",
     zIndex: 1,
     borderTopLeftRadius: 20,
+    boxShadow: "0 0 4px 0px rgb(220,220,220)",
   },
   header: {
     display: "flex",

@@ -38,6 +38,9 @@ import TimeCalendar from "./pages/TimeTablePage/TimeCalendar";
 import Course from "./components/Courses/Course";
 import CourseContainer from "./components/Courses/CourseContainer";
 import CourseAward from "./components/Courses/CourseAward";
+import CommunitiesPage from "./pages/CommunitiesPage/CommunitiesPage";
+import CommunityPage from "./pages/CommunitiesPage/CommunityPage";
+import TodoPage from "./pages/TodoPage/TodoPage";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -68,6 +71,21 @@ function App() {
             path="/courses/:id/syllabus"
             element={<SyllabusContainer />}
           />
+          <Route
+              exact
+              path="/todo"
+              element={<TodoPage />}
+          />
+          <Route
+              exact
+              path="/communities"
+              element={<CommunitiesPage />}
+          />
+          <Route
+              exact
+              path="/communities/:commId"
+              element={<CommunityPage />}
+          />
           <Route exact path="/awards" element={<AwardsContainer />} />
           <Route exact path="/awards/:id/winners" element={<Award />} />
           <Route exact path="/courses/:id/winners" element={<CourseAward />} />
@@ -85,12 +103,6 @@ function App() {
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher"]} />}>
-          {/* <Route exact path="/groups" element={<TeacherGroupsPage />} /> */}
-          {/* <Route
-            exact
-            path="/groups/:groupId/students"
-            element={<StudentsPage />}
-          /> */}
           <Route exact path="/my-groups" element={<TeacherGroupsPage />} />
           <Route
             exact

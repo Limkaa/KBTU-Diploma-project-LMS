@@ -15,7 +15,7 @@ import Select from "@mui/material/Select";
 import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import { toastify } from "../../components/shared/Toast/Toast";
 
-const InputStyled = styled(TextField)(() => ({
+export const InputStyled = styled(TextField)(() => ({
   "& fieldset": {
     borderRadius: "10px",
   },

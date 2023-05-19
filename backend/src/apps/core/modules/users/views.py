@@ -12,10 +12,11 @@ from ..schools.models import School
 from apps.core.utils.pagination import OptionalPaginationListAPIView
 
 
-class OwnProfileAPI(APIView):
-    def get(self, request):
-        serializer = serializers.UserSerializer(request.user)
-        return Response(serializer.data)
+class OwnProfileAPI(generics.RetrieveUpdateAPIView):
+    serializer_class = serializers.UserSerializer
+    
+    def get_object(self):
+        return get_object_or_404(User, pk=self.request.user.pk)
 
 
 class UsersListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):

@@ -29,6 +29,7 @@ const GroupsPage = () => {
   const [showUpdateGroupModal, setShowUpdateGroupModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState();
 
+  const [isActive, setIsActive] = useState("");
   const {
     data: groupsData,
     isLoading,
@@ -40,6 +41,7 @@ const GroupsPage = () => {
     teacher_id: teacher,
     page,
     search,
+    isActive,
   });
   const { data: grades, isSuccess: isGradesLoaded } =
     useGetSchoolGradesWithoutPageQuery({ school_id: user?.school_id });
@@ -202,6 +204,7 @@ const GroupsPage = () => {
             }}
           >
             <Radio.Group
+              size={"large"}
               style={{ marginRight: 10 }}
               value={groupType}
               onChange={handleGroupTypeChange}
@@ -212,6 +215,7 @@ const GroupsPage = () => {
             </Radio.Group>
             {groupType === "school" && (
               <Select
+                size={"large"}
                 style={{ width: 200 }}
                 placeholder="Not required"
                 disabled={true}
@@ -219,6 +223,7 @@ const GroupsPage = () => {
             )}
             {groupType === "teacher" && (
               <Select
+                size={"large"}
                 showSearch
                 style={{ width: 200 }}
                 placeholder="Search to Select"
@@ -234,6 +239,7 @@ const GroupsPage = () => {
             )}
             {groupType === "grade" && (
               <Select
+                size={"large"}
                 showSearch
                 style={{ width: 200 }}
                 placeholder="Search to Select"
@@ -250,6 +256,7 @@ const GroupsPage = () => {
           </div>
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
+              size={"middle"}
               placeholder="Search code"
               prefix={
                 <img alt="" src={Search} style={{ height: 15, width: 15 }} />
@@ -258,11 +265,12 @@ const GroupsPage = () => {
               onChange={(e) => setSearch(e.target.value.toLowerCase())}
             />
             <Button
+              size={"large"}
               type="primary"
               style={{
                 alignItems: "center",
                 display: "flex",
-                fontWeight: 500,
+                fontWeight: 400,
                 marginLeft: 16,
               }}
               icon={<img alt="" src={Plus} style={{ paddingRight: 5 }} />}

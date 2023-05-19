@@ -13,7 +13,7 @@ class UserSerializer(serializers.Serializer):
     last_name = serializers.CharField(required=True)
     school_id = serializers.IntegerField(read_only=True)
     role = serializers.ChoiceField(read_only=True, choices=User.Role.choices)
-    avatar = serializers.ImageField(required=False, allow_null=True)
+    avatar = serializers.ImageField(required=False, allow_null=True, use_url=True)
     gender = serializers.ChoiceField(required=True, choices=User.Gender.choices)
     date_of_birth = serializers.DateField(required=True)
     rating = serializers.IntegerField(read_only=True)
@@ -22,7 +22,7 @@ class UserSerializer(serializers.Serializer):
     is_active = serializers.BooleanField(required=False)
     updated_at = serializers.DateTimeField(read_only=True)
     date_joined = serializers.DateTimeField(read_only=True)
-
+    
     def update(self, instance, validated_data):
         for key, value in validated_data.items():
             setattr(instance, key, value)

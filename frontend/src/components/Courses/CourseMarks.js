@@ -15,6 +15,7 @@ import Search from "../../assets/icons/search.svg";
 import { useGetMarksOfCourseQuery } from "../../redux/marks/marksOfCourse/marksOfCourseApiSlice";
 import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
 import moment from "moment";
+import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
 
 const CourseMarks = () => {
   const { id: courseId } = useParams();
@@ -22,6 +23,7 @@ const CourseMarks = () => {
   const [total, setTotal] = React.useState();
   const [search, setSearch] = React.useState("");
   const [marks, setMarks] = React.useState([]);
+  const [markDates, setMarkDates] = React.useState([]);
 
   const { data, isLoading } = useGetMarksOfCourseQuery({
     course_id: courseId,
@@ -29,21 +31,29 @@ const CourseMarks = () => {
     search,
   });
 
+  const {
+    data: dataAssignments,
+    isLoading: isLoadingAssignments,
+    refetch,
+  } = useGetCourseAssignmentsQuery({ course_id: courseId, search: "" });
+
   React.useEffect(() => {
     if (data && !isLoading) {
-      console.log(data);
-    //   //   const temp = {};
+      // // console.log(data);
+      // const temp = {};
 
-    //   data?.results.forEach((el) => {
-    //     el.marks.forEach((item) => {
-    //       const startTime = moment(item.event?.startTime).format("MMMM YYYY");
-    //     });
-    //     if (!finishedDateHash[startTime]) {
-    //       finishedDateHash[startTime] = [item];
-    //     } else {
-    //       finishedDateHash[startTime] = [...finishedDateHash[startTime], item];
-    //     }
-    //   });
+      // data?.results.forEach((el) => {
+      //   el.marks.forEach((item) => {
+      //     const startTime = moment(item.created_at).format("MMMM YY, DD");
+      //     if (!temp[startTime]) {
+      //       temp[startTime] = [item];
+      //     } else {
+      //       temp[startTime] = [...temp[startTime], item];
+      //     }
+      //   });
+      //   // console.log(temp);
+      // });
+      // setMarkDates(temp);
       setMarks(data.results);
       setTotal(data.count);
     }
@@ -58,6 +68,8 @@ const CourseMarks = () => {
       return "rgba(234, 90, 12, 1)";
     }
   };
+
+  console.log(marks);
 
   const columns = [
     {
@@ -80,22 +92,28 @@ const CourseMarks = () => {
       render: (item) => (
         <div style={{ display: "flex" }}>
           {item?.marks?.map((el) => (
-            <div>
-              <div>{moment(el?.created_at).format("DD/MM/YY")}</div>
-              <div
-                style={{
-                  alignSelf: "baseline",
-                  backgroundColor: renderColor(el?.number),
-                  padding: 10,
-                  color: "white",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                  fontSize: 14,
-                  margin: 2,
-                }}
-              >
-                {el?.number}
-              </div>
+            <div key={el.id}>
+              {dataAssignments?.map((ass) =>
+                el.assignment === ass.id ? (
+                  <div
+                    style={{
+                      alignSelf: "baseline",
+                      backgroundColor: renderColor(el?.number),
+                      padding: 6,
+                      color: "white",
+                      textDecoration: "none",
+                      fontWeight: 500,
+                      fontSize: 14,
+                      margin: 2,
+                      borderRadius: 5,
+                    }}
+                  >
+                    {el?.number}
+                  </div>
+                ) : (
+                  <div>0</div>
+                )
+              )}
             </div>
           ))}
         </div>

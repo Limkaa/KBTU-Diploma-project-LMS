@@ -174,7 +174,6 @@ const TimeSchedule = (props) => {
                                 size={"small"}
                                 style={{width: '150px'}}
                                 showSearch
-                                style={{ width: 200 }}
                                 placeholder="Search to Select"
                                 optionFilterProp="children"
                                 filterOption={(input, option) =>

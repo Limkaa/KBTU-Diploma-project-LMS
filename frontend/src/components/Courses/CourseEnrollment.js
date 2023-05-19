@@ -104,16 +104,20 @@ const CourseEnrollment = () => {
         await createEnrollment({
           course_id: course_id,
           student: row?.id,
-        }).then(() => {
-          refetch();
-          refetchNotEnrolled();
-          toastify("success", "Enrollments Created");
-          setSelectedRows([]);
-        });
+        })
+          .unwrap()
+          .then(() => {
+            refetch();
+            refetchNotEnrolled();
+            toastify("success", "Enrollments Created");
+            setSelectedRows([]);
+          });
       } catch (err) {
         toastify(
           "error",
-          `Failed to create enrollment for ${row.user.first_name} ${row.user.last_name}`
+          `Failed to create enrollment for ${row.user.first_name} ${row.user.last_name}` +
+            " " +
+            err?.data?.detail?.subject[0]
         );
       }
     }
@@ -125,16 +129,20 @@ const CourseEnrollment = () => {
         await updateEnrollment({
           course_id: course_id,
           enrollment_id: row?.id,
-        }).then(() => {
-          refetch();
-          refetchTransferred();
-          toastify("success", "Enrollments Updated");
-          setSelectedTransferred([]);
-        });
+        })
+          .unwrap()
+          .then((payload) => {
+            refetch();
+            refetchTransferred();
+            toastify("success", "Enrollments Updated");
+            setSelectedTransferred([]);
+          });
       } catch (err) {
         toastify(
           "error",
-          `Failed to update enrollment for ${row.user.first_name} ${row.user.last_name}`
+          `Failed to update enrollment for ${row.user.first_name} ${row.user.last_name}` +
+            " " +
+            err.data.detail?.subject[0]
         );
       }
     }

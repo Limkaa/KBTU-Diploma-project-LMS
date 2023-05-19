@@ -7,7 +7,7 @@ import {
   useGetCourseWinnersQuery,
   useGetWinnersOfAwardQuery,
 } from "../../redux/winners/winnersApiSlice";
-import { Spin, Table, Input } from "antd";
+import { Spin, Table, Input, Tooltip } from "antd";
 import { useGetAwardQuery } from "../../redux/awards/awardsApiSlice";
 import { Paper } from "@mui/material";
 import Back from "../shared/Back";
@@ -16,6 +16,14 @@ import { useGetMarksOfCourseQuery } from "../../redux/marks/marksOfCourse/marksO
 import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
 import moment from "moment";
 import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
+
+const TooltipStyled = styled(Tooltip)`
+  &.ant-tooltip {
+    color: #666666;
+    font-size: 15px;
+    border: 1px solid red;
+  }
+`;
 
 const CourseMarks = () => {
   const { id: courseId } = useParams();
@@ -39,21 +47,6 @@ const CourseMarks = () => {
 
   React.useEffect(() => {
     if (data && !isLoading) {
-      // // console.log(data);
-      // const temp = {};
-
-      // data?.results.forEach((el) => {
-      //   el.marks.forEach((item) => {
-      //     const startTime = moment(item.created_at).format("MMMM YY, DD");
-      //     if (!temp[startTime]) {
-      //       temp[startTime] = [item];
-      //     } else {
-      //       temp[startTime] = [...temp[startTime], item];
-      //     }
-      //   });
-      //   // console.log(temp);
-      // });
-      // setMarkDates(temp);
       setMarks(data.results);
       setTotal(data.count);
     }
@@ -63,9 +56,9 @@ const CourseMarks = () => {
     if (item === 5) {
       return "rgba(0, 137, 158, 1)";
     } else if (item === 4) {
-      return "rgba(228, 218, 0, 1)";
+      return "#DFD61B";
     } else {
-      return "rgba(234, 90, 12, 1)";
+      return "#ED7432";
     }
   };
 
@@ -93,27 +86,26 @@ const CourseMarks = () => {
         <div style={{ display: "flex" }}>
           {item?.marks?.map((el) => (
             <div key={el.id}>
-              {dataAssignments?.map((ass) =>
-                el.assignment === ass.id ? (
-                  <div
-                    style={{
-                      alignSelf: "baseline",
-                      backgroundColor: renderColor(el?.number),
-                      padding: 6,
-                      color: "white",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: 14,
-                      margin: 2,
-                      borderRadius: 5,
-                    }}
-                  >
-                    {el?.number}
-                  </div>
-                ) : (
-                  <div>0</div>
-                )
-              )}
+              <Tooltip
+                color="white"
+                title={() => {
+                  return (
+                    <div>
+                      <div style={styles.comment}>Comment</div>
+                      <div style={styles.comment}>{el?.comment}</div>
+                    </div>
+                  );
+                }}
+              >
+                <div
+                  style={{
+                    ...styles.number,
+                    backgroundColor: renderColor(el?.number),
+                  }}
+                >
+                  {el?.number}
+                </div>
+              </Tooltip>
             </div>
           ))}
         </div>
@@ -200,6 +192,22 @@ const styles = {
     textDecoration: "none",
     fontWeight: 400,
     fontSize: 13,
+  },
+  number: {
+    alignSelf: "baseline",
+    padding: "6px 10px",
+    color: "white",
+    textDecoration: "none",
+    fontWeight: 500,
+    fontSize: 14,
+    margin: 2,
+    borderRadius: 5,
+  },
+  comment: {
+    color: "#4A4D58",
+    fontWeight: 500,
+    fontSize: 13,
+    lineHeight: 1.2,
   },
 };
 

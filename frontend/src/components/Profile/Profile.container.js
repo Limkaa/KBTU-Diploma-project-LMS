@@ -70,7 +70,10 @@ const ProfileContainer = () => {
             </div>
           </div>
           <div style={styles.imgCont}>
-            <img style={styles.img} />
+            <img
+              style={styles.img}
+              src={"http://127.0.0.1:8000/static" + user?.avatar}
+            />
             {/* <Button style={{ width: 130, marginTop: 12 }}>Change Image</Button> */}
           </div>
         </div>
@@ -155,7 +158,7 @@ const styles = {
   },
   img: {
     width: 170,
-    height: 170,
+    height: 175,
     borderRadius: 120,
     backgroundColor: "#B6C3D8",
   },

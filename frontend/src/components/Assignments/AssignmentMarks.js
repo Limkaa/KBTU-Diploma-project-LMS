@@ -106,9 +106,9 @@ const AssignmentMarks = () => {
     try {
       await createMark({
         assignment_id: assignment_id,
-        enrollment: item.id,
-        number: item.number,
-        comment: item.comment,
+        enrollment: item?.id,
+        number: item?.number,
+        comment: item?.comment,
       })
         .unwrap()
         .then((payload) => {
@@ -117,11 +117,11 @@ const AssignmentMarks = () => {
         });
     } catch (err) {
       console.log(err);
-      if (err.data.detail?.__all__[0]) {
-        toastify("error", err.data.detail?.__all__[0]);
+      if (err?.data?.detail?.__all__[0]) {
+        toastify("error", err?.data?.detail?.__all__[0]);
       }
-      if (err.data.detail?.non_field_errors[0]) {
-        toastify("error", err.data.detail?.non_field_errors[0]);
+      if (err?.data?.detail?.non_field_errors[0]) {
+        toastify("error", err?.data?.detail?.non_field_errors[0]);
       } else {
         toastify("error", "Error");
       }
@@ -275,25 +275,29 @@ const AssignmentMarks = () => {
       width: "15%",
       render: (_, record) => (
         <Space size="middle">
-          <Tooltip title="Create Mark">
-            <CheckOutlined
-              className="check"
-              onClick={() => {
-                handleCreateMark(record.id);
-                setMark(record.id);
-              }}
-            />
-          </Tooltip>
-          <Tooltip title="Update Mark">
-            <EditOutlined
-              key="edit"
-              className="edit"
-              onClick={() => {
-                handleUpdateMark(record.id);
-                setMark(record.id);
-              }}
-            />
-          </Tooltip>
+          {(!record?.number || !record?.comment) && (
+            <Tooltip title="Create Mark">
+              <CheckOutlined
+                className="check"
+                onClick={() => {
+                  handleCreateMark(record.id);
+                  setMark(record.id);
+                }}
+              />
+            </Tooltip>
+          )}
+          {(record?.number || record?.comment) && (
+            <Tooltip title="Update Mark">
+              <EditOutlined
+                key="edit"
+                className="edit"
+                onClick={() => {
+                  handleUpdateMark(record.id);
+                  setMark(record.id);
+                }}
+              />
+            </Tooltip>
+          )}
           <Tooltip title="Delete Mark">
             <DeleteOutlined
               className="delete"

@@ -316,6 +316,7 @@ const CourseMarks = () => {
           <Input
             placeholder="Number"
             value={newNumber}
+            disabled={user?.role === "manager"}
             onChange={(e) => {
               setNewNumber(e.target.value);
               setError(false);
@@ -328,11 +329,12 @@ const CourseMarks = () => {
           <Input
             placeholder="Comment"
             value={newComment}
+            disabled={user?.role === "manager"}
             onChange={(e) => setNewComment(e.target.value)}
           />
         </div>
         {user?.role === "manager" && (
-          <div>
+          <div style={{ ...styles.date, color: "#4A4D58" }}>
             Last updated by: {dataUser?.last_name} {dataUser?.first_name}
           </div>
         )}
@@ -342,30 +344,32 @@ const CourseMarks = () => {
         <div style={styles.date}>
           Updated date: {moment(mark?.updated_at).format("DD MMM YYYY")}
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 10,
-            marginTop: 15,
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button
-            type="primary"
-            style={styles.btnDelete}
-            onClick={() => handleDeleteMark()}
+        {user?.role !== "manager" && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 10,
+              marginTop: 15,
+              justifyContent: "flex-end",
+            }}
           >
-            Delete
-          </Button>
-          <Button
-            type="primary"
-            style={styles.btnAdd}
-            onClick={() => handleUpdateMark()}
-          >
-            Update
-          </Button>
-        </div>
+            <Button
+              type="primary"
+              style={styles.btnDelete}
+              onClick={() => handleDeleteMark()}
+            >
+              Delete
+            </Button>
+            <Button
+              type="primary"
+              style={styles.btnAdd}
+              onClick={() => handleUpdateMark()}
+            >
+              Update
+            </Button>
+          </div>
+        )}
       </Modal>
     </div>
   );

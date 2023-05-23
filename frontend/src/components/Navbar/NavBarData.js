@@ -38,7 +38,7 @@ export const managerMenu = [
   },
   {
     title: "Marks",
-    path: `/students/:id/marks`,
+    path: `/marks`,
     icon: SchoolGradesSvg,
   },
   {
@@ -154,8 +154,8 @@ export const studentMenu = [
     icon: ClassroomSvg,
   },
   {
-    title: "Grades",
-    path: "/grades",
+    title: "Marks",
+    path: "/marks",
     icon: GradesSvg,
   },
   {
@@ -203,7 +203,7 @@ export const teacherMenu = [
   },
   {
     title: "Marks",
-    path: "/grades",
+    path: "/marks",
     icon: GradesSvg,
   },
   {

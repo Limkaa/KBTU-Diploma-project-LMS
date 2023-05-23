@@ -9,7 +9,7 @@ import ScheduleContainer from "./components/Schedule/Schedule.container";
 import MaterialsContainer from "./components/Materials/Materials.container";
 import ClassroomContainer from "./components/Classroom/Classroom.container";
 import TimelineContainer from "./components/Timeline/Timeline.container";
-import GradesContainer from "./components/Grades/Grades.container";
+import MarksContainer from "./components/Marks/Marks.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
 import SchoolGradesContainer from "./components/SchoolGrades/SchoolGrades.container";
@@ -63,7 +63,7 @@ function App() {
           <Route exact path="/schedule" element={<ScheduleContainer />} />
           <Route exact path="/materials" element={<MaterialsContainer />} />
           <Route exact path="/classroom" element={<ClassroomContainer />} />
-          <Route exact path="/grades" element={<GradesContainer />} />
+          <Route exact path="/marks" element={<MarksContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
           <Route exact path="/school" element={<SchoolPage />} />
           <Route
@@ -71,20 +71,12 @@ function App() {
             path="/courses/:id/syllabus"
             element={<SyllabusContainer />}
           />
+          <Route exact path="/todo" element={<TodoPage />} />
+          <Route exact path="/communities" element={<CommunitiesPage />} />
           <Route
-              exact
-              path="/todo"
-              element={<TodoPage />}
-          />
-          <Route
-              exact
-              path="/communities"
-              element={<CommunitiesPage />}
-          />
-          <Route
-              exact
-              path="/communities/:commId"
-              element={<CommunityPage />}
+            exact
+            path="/communities/:commId"
+            element={<CommunityPage />}
           />
           <Route exact path="/awards" element={<AwardsContainer />} />
           <Route exact path="/awards/:id/winners" element={<Award />} />

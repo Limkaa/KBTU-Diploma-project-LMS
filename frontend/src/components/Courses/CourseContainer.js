@@ -41,11 +41,11 @@ const CourseContainer = () => {
       label: `General`,
       children: <Course />,
     },
-    {
-      key: "4",
-      label: `Marks`,
-      children: <CourseMarks />,
-    },
+    // {
+    //   key: "4",
+    //   label: `Marks`,
+    //   children: <CourseMarks />,
+    // },
     {
       key: "2",
       label: `Awards`,

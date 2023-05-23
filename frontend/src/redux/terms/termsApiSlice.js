@@ -30,6 +30,7 @@ export const termsApiSlice = authApi.injectEndpoints({
 export const {
   useGetTermsQuery,
   useGetTermsWithoutPageQuery,
+  useLazyGetTermsWithoutPageQuery,
   useAddTermMutation,
   useUpdateTermMutation,
 } = termsApiSlice;

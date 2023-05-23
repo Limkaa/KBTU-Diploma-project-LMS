@@ -47,6 +47,7 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
 export const {
   useGetCourseAssignmentsQuery,
   useGetAssignmentQuery,
+  useLazyGetAssignmentQuery,
   useGetTeacherAssignmentsQuery,
   useGetAssignmentMarksByEnrollmentsQuery,
   useGetAssignmentMarksQuery,

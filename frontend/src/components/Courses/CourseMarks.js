@@ -1,29 +1,10 @@
 import React from "react";
-import Header from "../shared/Header/Header";
-import styled from "styled-components";
-import Profile from "../Dashboard/Profile";
 import { useLocation, useParams } from "react-router-dom";
-import {
-  useGetCourseWinnersQuery,
-  useGetWinnersOfAwardQuery,
-} from "../../redux/winners/winnersApiSlice";
-import { Spin, Table, Input, Tooltip } from "antd";
-import { useGetAwardQuery } from "../../redux/awards/awardsApiSlice";
-import { Paper } from "@mui/material";
-import Back from "../shared/Back";
+import { Spin, Table, Input, Tooltip, Modal } from "antd";
 import Search from "../../assets/icons/search.svg";
 import { useGetMarksOfCourseQuery } from "../../redux/marks/marksOfCourse/marksOfCourseApiSlice";
-import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
 import moment from "moment";
 import { useGetCourseAssignmentsQuery } from "../../redux/assignments/assignmentsApiSlice";
-
-const TooltipStyled = styled(Tooltip)`
-  &.ant-tooltip {
-    color: #666666;
-    font-size: 15px;
-    border: 1px solid red;
-  }
-`;
 
 const CourseMarks = () => {
   const { id: courseId } = useParams();
@@ -31,7 +12,8 @@ const CourseMarks = () => {
   const [total, setTotal] = React.useState();
   const [search, setSearch] = React.useState("");
   const [marks, setMarks] = React.useState([]);
-  const [markDates, setMarkDates] = React.useState([]);
+  const [mark, setMark] = React.useState();
+  const [show, setShow] = React.useState(false);
 
   const { data, isLoading } = useGetMarksOfCourseQuery({
     course_id: courseId,
@@ -62,7 +44,7 @@ const CourseMarks = () => {
     }
   };
 
-  console.log(marks);
+  console.log(mark);
 
   const columns = [
     {
@@ -85,14 +67,36 @@ const CourseMarks = () => {
       render: (item) => (
         <div style={{ display: "flex" }}>
           {item?.marks?.map((el) => (
-            <div key={el.id}>
+            <div
+              key={el.id}
+              onClick={() => {
+                setMark(el);
+                setShow(true);
+              }}
+              style={{ cursor: "pointer" }}
+            >
               <Tooltip
                 color="white"
                 title={() => {
                   return (
-                    <div>
-                      <div style={styles.comment}>Comment</div>
-                      <div style={styles.comment}>{el?.comment}</div>
+                    <div style={{ padding: 5 }}>
+                      {el?.comment && (
+                        <div>
+                          <div
+                            style={{
+                              ...styles.commentTitle,
+                              color: renderColor(el?.number),
+                            }}
+                          >
+                            Comment
+                          </div>
+                          <div style={styles.comment}>{el?.comment}</div>
+                        </div>
+                      )}
+                      <div style={styles.date}>
+                        Updated date:{" "}
+                        {moment(item?.updated_at).format("DD MMM YYYY")}
+                      </div>
                     </div>
                   );
                 }}
@@ -110,6 +114,13 @@ const CourseMarks = () => {
           ))}
         </div>
       ),
+    },
+    {
+      title: () => {
+        return <>Average Mark</>;
+      },
+      width: "10%",
+      render: (item) => <div style={styles.avr}>{item.average_mark}</div>,
     },
   ];
 
@@ -141,6 +152,17 @@ const CourseMarks = () => {
           />
         </Spin>
       </div>
+      <Modal
+        title="Update Mark"
+        style={{ fontSize: 25 }}
+        open={show}
+        onOk={() => console.log("hell")}
+        onCancel={() => setShow(false)}
+        maskClosable={false}
+        okText={"Update"}
+      >
+        <div>Test</div>
+      </Modal>
     </div>
   );
 };
@@ -203,11 +225,32 @@ const styles = {
     margin: 2,
     borderRadius: 5,
   },
-  comment: {
+  commentTitle: {
     color: "#4A4D58",
     fontWeight: 500,
     fontSize: 13,
     lineHeight: 1.2,
+  },
+  comment: {
+    color: "#4A4D58",
+    fontWeight: 400,
+    fontSize: 13,
+    lineHeight: 1.2,
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
+  date: {
+    color: "#969696",
+    fontWeight: 500,
+    fontSize: 13,
+    lineHeight: 1.2,
+  },
+  avr: {
+    color: "rgba(22, 58, 97, 1)",
+    fontWeight: 500,
+    fontSize: 15,
+    lineHeight: 1.2,
+    textAlign: "center",
   },
 };
 

@@ -129,33 +129,35 @@ const CoursesContainer = () => {
             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
-          <FormControl
-            sx={{
-              width: 220,
-              marginBottom: 3,
-              fieldset: { borderRadius: "10px" },
-            }}
-            size="small"
-          >
-            <InputLabel id="grade">Year</InputLabel>
-            <Select
-              labelId="grade"
-              id="grade"
-              label="Grade"
-              defaultValue={""}
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
+          {user?.role === "teacher" && (
+            <FormControl
+              sx={{
+                width: 220,
+                marginBottom: 3,
+                fieldset: { borderRadius: "10px" },
+              }}
+              size="small"
             >
-              <MenuItem value="" disabled>
-                <em>Choose year</em>
-              </MenuItem>
-              {years?.map((item) => (
-                <MenuItem value={item.id} key={item.id}>
-                  {item.name}
+              <InputLabel id="grade">Year</InputLabel>
+              <Select
+                labelId="grade"
+                id="grade"
+                label="Grade"
+                defaultValue={""}
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                <MenuItem value="" disabled>
+                  <em>Choose year</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                {years?.map((item) => (
+                  <MenuItem value={item.id} key={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
         </div>
         <Spin
           spinning={user?.role === "student" ? isLoading : teacherIsLoading}

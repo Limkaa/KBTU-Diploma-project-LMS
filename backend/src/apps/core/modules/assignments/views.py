@@ -7,6 +7,8 @@ from ..permissions import *
 from ..users.models import User
 
 from .models import Course, Assignment
+from ..students.models import Student
+from ..enrollments.models import Enrollment
 from .serializers import *
 
 
@@ -84,4 +86,20 @@ class TeacherAllAssignmentsListAPI(OptionalPaginationListAPIView):
         teacher = get_object_or_404(User.objects.select_related('school'), pk=self.kwargs['teacher_id'], role=User.Role.TEACHER)
         self.check_object_permissions(self.request, teacher)
         return self.queryset.filter(course__teacher=teacher)
+
+
+class StudentAllAssignmentsListAPI(OptionalPaginationListAPIView):
+    serializer_class = AssignmentModelNestedSerializer
+    permission_classes = [OnlyOwnSchool, IsStudent, IsUserItself]
+    queryset = Assignment.objects.select_related('course', 'term', 'course__school')
+    filterset_fields = ['course', 'term', 'is_active', 'course__subject', 'course__year']
+    ordering = ['datetime', 'created_at', 'updated_at']
+    search_fields = ['name']
+    ordering = '-created_at'
     
+    def get_queryset(self):
+        student = get_object_or_404(Student.objects.select_related('user', 'group', 'group__school'), pk=self.kwargs['student_id'])
+        self.check_object_permissions(self.request, student)
+        student_enrollments = Enrollment.objects.filter(
+            student=student, course__group=student.group).values_list('course', flat=True)
+        return self.queryset.filter(course__in=student_enrollments)

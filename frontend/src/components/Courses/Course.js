@@ -162,8 +162,6 @@ const Course = () => {
     }
   };
 
-  console.log(course);
-
   const handleUpdatePost = async ({ values }) => {
     try {
       await updatePost({
@@ -203,8 +201,6 @@ const Course = () => {
       }
     }
   };
-
-  console.log(course);
 
   return (
     <div style={styles.container}>

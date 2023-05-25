@@ -41,6 +41,7 @@ import CourseAward from "./components/Courses/CourseAward";
 import CommunitiesPage from "./pages/CommunitiesPage/CommunitiesPage";
 import CommunityPage from "./pages/CommunitiesPage/CommunityPage";
 import TodoPage from "./pages/TodoPage/TodoPage";
+import MarksByCourses from "./components/Marks/MarksByCourses";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -81,6 +82,9 @@ function App() {
           <Route exact path="/awards" element={<AwardsContainer />} />
           <Route exact path="/awards/:id/winners" element={<Award />} />
           <Route exact path="/courses/:id/winners" element={<CourseAward />} />
+        </Route>
+        <Route element={<PrivateRoute allowedRoles={["teacher", "manager"]} />}>
+          <Route exact path="/studentmarks" element={<MarksByCourses />} />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher", "student"]} />}>
           <Route

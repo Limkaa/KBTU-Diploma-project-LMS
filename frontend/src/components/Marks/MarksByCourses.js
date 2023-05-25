@@ -27,6 +27,7 @@ import { useGetMarksOfStudentQuery } from "../../redux/marks/marksOfStudent/mark
 import { useGetStudentQuery } from "../../redux/students/studentsApiSlice";
 import Header from "../shared/Header/Header";
 import Profile from "../Dashboard/Profile";
+import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 
 const SelectStyled = styled(Select)`
   &.ant-select-single .ant-select-selector {
@@ -39,7 +40,7 @@ const SelectStyled = styled(Select)`
   }
 `;
 
-const MarksContainer = () => {
+const MarksByCourses = () => {
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
   const [search, setSearch] = React.useState("");
@@ -48,7 +49,10 @@ const MarksContainer = () => {
   const [show, setShow] = React.useState(false);
   const { data: user } = useGetAuthUserQuery();
   const [select, setSelect] = React.useState("");
+  const [selectYear, setSelectYear] = React.useState("");
+
   const [termOptions, setTermOptions] = React.useState([]);
+  const [yearOptions, setYearOptions] = React.useState([]);
 
   const { data: studentData } = useGetStudentQuery(user?.id);
 
@@ -62,6 +66,11 @@ const MarksContainer = () => {
   const [getAssignment, { data: dataAssignment, isLoadingAssignment }] =
     useLazyGetAssignmentQuery();
 
+  const { data: dataYears, isLoading: isLoadingYears } =
+    useGetYearsWithoutPageQuery({
+      school_id: user?.school_id,
+    });
+
   const [getTerm, { data: dataTerm }] = useLazyGetTermsWithoutPageQuery();
 
   React.useEffect(() => {
@@ -71,6 +80,20 @@ const MarksContainer = () => {
       getTerm({ year_id: data?.results[0]?.year?.id });
     }
   }, [data, isLoading]);
+
+  React.useEffect(() => {
+    let arr = [];
+    if (dataYears && !isLoadingYears) {
+      console.log(user, dataYears);
+      dataYears.forEach((item) => {
+        arr.push({
+          value: item.id,
+          label: item.name,
+        });
+      });
+      setYearOptions(arr);
+    }
+  }, [dataTerm]);
 
   React.useEffect(() => {
     let arr = [{ value: "", label: "All terms" }];
@@ -190,7 +213,18 @@ const MarksContainer = () => {
       <div style={styles.tableCont}>
         <div style={styles.filter}>
           <div style={{ display: "flex", gap: 6 }}>
-            <div style={styles.selectHeader}>Year {marks[0]?.year?.name}</div>
+            <SelectStyled
+              size={"middle"}
+              style={{ width: 180 }}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "").includes(input)
+              }
+              options={yearOptions}
+              defaultValue={yearOptions[0]}
+              onChange={(val) => setSelectYear(val)}
+              value={selectYear}
+            />
             <div style={styles.selectHeader}>
               Grade: {marks[0]?.subject?.grade?.name}
             </div>
@@ -412,4 +446,4 @@ const styles = {
   },
 };
 
-export default MarksContainer;
+export default MarksByCourses;

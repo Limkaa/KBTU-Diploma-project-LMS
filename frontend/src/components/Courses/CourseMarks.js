@@ -118,8 +118,6 @@ const CourseMarks = () => {
     }
   };
 
-  console.log(dataTerm);
-
   const handleUpdateMark = async () => {
     if (!newNumber) {
       setError(true);

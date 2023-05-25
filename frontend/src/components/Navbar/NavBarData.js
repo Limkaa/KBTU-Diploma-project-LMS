@@ -38,8 +38,8 @@ export const managerMenu = [
   },
   {
     title: "Marks",
-    path: `/marks`,
-    icon: SchoolGradesSvg,
+    path: "/studentmarks",
+    icon: GradesSvg,
   },
   {
     title: "Groups",
@@ -203,7 +203,7 @@ export const teacherMenu = [
   },
   {
     title: "Marks",
-    path: "/marks",
+    path: "/studentmarks",
     icon: GradesSvg,
   },
   {

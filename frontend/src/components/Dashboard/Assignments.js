@@ -1,9 +1,44 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {Alert, Button} from "antd";
+import {useEffect, useState} from "react";
+import {useGetStudentQuery} from "../../redux/students/studentsApiSlice";
+import {selectCurrentUser} from "../../redux/auth/authSlice";
+import {useSelector} from "react-redux";
+import {
+  useGetStudentOrTeacherAssignmentsQuery
+} from "../../redux/assignments/assignmentsApiSlice";
 
-import { Button } from "antd";
-const Assignments = () => {
+const Assignments = (props) => {
   const navigate = useNavigate();
+  const user = useSelector(selectCurrentUser);
+  const [student, setStudent] = useState();
+  const {data: studentData, isSuccess: isStudentSuccess, error} = useGetStudentQuery(user.user_id);
+  const {data: assignmentsData, isSuccess: isAssignmentsSuccess}
+      = useGetStudentOrTeacherAssignmentsQuery({type: props.type, studentId: student?.id, teacherId: user.user_id});
+  const [assignments, setAssignments] = useState([]);
+
+  useEffect(() => {
+    if (isStudentSuccess) {
+      setStudent(studentData);
+    }
+  }, [studentData, isStudentSuccess])
+
+  useEffect(() => {
+    if (isAssignmentsSuccess) {
+      let arr = [];
+      for (let as of assignmentsData) {
+        const date = new Date(as.datetime);
+        const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const formattedTime = `${hours}:${minutes} ${dayOfWeek}`;
+        arr.push({id: as.id, name: as.name, time: formattedTime, subject: as.course.subject})
+      }
+      setAssignments(arr.slice(0, 5));
+    }
+  }, [assignmentsData, isAssignmentsSuccess])
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -17,23 +52,26 @@ const Assignments = () => {
         </Button>
       </div>
       <div>
-        <div style={styles.assItem}>
-          <div style={{ display: "flex", alignItems: "center", flex: 2 }}>
-            <div style={styles.statusLine} />
-            <img style={styles.assImg} />
-            <div style={{ marginLeft: 12 }}>
-              <p style={styles.title}>Presentations SIS1</p>
-              <p style={styles.subtitle}>Biology</p>
-            </div>
-          </div>
-          <div style={{ flex: 1 }}>
-            <p style={styles.time}>11:40 PM Today</p>
-            <p style={styles.deadline}>Deadline</p>
-          </div>
-          <div style={{ flex: 0.5 }}>
-            <p style={styles.turnIn}>Turn in</p>
-          </div>
-        </div>
+        {
+          assignments.map(as => (
+              <div key={as.id} style={styles.assItem}>
+                <div style={{ display: "flex", alignItems: "center", width: "75%" }}>
+                  <div style={styles.statusLine} />
+                  <div style={{ marginLeft: 12 }}>
+                    <p style={styles.title}>{as.name}</p>
+                    <p style={styles.subtitle}>{as.subject}</p>
+                  </div>
+                </div>
+                <div style={{ width: "20%" }}>
+                  <p style={styles.time}>{as.time}</p>
+                  <p style={styles.deadline}>Deadline</p>
+                </div>
+              </div>
+          ))
+        }
+        {!assignments.length &&
+            <Alert message={"You have no assignments."}/>
+        }
       </div>
     </div>
   );
@@ -72,6 +110,7 @@ const styles = {
     border: "1px solid #F1F1F1",
     alignItems: "center",
     justifyContent: "space-between",
+    marginBottom: 5,
   },
   assImg: {
     width: 34,
@@ -82,9 +121,9 @@ const styles = {
   },
   title: {
     color: "#000000",
-    fontWeight: 600,
-    fontSize: 14,
-    lineHeight: 0.5,
+    fontWeight: 500,
+    fontSize: 13,
+    lineHeight: 1,
   },
   subtitle: {
     color: "#4A4D58",

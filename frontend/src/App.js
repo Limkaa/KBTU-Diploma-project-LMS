@@ -60,7 +60,6 @@ function App() {
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses/:id" element={<CourseContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
-          <Route exact path="/schedule" element={<ScheduleContainer />} />
           <Route exact path="/materials" element={<MaterialsContainer />} />
           <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
@@ -111,7 +110,7 @@ function App() {
           />
           <Route
             exact
-            path="/timetable"
+            path="/timeline"
             element={<TimeCalendar type="teacher" />}
           />
         </Route>
@@ -119,7 +118,7 @@ function App() {
           <Route exact path="/my-groups" element={<TeacherGroupsPage />} />
           <Route
             exact
-            path="/timeline"
+            path="/schedule"
             element={<TimeCalendar type="student" />}
           />
         </Route>

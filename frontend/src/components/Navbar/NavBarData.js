@@ -135,7 +135,7 @@ export const studentMenu = [
   },
   {
     title: "Schedule",
-    path: "/timeline",
+    path: "/schedule",
     icon: ScheduleSvg,
   },
   {
@@ -143,11 +143,6 @@ export const studentMenu = [
     path: "/materials",
     icon: MaterialsSvg,
   },
-  // {
-  //   title: "Timeline",
-  //   path: "/timeline",
-  //   icon: TimelineSvg,
-  // },
   {
     title: "Classroom",
     path: "/classroom",
@@ -168,11 +163,6 @@ export const studentMenu = [
     path: `/awards`,
     icon: AwardsSvg,
   },
-  // {
-  //   title: "Timetable",
-  //   path: `/schedule`,
-  //   icon: ScheduleSvg,
-  // },
   {
     title: "Communities",
     path: `/communities`,
@@ -203,7 +193,7 @@ export const teacherMenu = [
   },
   {
     title: "Schedule",
-    path: "/timetable",
+    path: "/timeline",
     icon: ScheduleSvg,
   },
   {
@@ -211,11 +201,11 @@ export const teacherMenu = [
     path: "/materials",
     icon: MaterialsSvg,
   },
-  {
-    title: "Timeline",
-    path: "/timeline",
-    icon: TimelineSvg,
-  },
+  // {
+  //   title: "Timeline",
+  //   path: "/timeline",
+  //   icon: TimelineSvg,
+  // },
   {
     title: "Classroom",
     path: "/classroom",

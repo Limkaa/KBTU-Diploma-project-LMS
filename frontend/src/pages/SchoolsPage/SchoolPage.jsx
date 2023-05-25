@@ -70,8 +70,6 @@ const SchoolPage = () => {
   const [text, setText] = React.useState("");
   const [posts, setPosts] = React.useState();
 
-  console.log(user)
-
   const {
     data: dataPosts,
     isLoading: isLoadingPosts,

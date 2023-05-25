@@ -33,8 +33,9 @@
     display: flex;
     background-color: #F8F9FA;
     border-radius: 12px;
-    padding: 12px 15px;
+    padding: 5px 15px;
     align-items: center;
+    margin-bottom: 3px;
 }
 .dashboard .ann-img {
     width: 38px;
@@ -47,6 +48,47 @@
     font-size: 12px;
     font-weight: 600;
     line-height: 12px;
+}
+
+.dashboard .todo-item {
+    border: 1px solid;
+    padding: 10px 18px;
+    display: flex;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border-left-width: 4px;
+}
+
+.dashboard .todo-item .content {
+    display: flex;
+    align-items: center;
+    max-width: 90%;
+}
+
+.dashboard hr {
+    height: 20px;
+}
+
+.dashboard .todo-item p {
+    margin: 0 3px 0 0;
+}
+
+.dashboard .todo-item .check {
+    padding-right: 10px;
+}
+
+.dashboard .todo-item .name {
+    color: #163A61;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.dashboard .todo-item .desc {
+    color: #4A4D58;
+    font-size: 0.7rem;
 }
 
 

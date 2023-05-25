@@ -38,7 +38,6 @@ const TimeCalendar = (props) => {
 
     useEffect(() => {
         if (error && props.type === "student") {
-            console.log(error);
             setIsGroup(false);
         }
         else {
@@ -50,7 +49,6 @@ const TimeCalendar = (props) => {
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(timetableData);
             const arr = timetableData?.map(event => ({
                 id: event.id,
                 title: event.course ? `${event.course?.subject?.name} ${event.course?.subject?.grade?.name}` : 'No course',
@@ -96,7 +94,6 @@ const TimeCalendar = (props) => {
                     <div className="calendar">
                         <Spin spinning={isLoading}>
                             <Calendar
-                                // className="calendar"
                                 localizer={localizer}
                                 events={events}
                                 formats={formats}

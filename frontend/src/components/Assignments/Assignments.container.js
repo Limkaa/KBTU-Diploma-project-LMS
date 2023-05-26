@@ -72,6 +72,7 @@ const AssignmentsCourse = () => {
       getTeacherCourses({
         teacher_id: user?.id,
         year_id: selectedYear,
+        grade: "",
       });
     }
   }, [user, selectedYear]);

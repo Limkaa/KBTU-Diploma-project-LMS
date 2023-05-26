@@ -24,6 +24,8 @@ import {
 } from "../../redux/terms/termsApiSlice";
 import {
   useGetCourseQuery,
+  useGetSchoolCoursesWithoutQuery,
+  useLazyGetSchoolCoursesWithoutQuery,
   useLazyGetTeacherCoursesWithoutQuery,
 } from "../../redux/courses/coursesApiSlice";
 import { useGetMarksOfStudentQuery } from "../../redux/marks/marksOfStudent/marksOfStudentApiSlice";
@@ -31,6 +33,7 @@ import { useGetStudentQuery } from "../../redux/students/studentsApiSlice";
 import Header from "../shared/Header/Header";
 import Profile from "../Dashboard/Profile";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
+import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
 
 const SelectStyled = styled(Select)`
   &.ant-select-single .ant-select-selector {
@@ -61,17 +64,24 @@ const MarksByCourses = () => {
   const [courseOptions, setCourseOptions] = React.useState([]);
   const [gradeOptions, setGradeOptions] = React.useState([]);
 
-  // const { data: studentData } = useGetStudentQuery(user?.id);
+  const [newNumber, setNewNumber] = React.useState();
+  const [newComment, setNewComment] = React.useState();
 
-  // const { data, isLoading } = useGetMarksOfStudentQuery({
-  //   student_id: studentData?.id,
-  //   grade: studentData?.group?.grade?.id,
-  //   search: search,
-  //   term: select,
-  // });
+  const [updateMark] = useUpdateMarkMutation();
+  const [deleteMark] = useDeleteMarkMutation();
 
-  // const [getAssignment, { data: dataAssignment, isLoadingAssignment }] =
-  //   useLazyGetAssignmentQuery();
+  const [error, setError] = React.useState(false);
+  const [errorText, setErrorText] = React.useState();
+
+  const { data, isLoading, refetch } = useGetMarksOfCourseQuery({
+    course_id: selectCourse || courseOptions[0]?.value,
+    page,
+    search,
+    term: select,
+  });
+
+  const [getAssignment, { data: dataAssignment, isLoadingAssignment }] =
+    useLazyGetAssignmentQuery();
 
   const { data: dataYears, isLoading: isLoadingYears } =
     useGetYearsWithoutPageQuery({
@@ -80,18 +90,34 @@ const MarksByCourses = () => {
 
   const [getTerm, { data: dataTerm }] = useLazyGetTermsWithoutPageQuery();
 
+  const [getUser, { data: dataUser, isLoadingUser }] = useLazyGetUserQuery();
+
   const [
     getTeacherCourses,
     { data: teacherData, isLoading: teacherIsLoading },
   ] = useLazyGetTeacherCoursesWithoutQuery();
 
-  // React.useEffect(() => {
-  //   if (data && !isLoading) {
-  //     setMarks(data.results);
-  //     setTotal(data.count);
-  //     getTerm({ year_id: data?.results[0]?.year?.id });
-  //   }
-  // }, [data, isLoading]);
+  const [
+    getTeacherCoursesWithout,
+    { data: teacherWithoutData, isLoading: teacherWithoutIsLoading },
+  ] = useLazyGetTeacherCoursesWithoutQuery();
+
+  const [
+    getSchoolCourses,
+    { data: schoolCoursesData, isLoading: schoolCoursesIsLoading },
+  ] = useLazyGetSchoolCoursesWithoutQuery();
+
+  const { data: dataGrades, isLoading: isLoadingGrades } =
+    useGetSchoolGradesWithoutPageQuery({
+      school_id: user?.school_id,
+    });
+
+  React.useEffect(() => {
+    if (data && !isLoading) {
+      setMarks(data.results);
+      setTotal(data.count);
+    }
+  }, [data, isLoading]);
 
   React.useEffect(() => {
     let arr = [];
@@ -131,41 +157,162 @@ const MarksByCourses = () => {
       getTeacherCourses({
         teacher_id: user?.id,
         year_id: selectYear,
+        grade: selectGrade,
+      });
+      getTeacherCoursesWithout({
+        teacher_id: user?.id,
+        year_id: selectYear,
+        grade: "",
+      });
+    } else if (user?.role === "manager") {
+      getSchoolCourses({
+        school_id: user?.school_id,
+        year_id: selectYear,
+        grade: selectGrade,
       });
     }
-  }, [user, selectYear]);
+  }, [user, selectYear, selectGrade]);
 
   React.useEffect(() => {
     let arr = [];
-    let gradearr = [];
-    if (teacherData && !teacherIsLoading) {
-      teacherData.forEach((item) => {
-        arr.push({
-          value: item?.id,
-          label: item?.subject?.name,
-        });
-
-        if (gradearr.indexOf(item?.group?.grade?.id) === -1) {
-          gradearr.push({
-            value: item?.group?.grade?.id,
-            label: item?.group?.grade?.name,
+    if (user?.role === "teacher") {
+      if (teacherData && !teacherIsLoading) {
+        teacherData.forEach((item) => {
+          arr.push({
+            value: item?.id,
+            label: item?.subject?.name,
           });
-        }
-      });
-      setCourseOptions(arr);
-      setGradeOptions(new Set(gradearr));
+        });
+        setCourseOptions(arr);
+      }
+    } else if (user?.role === "manager") {
+      if (schoolCoursesData && !schoolCoursesIsLoading) {
+        schoolCoursesData.forEach((item) => {
+          arr.push({
+            value: item?.id,
+            label: item?.subject?.name,
+          });
+        });
+        setCourseOptions(arr);
+      }
     }
-  }, [teacherData]);
+  }, [teacherData, schoolCoursesData]);
 
-  // console.log(marks);
+  React.useEffect(() => {
+    let gradearr = [{ value: "", label: "All grades" }];
+    if (user?.role === "teacher") {
+      if (teacherWithoutData && !teacherWithoutIsLoading) {
+        teacherWithoutData.forEach((item) => {
+          const existingItem = gradearr.find(
+            (gradearr) =>
+              gradearr.value === item?.group?.grade?.id &&
+              gradearr.label === item?.group?.grade?.name
+          );
+          if (!existingItem) {
+            gradearr.push({
+              value: item?.group?.grade?.id,
+              label: item?.group?.grade?.name,
+            });
+          }
+        });
+        setGradeOptions(gradearr);
+      }
+    } else if (user?.role === "manager") {
+      if (dataGrades && !isLoadingGrades) {
+        // console.log(dataGrades);
+        dataGrades?.forEach((item) => {
+          gradearr.push({
+            value: item?.id,
+            label: item?.name,
+          });
+        });
+        setGradeOptions(gradearr);
+      }
+    }
+  }, [
+    teacherWithoutData,
+    teacherWithoutIsLoading,
+    dataGrades,
+    isLoadingGrades,
+  ]);
 
   // React.useEffect(() => {
-  //   if (mark) {
-  //     getAssignment({
-  //       assignment_id: mark?.assignment,
+  //   let gradearr = [{ value: "", label: "All grades" }];
+
+  //   if (dataGrades && !isLoadingGrades) {
+  //     dataGrades?.forEach((item) => {
+  //       gradearr.push({
+  //         value: item?.group?.grade?.id,
+  //         label: item?.group?.grade?.name,
+  //       });
   //     });
   //   }
-  // }, [mark]);
+  // }, [dataGrades, isLoadingGrades]);
+
+  React.useEffect(() => {
+    if (mark) {
+      getAssignment({
+        assignment_id: mark?.assignment,
+      });
+      if (user?.role === "manager") getUser(mark?.last_edited_by);
+    }
+  }, [mark]);
+
+  const handleUpdateMark = async () => {
+    if (!newNumber) {
+      setError(true);
+      setErrorText("This field is required");
+      return;
+    }
+    if (newNumber > 5) {
+      setError(true);
+      setErrorText("Ensure this value is less than or equal to 5.");
+      return;
+    }
+    if (newNumber < 1) {
+      setError(true);
+      setErrorText("Ensure this value is greater than or equal to 1.");
+      return;
+    }
+    try {
+      await updateMark({
+        mark_id: mark.id,
+        number: newNumber,
+        comment: newComment,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Mark updated");
+          refetch();
+          setShow(false);
+          setError(false);
+        });
+    } catch (err) {
+      console.log(err);
+      toastify("error", "Error");
+    }
+  };
+
+  const handleDeleteMark = async () => {
+    try {
+      await deleteMark({
+        mark_id: mark?.id,
+      })
+        .unwrap()
+        .then((payload) => {
+          toastify("success", "Mark deleted");
+          refetch();
+          setShow(false);
+          setError(false);
+        });
+    } catch (err) {
+      if (err.data.detail?.__all__[0]) {
+        toastify("error", err.data.detail?.__all__[0]);
+      } else {
+        toastify("error", "Error");
+      }
+    }
+  };
 
   const renderColor = (item) => {
     if (item === 5) {
@@ -180,13 +327,15 @@ const MarksByCourses = () => {
   const columns = [
     {
       title: () => {
-        return <>Subject</>;
+        return <>Name</>;
       },
-      width: "12%",
+      width: "10%",
       render: (item) => (
-        <div>
-          <div style={styles.name}>{item?.subject?.name}</div>
-          <div style={styles.email}>{item?.subject?.code}</div>
+        <div style={{}}>
+          <div style={styles.name}>
+            {item?.student?.user?.first_name} {item?.student?.user?.last_name}
+          </div>
+          <div style={styles.email}>{item?.student?.user?.email}</div>
         </div>
       ),
     },
@@ -201,6 +350,8 @@ const MarksByCourses = () => {
               onClick={() => {
                 setMark(el);
                 setShow(true);
+                setNewComment(el.comment);
+                setNewNumber(el.number);
               }}
               style={{ cursor: "pointer" }}
             >
@@ -271,12 +422,13 @@ const MarksByCourses = () => {
               }
               options={yearOptions}
               defaultValue={yearOptions[yearOptions?.length - 1]}
-              onChange={(val) => setSelectYear(val)}
+              onChange={(val) => {
+                setSelectYear(val);
+                setSelectCourse("");
+                setSelectGrade("");
+              }}
               value={selectYear || yearOptions[yearOptions?.length - 1]}
             />
-            {/* <div style={styles.selectHeader}>
-              Grade: {marks[0]?.subject?.grade?.name}
-            </div> */}
             <SelectStyled
               size={"middle"}
               style={{ width: 140 }}
@@ -291,7 +443,7 @@ const MarksByCourses = () => {
             />
             <SelectStyled
               size={"middle"}
-              style={{ width: 180 }}
+              style={{ width: 150 }}
               optionFilterProp="children"
               filterOption={(input, option) =>
                 (option?.label ?? "").includes(input)
@@ -322,7 +474,7 @@ const MarksByCourses = () => {
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
         </div>
-        {/* <Spin spinning={isLoading} size="large">
+        <Spin spinning={isLoading} size="large">
           <Table
             dataSource={marks}
             columns={columns}
@@ -336,12 +488,13 @@ const MarksByCourses = () => {
               showSizeChanger: false,
             }}
           />
-        </Spin> */}
+        </Spin>
       </div>
-      {/* <Modal
-        title="Mark"
+      <Modal
+        title="Update Mark"
         style={{ fontSize: 25 }}
         open={show}
+        onOk={() => handleUpdateMark()}
         onCancel={() => setShow(false)}
         maskClosable={false}
         okText={"Update"}
@@ -354,19 +507,64 @@ const MarksByCourses = () => {
 
         <div style={styles.select}>
           <div style={styles.title}>Number:</div>
-          <div style={styles.input}>{mark?.number}</div>
+          <Input
+            placeholder="Number"
+            value={newNumber}
+            disabled={user?.role === "manager"}
+            onChange={(e) => {
+              setNewNumber(e.target.value);
+              setError(false);
+            }}
+          />
+          {error && <div style={{ color: "#E74C3C" }}>{errorText}</div>}
         </div>
         <div style={styles.select}>
           <div style={styles.title}>Comment:</div>
-          <div style={styles.input}>{mark?.comment || "-"}</div>
+          <Input
+            placeholder="Comment"
+            value={newComment}
+            disabled={user?.role === "manager"}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
         </div>
+        {user?.role === "manager" && (
+          <div style={{ ...styles.date, color: "#4A4D58" }}>
+            Last updated by: {dataUser?.last_name} {dataUser?.first_name}
+          </div>
+        )}
         <div style={styles.date}>
           Created date: {moment(mark?.created_at).format("DD MMM YYYY")}
         </div>
         <div style={styles.date}>
           Updated date: {moment(mark?.updated_at).format("DD MMM YYYY")}
         </div>
-      </Modal> */}
+        {user?.role !== "manager" && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 10,
+              marginTop: 15,
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button
+              type="primary"
+              style={styles.btnDelete}
+              onClick={() => handleDeleteMark()}
+            >
+              Delete
+            </Button>
+            <Button
+              type="primary"
+              style={styles.btnAdd}
+              onClick={() => handleUpdateMark()}
+            >
+              Update
+            </Button>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

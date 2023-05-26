@@ -22,7 +22,10 @@ import {
   useGetTermsWithoutPageQuery,
   useLazyGetTermsWithoutPageQuery,
 } from "../../redux/terms/termsApiSlice";
-import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
+import {
+  useGetCourseQuery,
+  useLazyGetTeacherCoursesWithoutQuery,
+} from "../../redux/courses/coursesApiSlice";
 import { useGetMarksOfStudentQuery } from "../../redux/marks/marksOfStudent/marksOfStudentApiSlice";
 import { useGetStudentQuery } from "../../redux/students/studentsApiSlice";
 import Header from "../shared/Header/Header";
@@ -50,21 +53,25 @@ const MarksByCourses = () => {
   const { data: user } = useGetAuthUserQuery();
   const [select, setSelect] = React.useState("");
   const [selectYear, setSelectYear] = React.useState("");
+  const [selectCourse, setSelectCourse] = React.useState("");
+  const [selectGrade, setSelectGrade] = React.useState("");
 
   const [termOptions, setTermOptions] = React.useState([]);
   const [yearOptions, setYearOptions] = React.useState([]);
+  const [courseOptions, setCourseOptions] = React.useState([]);
+  const [gradeOptions, setGradeOptions] = React.useState([]);
 
-  const { data: studentData } = useGetStudentQuery(user?.id);
+  // const { data: studentData } = useGetStudentQuery(user?.id);
 
-  const { data, isLoading } = useGetMarksOfStudentQuery({
-    student_id: studentData?.id,
-    grade: studentData?.group?.grade?.id,
-    search: search,
-    term: select,
-  });
+  // const { data, isLoading } = useGetMarksOfStudentQuery({
+  //   student_id: studentData?.id,
+  //   grade: studentData?.group?.grade?.id,
+  //   search: search,
+  //   term: select,
+  // });
 
-  const [getAssignment, { data: dataAssignment, isLoadingAssignment }] =
-    useLazyGetAssignmentQuery();
+  // const [getAssignment, { data: dataAssignment, isLoadingAssignment }] =
+  //   useLazyGetAssignmentQuery();
 
   const { data: dataYears, isLoading: isLoadingYears } =
     useGetYearsWithoutPageQuery({
@@ -73,18 +80,22 @@ const MarksByCourses = () => {
 
   const [getTerm, { data: dataTerm }] = useLazyGetTermsWithoutPageQuery();
 
-  React.useEffect(() => {
-    if (data && !isLoading) {
-      setMarks(data.results);
-      setTotal(data.count);
-      getTerm({ year_id: data?.results[0]?.year?.id });
-    }
-  }, [data, isLoading]);
+  const [
+    getTeacherCourses,
+    { data: teacherData, isLoading: teacherIsLoading },
+  ] = useLazyGetTeacherCoursesWithoutQuery();
+
+  // React.useEffect(() => {
+  //   if (data && !isLoading) {
+  //     setMarks(data.results);
+  //     setTotal(data.count);
+  //     getTerm({ year_id: data?.results[0]?.year?.id });
+  //   }
+  // }, [data, isLoading]);
 
   React.useEffect(() => {
     let arr = [];
     if (dataYears && !isLoadingYears) {
-      console.log(user, dataYears);
       dataYears.forEach((item) => {
         arr.push({
           value: item.id,
@@ -92,8 +103,15 @@ const MarksByCourses = () => {
         });
       });
       setYearOptions(arr);
+      getTerm({ year_id: dataYears[dataYears?.length - 1]?.id });
     }
-  }, [dataTerm]);
+  }, [dataYears]);
+
+  React.useEffect(() => {
+    if (selectYear !== "") {
+      getTerm({ year_id: selectYear });
+    }
+  }, [selectYear]);
 
   React.useEffect(() => {
     let arr = [{ value: "", label: "All terms" }];
@@ -108,15 +126,46 @@ const MarksByCourses = () => {
     }
   }, [dataTerm]);
 
-  console.log(marks);
-
   React.useEffect(() => {
-    if (mark) {
-      getAssignment({
-        assignment_id: mark?.assignment,
+    if (user?.role === "teacher") {
+      getTeacherCourses({
+        teacher_id: user?.id,
+        year_id: selectYear,
       });
     }
-  }, [mark]);
+  }, [user, selectYear]);
+
+  React.useEffect(() => {
+    let arr = [];
+    let gradearr = [];
+    if (teacherData && !teacherIsLoading) {
+      teacherData.forEach((item) => {
+        arr.push({
+          value: item?.id,
+          label: item?.subject?.name,
+        });
+
+        if (gradearr.indexOf(item?.group?.grade?.id) === -1) {
+          gradearr.push({
+            value: item?.group?.grade?.id,
+            label: item?.group?.grade?.name,
+          });
+        }
+      });
+      setCourseOptions(arr);
+      setGradeOptions(new Set(gradearr));
+    }
+  }, [teacherData]);
+
+  // console.log(marks);
+
+  // React.useEffect(() => {
+  //   if (mark) {
+  //     getAssignment({
+  //       assignment_id: mark?.assignment,
+  //     });
+  //   }
+  // }, [mark]);
 
   const renderColor = (item) => {
     if (item === 5) {
@@ -215,22 +264,22 @@ const MarksByCourses = () => {
           <div style={{ display: "flex", gap: 6 }}>
             <SelectStyled
               size={"middle"}
-              style={{ width: 180 }}
+              style={{ width: 140 }}
               optionFilterProp="children"
               filterOption={(input, option) =>
                 (option?.label ?? "").includes(input)
               }
               options={yearOptions}
-              defaultValue={yearOptions[0]}
+              defaultValue={yearOptions[yearOptions?.length - 1]}
               onChange={(val) => setSelectYear(val)}
-              value={selectYear}
+              value={selectYear || yearOptions[yearOptions?.length - 1]}
             />
-            <div style={styles.selectHeader}>
+            {/* <div style={styles.selectHeader}>
               Grade: {marks[0]?.subject?.grade?.name}
-            </div>
+            </div> */}
             <SelectStyled
               size={"middle"}
-              style={{ width: 180 }}
+              style={{ width: 140 }}
               optionFilterProp="children"
               filterOption={(input, option) =>
                 (option?.label ?? "").includes(input)
@@ -239,6 +288,30 @@ const MarksByCourses = () => {
               defaultValue={termOptions[0]}
               onChange={(val) => setSelect(val)}
               value={select}
+            />
+            <SelectStyled
+              size={"middle"}
+              style={{ width: 180 }}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "").includes(input)
+              }
+              options={gradeOptions}
+              defaultValue={gradeOptions[0]}
+              onChange={(val) => setSelectGrade(val)}
+              value={selectGrade}
+            />
+            <SelectStyled
+              size={"middle"}
+              style={{ width: 180 }}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "").includes(input)
+              }
+              options={courseOptions}
+              defaultValue={courseOptions[0]}
+              onChange={(val) => setSelectCourse(val)}
+              value={selectCourse || courseOptions[0]}
             />
           </div>
           <Input
@@ -249,7 +322,7 @@ const MarksByCourses = () => {
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
         </div>
-        <Spin spinning={isLoading} size="large">
+        {/* <Spin spinning={isLoading} size="large">
           <Table
             dataSource={marks}
             columns={columns}
@@ -263,9 +336,9 @@ const MarksByCourses = () => {
               showSizeChanger: false,
             }}
           />
-        </Spin>
+        </Spin> */}
       </div>
-      <Modal
+      {/* <Modal
         title="Mark"
         style={{ fontSize: 25 }}
         open={show}
@@ -293,7 +366,7 @@ const MarksByCourses = () => {
         <div style={styles.date}>
           Updated date: {moment(mark?.updated_at).format("DD MMM YYYY")}
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

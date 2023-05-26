@@ -5,11 +5,13 @@ from apps.core.utils.pagination import OptionalPaginationListAPIView
 from ..permissions import *
 
 from ..users.models import User
-
 from .models import Course, Assignment
 from ..students.models import Student
 from ..enrollments.models import Enrollment
+
 from .serializers import *
+from ..subjects.serializers import SubjectModelSerializer
+from ..courses.serializers import CourseModelSerializer
 
 
 class CourseAssignmentsListCreateAPI(generics.ListCreateAPIView, OptionalPaginationListAPIView):
@@ -88,8 +90,14 @@ class TeacherAllAssignmentsListAPI(OptionalPaginationListAPIView):
         return self.queryset.filter(course__teacher=teacher)
 
 
-class StudentAllAssignmentsListAPI(OptionalPaginationListAPIView):
-    serializer_class = AssignmentModelNestedSerializer
+class StudentAllAssignmentsListAPI(generics.ListAPIView):
+    class OutputSerializer(AssignmentModelNestedSerializer):
+        class CourseSerializer(CourseModelSerializer):
+            subject = SubjectModelSerializer(read_only=True)
+            
+        course = CourseSerializer(read_only=True)
+        
+    serializer_class = OutputSerializer
     permission_classes = [OnlyOwnSchool, IsStudent, IsUserItself]
     queryset = Assignment.objects.select_related('course', 'term', 'course__school')
     filterset_fields = ['course', 'term', 'is_active', 'course__subject', 'course__year']

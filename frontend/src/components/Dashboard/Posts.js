@@ -4,7 +4,7 @@ import moment from "moment-timezone";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
 import {Link} from "react-router-dom";
-import {Alert} from "antd";
+import {Alert, Spin} from "antd";
 
 const Posts = () => {
     const user = useSelector(selectCurrentUser);
@@ -17,7 +17,7 @@ const Posts = () => {
 
     useEffect(() => {
         if (dataPosts && !isLoadingPosts) {
-            setPosts(dataPosts.slice(0,5));
+            setPosts(dataPosts.slice(0,1));
         }
     }, [dataPosts, isLoadingPosts]);
 
@@ -31,19 +31,21 @@ const Posts = () => {
                     textDecoration: "none",
                 }}>See all</Link>
             </div>
-            {posts.map(p => (
-                <div className="ann-item">
-                    <div style={{ flex: 1 }}>
-                        <p className="ann-text">{p.title}</p>
+            {/*<Spin spinning={isLoadingPosts}>*/}
+                {posts.map(p => (
+                    <div key={p.id} className="ann-item">
+                        <div style={{ flex: 1 }}>
+                            <p className="ann-text">{p.title}</p>
+                        </div>
+                        <p className="ann-text" style={{ color: "#5C5C5C" }}>
+                            {moment(p?.updated_at).format("dddd, DD MMM YYYY")}
+                        </p>
                     </div>
-                    <p className="ann-text" style={{ color: "#5C5C5C" }}>
-                        {moment(p?.updated_at).format("dddd, DD MMM YYYY")}
-                    </p>
-                </div>
-            ))}
-            {!posts.length &&
-                <Alert message={"You have no assignments."}/>
-            }
+                ))}
+                {!isLoadingPosts && !posts.length &&
+                    <Alert message={"You have no assignments."}/>
+                }
+            {/*</Spin>*/}
         </div>
     );
 };

@@ -19,7 +19,15 @@ export const awardsApiSlice = authApi.injectEndpoints({
         body: data,
       }),
     }),
+    getStudentAwards: builder.query({
+      query: (studentId) => `/api/students/${studentId}/awards`,
+    })
   }),
 });
 
-export const { useGetAwardQuery, useCreateAwardMutation, useUpdateAwardMutation } = awardsApiSlice;
+export const {
+  useGetAwardQuery,
+  useCreateAwardMutation,
+  useUpdateAwardMutation,
+  useGetStudentAwardsQuery,
+} = awardsApiSlice;

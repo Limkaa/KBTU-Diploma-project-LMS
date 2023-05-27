@@ -6,8 +6,6 @@ import DashboardContainer from "./components/Dashboard/Dashboard.container";
 import CoursesContainer from "./components/Courses/Courses.container";
 import AssignmentsContainer from "./components/Assignments/Assignments.container";
 import ScheduleContainer from "./components/Schedule/Schedule.container";
-import MaterialsContainer from "./components/Materials/Materials.container";
-import ClassroomContainer from "./components/Classroom/Classroom.container";
 import TimelineContainer from "./components/Timeline/Timeline.container";
 import GradesContainer from "./components/Grades/Grades.container";
 import ProfileContainer from "./components/Profile/Profile.container";
@@ -41,6 +39,7 @@ import CourseAward from "./components/Courses/CourseAward";
 import CommunitiesPage from "./pages/CommunitiesPage/CommunitiesPage";
 import CommunityPage from "./pages/CommunitiesPage/CommunityPage";
 import TodoPage from "./pages/TodoPage/TodoPage";
+import PublicProfilePage from "./pages/PublicProfilePage/PublicProfilePage";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -60,8 +59,6 @@ function App() {
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses/:id" element={<CourseContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
-          <Route exact path="/materials" element={<MaterialsContainer />} />
-          <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
           <Route exact path="/school" element={<SchoolPage />} />
@@ -88,6 +85,7 @@ function App() {
           <Route exact path="/awards" element={<AwardsContainer />} />
           <Route exact path="/awards/:id/winners" element={<Award />} />
           <Route exact path="/courses/:id/winners" element={<CourseAward />} />
+          <Route exact path="/profile/:id" element={<PublicProfilePage />} />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher", "student"]} />}>
           <Route

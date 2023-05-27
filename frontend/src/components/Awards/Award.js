@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../shared/Header/Header";
 import styled from "styled-components";
 import Profile from "../Dashboard/Profile";
-import { useLocation, useParams } from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import { useGetWinnersOfAwardQuery } from "../../redux/winners/winnersApiSlice";
 import { Spin, Table, Input } from "antd";
 import { useGetAwardQuery } from "../../redux/awards/awardsApiSlice";
@@ -77,6 +77,7 @@ const Award = () => {
   const [award, setAward] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
+  const navigate = useNavigate();
 
   const { data, isLoading } = useGetWinnersOfAwardQuery({
     award_id: awardId,
@@ -115,7 +116,8 @@ const Award = () => {
       },
       width: "13%",
       render: (item) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div onClick={() => navigate(`../profile/${item?.student?.user.id}`)}
+             style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
           <img style={styles.img} />
           <div style={styles.name}>
             {item?.student?.user?.first_name} {item?.student?.user?.last_name}

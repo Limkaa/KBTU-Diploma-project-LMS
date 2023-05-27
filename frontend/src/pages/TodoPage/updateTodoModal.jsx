@@ -73,7 +73,7 @@ const UpdateTodoModal = ({show, setShow, refetch, todo }) => {
                 />
             </div>
             <div className="modal" style={styles.form}>
-                <p style={styles.contentTitle}>Name</p>
+                <p style={styles.contentTitle}></p>
                 <InputStyled
                     InputLabelProps={{
                         shrink: true,
@@ -113,6 +113,7 @@ const UpdateTodoModal = ({show, setShow, refetch, todo }) => {
                         setDesc(e.target.value);
                     }}
                 />
+                <p style={{color: "rgb(74, 77, 88)", marginBottom: 0}}>Priority</p>
                 <Slider
                     style={{width: "98%"}}
                     min={0}

@@ -16,10 +16,10 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
     getStudentOrTeacherAssignments: builder.query({
       query: ({type, studentId, teacherId}) => {
         if (type === "teacher") {
-          return `api/teachers/${teacherId}/assignments`;
+          return `api/teachers/${teacherId}/assignments?page=1`;
         }
         else if (type === "student") {
-          return `api/students/${studentId}/assignments`;
+          return `api/students/${studentId}/assignments?page=1`;
         }
       }
     }),

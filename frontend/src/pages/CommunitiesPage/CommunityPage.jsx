@@ -105,22 +105,20 @@ const CommunityPage = () => {
         {
             title: 'Member',
             key: 'student',
-            // width: "35%",
             render: (member) => (
-                <div className="rating">
-                        <span className="name">
-                            {member.student.user.first_name} {member.student.user.last_name}
-                        </span>
+                <div style={{cursor: "pointer"}} className="rating" onClick={() => navigate(`../profile/${user.user_id}`)}>
+                    <span className="name">
+                        {member.student.user.first_name} {member.student.user.last_name}
+                    </span>
                     <span className="email">
-                            {member.student.user.email}
-                        </span>
+                        {member.student.user.email}
+                    </span>
                 </div>
             ),
         },
         {
             title: 'Grade',
             key: 'grade',
-            // width: "15%",
             render: (member) => (
                 <span>
                     {member.student.group?.grade?.name ? member.student.group?.grade?.name : <MinusOutlined />}
@@ -130,7 +128,6 @@ const CommunityPage = () => {
         {
             title: 'Gender',
             key: 'gender',
-            // width: "15%",
             render: (member) => (
                 <Tag
                     style={{ minWidth: 50, textAlign: "center" }}
@@ -142,7 +139,6 @@ const CommunityPage = () => {
         {
             title: 'Group',
             key: 'group',
-            // width: "15%",
             render: (member) => {
                 if (member.student.group === null) {
                     return <MinusOutlined />;
@@ -221,7 +217,7 @@ const CommunityPage = () => {
                                                                 onClick={() => handleLeave(match.membership)}
                                                                 loading={isMyCommsLoading}
                                                             >
-                                                                Joined
+                                                                Leave
                                                             </Button>
                                                         ) : (
                                                             <Button

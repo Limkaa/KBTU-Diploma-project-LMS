@@ -54,11 +54,12 @@
 #communities .inputs {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 #communities .search {
-    width: 200px;
-    margin-bottom: 20px;
+    width: 280px;
     margin-right: 10px;
 }
 
@@ -107,9 +108,9 @@
 #communities .join, #community .join  {
     display: block;
     margin: 10px 0 0 0;
-    color: #EA5A0C;
+    color: #52c41a;
     width: 100%;
-    border: 1px solid #EA5A0C;
+    border: 1px solid #52c41a;
 }
 
 #communities .btn {
@@ -121,9 +122,9 @@
 #communities .joined, #community .joined {
     display: block;
     margin: 10px 0 0 0;
-    color: #52c41a;
+    color: #EA5A0C;
     width: 100%;
-    border: 1px solid #52c41a;
+    border: 1px solid #EA5A0C;
 }
 
 #community .joined, #community .join {

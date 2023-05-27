@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import {Button, Spin} from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -20,7 +20,7 @@ const Schedule = (props) => {
   const [events, setEvents] = useState([]);
   const {data: studentData, isSuccess: isStudentSuccess, error} = useGetStudentQuery(user.user_id);
   const [student, setStudent] = useState();
-  const {data: timetableData, isSuccess, refetch} = useGetTimeTableWithWeekdayQuery(
+  const {data: timetableData, isSuccess, refetch, isLoading} = useGetTimeTableWithWeekdayQuery(
       {type: props.type, weekday: dayOfWeek, studentGroupId: student?.group?.id, teacherId: user.user_id});
 
   useEffect(() => {
@@ -47,13 +47,22 @@ const Schedule = (props) => {
     }
   }, [timetableData, isSuccess])
 
+  const handleNavigate = () => {
+    if (user.role === "student") {
+      navigate("/schedule");
+    }
+    else {
+      navigate("/timeline");
+    }
+  }
+
 
   return (
     <div style={{ marginTop: 15 }}>
       <div style={styles.header}>
         <p style={styles.title}>Schedule</p>
         <Button
-          onClick={() => navigate("/timeline")}
+          onClick={handleNavigate}
           type="link"
           style={{ padding: 0 }}
         >
@@ -61,24 +70,26 @@ const Schedule = (props) => {
         </Button>
       </div>
       <div>
-        {
-          events.map(event => (
-              <div key={event.id} style={styles.itemContainer}>
-                <div>
-                  <p style={styles.itemTitle}>{event.subject}</p>
-                  <p style={styles.subTitle}>Room {event.room}</p>
+        {/*<Spin spinning={isLoading}>*/}
+          {
+            events.map(event => (
+                <div key={event.id} style={styles.itemContainer}>
+                  <div>
+                    <p style={styles.itemTitle}>{event.subject}</p>
+                    <p style={styles.subTitle}>Room {event.room}</p>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={styles.divider}></div>
+                    <p style={styles.time}>{event.time}</p>
+                  </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div style={styles.divider}></div>
-                  <p style={styles.time}>{event.time}</p>
-                </div>
-              </div>
-          ))
-        }
-        {
-          !events.length &&
-          <Alert message={`You have no scheduled events for today.`}/>
-        }
+            ))
+          }
+          {
+              !isLoading && !events.length &&
+              <Alert message={`You have no scheduled events for today.`}/>
+          }
+        {/*</Spin>*/}
       </div>
     </div>
   );

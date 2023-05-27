@@ -19,6 +19,7 @@ import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/sch
 import { useGetTeachersQuery } from "../../redux/users/usersApiSlice";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
+import {useNavigate} from "react-router-dom";
 
 const StudentsPage = () => {
   const user = useSelector(selectCurrentUser);
@@ -65,6 +66,7 @@ const StudentsPage = () => {
   } = useGetAllActiveGroupsQuery(user.school_id);
   const [selectedRows, setSelectedRows] = useState([]);
   const [updateGroup] = useUpdateStudentGroupMutation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isSuccess) {
@@ -117,7 +119,6 @@ const StudentsPage = () => {
   }, [groups]);
 
   const handleGroupChange = async () => {
-    console.log(selectedRows);
     let success = true;
     for (let row of selectedRows) {
       await updateGroup({ studentId: row.user.id, group: selectedGroup })
@@ -185,7 +186,7 @@ const StudentsPage = () => {
       key: "student",
       width: "35%",
       render: (student) => (
-        <div className="rating">
+        <div className="rating" style={{cursor: "pointer"}} onClick={() => navigate(`../profile/${student.user.id}`)}>
           <span className="name">
             {student.user.first_name} {student.user.last_name}
           </span>

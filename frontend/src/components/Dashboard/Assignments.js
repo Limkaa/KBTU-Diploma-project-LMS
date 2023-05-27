@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {Alert, Button} from "antd";
+import {Alert, Button, Spin} from "antd";
 import {useEffect, useState} from "react";
 import {useGetStudentQuery} from "../../redux/students/studentsApiSlice";
 import {selectCurrentUser} from "../../redux/auth/authSlice";
@@ -14,7 +14,7 @@ const Assignments = (props) => {
   const user = useSelector(selectCurrentUser);
   const [student, setStudent] = useState();
   const {data: studentData, isSuccess: isStudentSuccess, error} = useGetStudentQuery(user.user_id);
-  const {data: assignmentsData, isSuccess: isAssignmentsSuccess}
+  const {data: assignmentsData, isSuccess: isAssignmentsSuccess, isLoading}
       = useGetStudentOrTeacherAssignmentsQuery({type: props.type, studentId: student?.id, teacherId: user.user_id});
   const [assignments, setAssignments] = useState([]);
 
@@ -27,13 +27,13 @@ const Assignments = (props) => {
   useEffect(() => {
     if (isAssignmentsSuccess) {
       let arr = [];
-      for (let as of assignmentsData) {
+      for (let as of assignmentsData.results) {
         const date = new Date(as.datetime);
         const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
         const formattedTime = `${hours}:${minutes} ${dayOfWeek}`;
-        arr.push({id: as.id, name: as.name, time: formattedTime, subject: as.course.subject})
+        arr.push({id: as.id, name: as.name, time: formattedTime, subject: as.course.subject.name})
       }
       setAssignments(arr.slice(0, 5));
     }
@@ -52,26 +52,28 @@ const Assignments = (props) => {
         </Button>
       </div>
       <div>
-        {
-          assignments.map(as => (
-              <div key={as.id} style={styles.assItem}>
-                <div style={{ display: "flex", alignItems: "center", width: "75%" }}>
-                  <div style={styles.statusLine} />
-                  <div style={{ marginLeft: 12 }}>
-                    <p style={styles.title}>{as.name}</p>
-                    <p style={styles.subtitle}>{as.subject}</p>
+        {/*<Spin spinning={isLoading}>*/}
+          {
+            assignments.map(as => (
+                <div key={as.id} style={styles.assItem}>
+                  <div style={{ display: "flex", alignItems: "center", width: "75%" }}>
+                    <div style={styles.statusLine} />
+                    <div style={{ marginLeft: 12 }}>
+                      <p style={styles.title}>{as.name}</p>
+                      <p style={styles.subtitle}>{as.subject}</p>
+                    </div>
+                  </div>
+                  <div style={{ width: "20%" }}>
+                    <p style={styles.time}>{as.time}</p>
+                    <p style={styles.deadline}>Deadline</p>
                   </div>
                 </div>
-                <div style={{ width: "20%" }}>
-                  <p style={styles.time}>{as.time}</p>
-                  <p style={styles.deadline}>Deadline</p>
-                </div>
-              </div>
-          ))
-        }
-        {!assignments.length &&
-            <Alert message={"You have no assignments."}/>
-        }
+            ))
+          }
+          {!isLoading && !assignments.length &&
+              <Alert message={"You have no assignments."}/>
+          }
+        {/*</Spin>*/}
       </div>
     </div>
   );
@@ -84,6 +86,7 @@ const styles = {
     flex: 1,
     padding: 16,
     paddingTop: 0,
+    border: "1px solid rgba(5, 5, 5, 0.06)"
   },
   header: {
     display: "flex",

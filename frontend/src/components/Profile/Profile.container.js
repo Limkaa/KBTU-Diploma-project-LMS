@@ -4,12 +4,16 @@ import Header from "../shared/Header/Header";
 import { Button } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/auth/authSlice";
+import {logout, selectCurrentUser} from "../../redux/auth/authSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import {navigate} from "react-big-calendar/lib/utils/constants";
+import {useNavigate} from "react-router-dom";
 
 const ProfileContainer = () => {
   const { data: user } = useGetAuthUserQuery();
+  const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
+  const routeNavigate = useNavigate();
   return (
     <div style={styles.container}>
       <div style={{ display: "flex" }}>
@@ -24,7 +28,20 @@ const ProfileContainer = () => {
           marginTop: 20,
         }}
       >
-        <p style={styles.userInfo}>USER INFORMATION</p>
+        <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center"}}>
+          <p style={styles.userInfo}>USER INFORMATION</p>
+          <div>
+            {
+                currentUser.role === "student" &&
+                <Button style={{marginRight: 5}} onClick={() => routeNavigate(`/profile/${currentUser.user_id}`)}>
+                  Student Profile
+                </Button>
+            }
+            <Button type={"primary"} onClick={() => dispatch(logout())}>
+              Logout
+            </Button>
+          </div>
+        </div>
         <div style={{ flex: 1, display: "flex", gap: 16 }}>
           <div style={{ flex: 2 }}>
             <div>
@@ -104,9 +121,6 @@ const ProfileContainer = () => {
           />
         </div>
       </div>
-      <button onClick={() => dispatch(logout())} style={styles.logout}>
-        Logout
-      </button>
     </div>
   );
 };

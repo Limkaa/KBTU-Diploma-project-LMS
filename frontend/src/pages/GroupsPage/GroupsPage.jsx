@@ -249,7 +249,7 @@ const GroupsPage = () => {
           </div>
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
-              size={"middle"}
+              size={"large"}
               placeholder="Search code"
               prefix={
                 <img alt="" src={Search} style={{ height: 15, width: 15 }} />

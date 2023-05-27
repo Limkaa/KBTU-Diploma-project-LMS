@@ -261,7 +261,9 @@ const AwardsContainer = () => {
                                   style={{
                                     display: "flex",
                                     alignItems: "center",
+                                    cursor: "pointer",
                                   }}
+                                  onClick={() => navigate(`../profile/${winner.student.user.id}`)}
                                 >
                                   <img style={styles.img} />
                                   <div style={styles.name}>

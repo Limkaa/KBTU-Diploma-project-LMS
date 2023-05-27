@@ -141,6 +141,7 @@ const AddTodoModal = ({ show, setShow, refetch }) => {
                             )}
                         </Field>
                         <label>
+                            <p style={{color: "rgb(74, 77, 88)", margin: 0}}>Priority</p>
                             <Slider
                                 style={{width: "98%"}}
                                 min={0}

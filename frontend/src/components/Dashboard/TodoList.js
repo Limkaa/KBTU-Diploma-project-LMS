@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {useGetAllTodosQuery, useUpdateTodoMutation} from "../../redux/todo/todoApiSlice";
-import {Alert, Checkbox} from "antd";
+import {Alert, Checkbox, Spin} from "antd";
 import {Link} from "react-router-dom";
 
 const TodoList = () => {
-  const {data: todoData, isSuccess, refetch} = useGetAllTodosQuery({page: 1, isDone: "", priority: "", order: "-priority", search: ""});
+  const {data: todoData, isSuccess, refetch, isLoading} = useGetAllTodosQuery({page: 1, isDone: "", priority: "", order: "-priority", search: ""});
   const [todo, setTodo] = useState([]);
   const gradientColors = ['#00899E','#2EB873', '#F2B824', '#EA5A0C'];
   const [updateTodo] = useUpdateTodoMutation();
@@ -34,25 +34,26 @@ const TodoList = () => {
         <Link to="/todo" style={styles.seeAll}>See all</Link>
       </div>
       <div>
-        {
-          todo?.map((todo) => (
-              <div key={todo.id} className="todo-item" style={{borderColor: gradientColors[todo.priority]}}>
-                <div className="content">
-                  <Checkbox onChange={(e) => {
-                    handleCheck(todo, e.target.checked);
-                  }} className="check" checked={todo.is_done} />
-                  <div>
-                    <p className="name">{todo.name}</p>
-                    {/*<p className="desc">{todo.description}</p>*/}
+        {/*<Spin spinning={isLoading}>*/}
+          {
+            todo?.map((todo) => (
+                <div key={todo.id} className="todo-item" style={{borderColor: gradientColors[todo.priority]}}>
+                  <div className="content">
+                    <Checkbox onChange={(e) => {
+                      handleCheck(todo, e.target.checked);
+                    }} className="check" checked={todo.is_done} />
+                    <div>
+                      <p className="name">{todo.name}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-          ))
-        }
-        {
-            !todo.length &&
-            <Alert message={"You have no undone todos."}/>
-        }
+            ))
+          }
+          {
+              !isLoading && !todo.length &&
+              <Alert message={"You have no undone todos."}/>
+          }
+        {/*</Spin>*/}
       </div>
     </div>
   );

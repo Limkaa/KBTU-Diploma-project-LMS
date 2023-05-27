@@ -139,16 +139,6 @@ export const studentMenu = [
     icon: ScheduleSvg,
   },
   {
-    title: "Materials",
-    path: "/materials",
-    icon: MaterialsSvg,
-  },
-  {
-    title: "Classroom",
-    path: "/classroom",
-    icon: ClassroomSvg,
-  },
-  {
     title: "Grades",
     path: "/grades",
     icon: GradesSvg,
@@ -197,21 +187,6 @@ export const teacherMenu = [
     icon: ScheduleSvg,
   },
   {
-    title: "Materials",
-    path: "/materials",
-    icon: MaterialsSvg,
-  },
-  // {
-  //   title: "Timeline",
-  //   path: "/timeline",
-  //   icon: TimelineSvg,
-  // },
-  {
-    title: "Classroom",
-    path: "/classroom",
-    icon: ClassroomSvg,
-  },
-  {
     title: "Grades",
     path: "/grades",
     icon: GradesSvg,
@@ -241,9 +216,9 @@ export const teacherMenu = [
     path: `/awards`,
     icon: AwardsSvg,
   },
-  {
-    title: "Timetable",
-    path: `/timetable`,
-    icon: ScheduleSvg,
-  },
+  // {
+  //   title: "Timetable",
+  //   path: `/timetable`,
+  //   icon: ScheduleSvg,
+  // },
 ];

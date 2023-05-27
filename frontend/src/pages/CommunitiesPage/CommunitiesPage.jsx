@@ -107,6 +107,7 @@ const CommunitiesPage = () => {
                 <div className="inputs">
                     <div>
                         <Input
+                            size={"large"}
                             className="search"
                             placeholder="Search community"
                             prefix={
@@ -125,6 +126,7 @@ const CommunitiesPage = () => {
                         total={total * 6} />
                     {user.role === "manager" &&
                         <Button
+                            size={"large"}
                             type="primary"
                             style={{
                                 alignItems: "center",
@@ -178,7 +180,7 @@ const CommunitiesPage = () => {
                                                         onClick={() => handleLeave(match.membership)}
                                                         loading={isMyCommsLoading}
                                                     >
-                                                        Joined
+                                                        Leave
                                                     </Button>
                                                 ) : (
                                                     <Button

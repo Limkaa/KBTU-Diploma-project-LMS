@@ -499,8 +499,9 @@ const styles = {
     borderRadius: 12,
     marginBottom: 10,
     marginTop: 12,
-    boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.1)",
+    // boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.1)",
     transition: "all 0.3s",
+    border: "1px solid rgba(5, 5, 5, 0.06)",
   },
   title: {
     fontWeight: 500,

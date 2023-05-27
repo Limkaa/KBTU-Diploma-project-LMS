@@ -109,6 +109,7 @@ const TodoPage = () => {
                         <div className="inputs">
                             <div className="search">
                                 <Input
+                                    size={"large"}
                                     placeholder="Search code"
                                     prefix={
                                         <img alt="" src={Search} style={{ height: 25, width: 15 }} />
@@ -118,6 +119,7 @@ const TodoPage = () => {
                                 />
                             </div>
                             <Button
+                                size={"large"}
                                 type="primary"
                                 style={{
                                     alignItems: "center",

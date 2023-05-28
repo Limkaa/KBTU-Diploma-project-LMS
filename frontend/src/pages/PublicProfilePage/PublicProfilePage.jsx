@@ -70,9 +70,9 @@ const PublicProfilePage = () => {
                         <div className="img-con">
                             <img
                                 src={
-                                    student.user?.avatar
-                                        ? student.user?.avatar
-                                        : student.user?.gender === "male"
+                                    student?.user?.avatar
+                                        ? student?.user?.avatar
+                                        : student?.user?.gender === "male"
                                             ? require("../../assets/icons/boy.png")
                                             : require("../../assets/icons/girl.png")
                                 }
@@ -110,7 +110,7 @@ const PublicProfilePage = () => {
                                 <Spin spinning={isCommsLoading}>
                                     {
                                         comms.map(c => (
-                                            <div className="comm-item">
+                                            <div key={c.id} className="comm-item">
                                                 <p>{c.community.name}</p>
                                                 <ArrowRightOutlined onClick={() => navigate(`../communities/${c.community.id}`, { replace: true })}/>
                                             </div>
@@ -131,7 +131,7 @@ const PublicProfilePage = () => {
                             <Spin spinning={isAwLoading}>
                                 {
                                     awards.map(aw => (
-                                        <div className="award">
+                                        <div key={aw.id} className="award">
                                             <p style={{cursor: "pointer"}} onClick={() => navigate(`../awards/${aw.award.id}/winners`, { replace: true })}>{aw.award.name}</p>
                                             <span>+{aw.award.points}</span>
                                         </div>

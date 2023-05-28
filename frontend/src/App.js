@@ -61,7 +61,6 @@ function App() {
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses/:id" element={<CourseContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
-          <Route exact path="/schedule" element={<ScheduleContainer />} />
           <Route exact path="/marks" element={<MarksContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
           <Route exact path="/school" element={<SchoolPage />} />

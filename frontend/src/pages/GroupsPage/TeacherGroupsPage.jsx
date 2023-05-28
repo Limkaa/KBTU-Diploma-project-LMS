@@ -74,7 +74,7 @@ const TeacherGroupsPage = () => {
     return (
         <main className="groups">
             <header className="header">
-                <Header text={"GroupsPage"} />
+                <Header text={"My groups"} />
                 <Profile />
             </header>
             <div style={styles.tableCont}>

@@ -72,7 +72,17 @@ const Leaderboard = () => {
                                   }}
                                   onClick={() => navigate(`profile/${user.user_id}`)}
                               >
-                                  <img className="ann-img" />
+                                  <img
+                                      className="ann-img"
+                                      // style={styles.img}
+                                      src={
+                                          user?.avatar
+                                              ? user?.avatar
+                                              : user?.gender === "male"
+                                                  ? require("../../assets/icons/boy.png")
+                                                  : require("../../assets/icons/girl.png")
+                                      }
+                                  />
                                   <p
                                       style={{
                                           marginLeft: 8,
@@ -127,7 +137,17 @@ const Leaderboard = () => {
                                       alignItems: "center",
                                   }}
                               >
-                                  <img className="ann-img" />
+                                  <img
+                                      className="ann-img"
+                                      // style={styles.img}
+                                      src={
+                                          user?.avatar
+                                              ? user?.avatar
+                                              : user?.gender === "male"
+                                                  ? require("../../assets/icons/boy.png")
+                                                  : require("../../assets/icons/girl.png")
+                                      }
+                                  />
                                   <p
                                       style={{
                                           marginLeft: 8,

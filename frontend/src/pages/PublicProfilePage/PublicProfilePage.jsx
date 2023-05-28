@@ -68,7 +68,15 @@ const PublicProfilePage = () => {
                 <div className="top">
                     <div className="main">
                         <div className="img-con">
-                            <img />
+                            <img
+                                src={
+                                    student.user?.avatar
+                                        ? student.user?.avatar
+                                        : student.user?.gender === "male"
+                                            ? require("../../assets/icons/boy.png")
+                                            : require("../../assets/icons/girl.png")
+                                }
+                            />
                             <h2>{student?.user?.first_name} {student?.user?.last_name}</h2>
                         </div>
                     </div>

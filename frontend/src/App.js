@@ -6,9 +6,6 @@ import DashboardContainer from "./components/Dashboard/Dashboard.container";
 import CoursesContainer from "./components/Courses/Courses.container";
 import AssignmentsContainer from "./components/Assignments/Assignments.container";
 import ScheduleContainer from "./components/Schedule/Schedule.container";
-import MaterialsContainer from "./components/Materials/Materials.container";
-import ClassroomContainer from "./components/Classroom/Classroom.container";
-import TimelineContainer from "./components/Timeline/Timeline.container";
 import MarksContainer from "./components/Marks/Marks.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
@@ -64,10 +61,7 @@ function App() {
           <Route exact path="/courses" element={<CoursesContainer />} />
           <Route exact path="/courses/:id" element={<CourseContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
-          <Route exact path="/grades" element={<GradesContainer />} />
           <Route exact path="/schedule" element={<ScheduleContainer />} />
-          <Route exact path="/materials" element={<MaterialsContainer />} />
-          <Route exact path="/classroom" element={<ClassroomContainer />} />
           <Route exact path="/marks" element={<MarksContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
           <Route exact path="/school" element={<SchoolPage />} />

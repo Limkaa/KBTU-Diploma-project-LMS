@@ -28,3 +28,22 @@
 .tabs {
   margin-top: 10px;
 }
+.check {
+  padding-right: 15px;
+}
+
+.edit {
+  padding-right: 15px;
+}
+.check:hover {
+  color: rgba(69, 183, 100, 1);
+}
+
+.edit:hover {
+  color: rgba(0, 136, 157, 1);
+}
+
+.delete:hover {
+  color: #d20000;
+}
+

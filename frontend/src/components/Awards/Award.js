@@ -116,7 +116,16 @@ const Award = () => {
       width: "13%",
       render: (item) => (
         <div style={{ display: "flex", alignItems: "center" }}>
-          <img style={styles.img} />
+          <img
+            style={styles.img}
+            src={
+              item?.student?.user?.avatar
+                ? item?.student?.user?.avatar
+                : item?.student?.user?.gender === "male"
+                ? require("../../assets/icons/boy.png")
+                : require("../../assets/icons/girl.png")
+            }
+          />
           <div style={styles.name}>
             {item?.student?.user?.first_name} {item?.student?.user?.last_name}
           </div>
@@ -151,7 +160,16 @@ const Award = () => {
       render: (item) =>
         item?.issued_by && (
           <div style={{ display: "flex", alignItems: "center" }}>
-            <img style={styles.img} />
+            <img
+              style={styles.img}
+              src={
+                item?.issued_by?.avatar
+                  ? item?.issued_by?.avatar
+                  : item?.issued_by?.gender === "male"
+                  ? require("../../assets/icons/boy.png")
+                  : require("../../assets/icons/girl.png")
+              }
+            />
             <div style={styles.name}>
               {item?.issued_by?.first_name} {item?.issued_by?.last_name}
             </div>

@@ -46,9 +46,10 @@ const UpdateYear = ({
   const [values, setValues] = React.useState({
     name: "",
     is_active: "",
+    is_opened_to_marks: "",
   });
 
-  const { name, is_active } = values;
+  const { name, is_active, is_opened_to_marks } = values;
 
   React.useEffect(() => {
     if (year) {
@@ -59,6 +60,8 @@ const UpdateYear = ({
   const handleInputChange = (e) => {
     let { name, value, checked } = e.target;
     if (name === "is_active") {
+      setValues({ ...values, [name]: checked });
+    } else if (name === "is_opened_to_marks") {
       setValues({ ...values, [name]: checked });
     } else {
       setValues({ ...values, [name]: value });
@@ -104,6 +107,16 @@ const UpdateYear = ({
             style={{ fontWeight: 400, fontSize: 15 }}
           >
             Active
+          </Checkbox>
+        </div>
+        <div>
+          <Checkbox
+            checked={is_opened_to_marks || false}
+            onChange={handleInputChange}
+            name="is_opened_to_marks"
+            style={{ fontWeight: 400, fontSize: 15 }}
+          >
+            Opened to marks
           </Checkbox>
         </div>
         <button

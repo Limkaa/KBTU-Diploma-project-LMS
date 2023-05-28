@@ -20,7 +20,16 @@ const Profile = () => {
         </div>
         <div style={styles.subtitle}>{returnRole()}</div>
       </div>
-      <img style={styles.img} />
+      <img
+        style={styles.img}
+        src={
+          user?.avatar
+            ? user?.avatar
+            : user?.gender === "male"
+            ? require("../../assets/icons/boy.png")
+            : require("../../assets/icons/girl.png")
+        }
+      />
     </div>
   );
 };
@@ -34,8 +43,8 @@ const styles = {
     marginLeft: 20,
   },
   img: {
-    width: 42,
-    height: 42,
+    width: 40,
+    height: 40,
     borderRadius: 120,
     backgroundColor: "#DBDBDB",
   },

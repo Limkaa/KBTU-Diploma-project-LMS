@@ -395,9 +395,19 @@ const CoursePost = ({ item, handleUpdatePost, handleDeletePost, user }) => {
                           paddingLeft: 12,
                           paddingTop: 5,
                           paddingBottom: 5,
+                          alignItems: "start",
                         }}
                       >
-                        <img style={styles.avatar} />
+                        <img
+                          style={styles.avatar}
+                          src={
+                            item?.user?.avatar
+                              ? item?.user?.avatar
+                              : item?.user?.gender === "male"
+                              ? require("../../assets/icons/boy.png")
+                              : require("../../assets/icons/girl.png")
+                          }
+                        />
                         <div style={styles.rightCont}>
                           <div
                             style={{

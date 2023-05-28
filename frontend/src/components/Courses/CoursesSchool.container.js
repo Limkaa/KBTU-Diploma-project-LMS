@@ -152,7 +152,8 @@ const CoursesSchoolContainer = () => {
           to={`/courses/${item.id}`}
           style={{ textDecoration: "none", fontWeight: 600, color: "#00889D" }}
         >
-          {item?.subject?.name} ({item?.subject?.code})
+          {item?.subject?.name}{" "}
+          {item?.subject?.code && "(" + item?.subject?.code + ")"}
         </Link>
       ),
     },
@@ -181,7 +182,8 @@ const CoursesSchoolContainer = () => {
       width: "15%",
       render: (item) => (
         <div>
-          {item?.group?.grade?.name} ({item?.group?.code})
+          {item?.group?.grade?.name}
+          {item?.group?.code && "(" + item?.group?.code + ")"}
         </div>
       ),
     },

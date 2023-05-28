@@ -8,7 +8,10 @@ export const usersApiSlice = authApi.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     getTeachers: builder.query({
-      query: ( school_id ) => `/api/schools/${school_id}/teachers`,
+      query: (school_id) => `/api/schools/${school_id}/teachers`,
+    }),
+    getUser: builder.query({
+      query: (user_id) => `/api/users/${user_id}`,
     }),
     addUser: builder.mutation({
       query: ({ school_id, ...data }) => ({
@@ -35,4 +38,5 @@ export const {
   useGetTeachersQuery,
   useAddUserMutation,
   useUpdateUserMutation,
+  useLazyGetUserQuery,
 } = usersApiSlice;

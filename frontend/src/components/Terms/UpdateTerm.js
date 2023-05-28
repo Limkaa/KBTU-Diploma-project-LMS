@@ -57,9 +57,19 @@ const UpdateTerm = ({
     from_date: "",
     to_date: "",
     is_closed: "",
+    // is_finished: "",
+    // is_opened_to_final_marks: "",
   });
 
-  const { name, year, from_date, to_date, is_closed } = values;
+  const {
+    name,
+    year,
+    from_date,
+    to_date,
+    is_closed,
+    // is_finished,
+    // is_opened_to_final_marks,
+  } = values;
 
   React.useEffect(() => {
     if (term) {
@@ -74,7 +84,13 @@ const UpdateTerm = ({
       let { name, value, checked } = e.target;
       if (name === "is_closed") {
         setValues({ ...values, [name]: checked });
-      } else {
+      }
+      // if (name === "is_finished") {
+      //   setValues({ ...values, [name]: checked });
+      // }
+      // if (name === "is_opened_to_final_marks") {
+      //   setValues({ ...values, [name]: checked });
+      else {
         setValues({ ...values, [name]: value });
       }
     }
@@ -161,6 +177,30 @@ const UpdateTerm = ({
             Closed
           </Checkbox>
         </div>
+        <br />
+
+        {/* <div>
+          <Checkbox
+            checked={is_finished || false}
+            onChange={handleInputChange}
+            name="is_finished"
+            style={{ fontWeight: 400, fontSize: 15 }}
+          >
+            Finished
+          </Checkbox>
+        </div>
+        <br />
+
+        <div>
+          <Checkbox
+            checked={is_opened_to_final_marks || false}
+            onChange={handleInputChange}
+            name="is_opened_to_final_marks"
+            style={{ fontWeight: 400, fontSize: 15 }}
+          >
+            Opened to final marks
+          </Checkbox>
+        </div> */}
         <br />
         <button
           type="submit"

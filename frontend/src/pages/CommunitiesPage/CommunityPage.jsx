@@ -106,7 +106,7 @@ const CommunityPage = () => {
             title: 'Member',
             key: 'student',
             render: (member) => (
-                <div style={{cursor: "pointer"}} className="rating" onClick={() => navigate(`../profile/${member.student.id}`)}>
+                <div style={{cursor: "pointer"}} className="rating" onClick={() => navigate(`../profile/${member.student.user.id}`)}>
                     <span className="name">
                         {member.student.user.first_name} {member.student.user.last_name}
                     </span>

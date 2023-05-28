@@ -23,8 +23,17 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
         }
       }
     }),
+    getStudentAssignments: builder.query({
+      query: ({ student_id, search }) =>
+        `api/students/${student_id}/assignments?ordering=-datetime&search=${search}`,
+    }),
     getAssignmentMarks: builder.query({
       query: ({ assignment_id }) => `api/assignments/${assignment_id}/marks`,
+    }),
+    getAssignmentMarksByEnrollments: builder.query({
+      query: ({ assignment_id, search }) =>
+        `api/assignments/${assignment_id}/marks-grouped?search=${search}`,
+      keepUnusedDataFor: 5,
     }),
     addAssignment: builder.mutation({
       query: ({ course_id, ...data }) => ({
@@ -52,10 +61,14 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
 export const {
   useGetCourseAssignmentsQuery,
   useGetAssignmentQuery,
+  useLazyGetAssignmentQuery,
   useGetTeacherAssignmentsQuery,
   useGetStudentOrTeacherAssignmentsQuery,
+  useGetAssignmentMarksByEnrollmentsQuery,
   useGetAssignmentMarksQuery,
   useAddAssignmentMutation,
   useUpdateAssignmentMutation,
   useDeleteAssignmentMutation,
+  useLazyGetAssignmentMarksByEnrollmentsQuery,
+  useGetStudentAssignmentsQuery,
 } = assignmentsApiSlice;

@@ -6,6 +6,7 @@ import {
   useAddAssignmentMutation,
   useDeleteAssignmentMutation,
   useGetCourseAssignmentsQuery,
+  useGetStudentAssignmentsQuery,
   useGetTeacherAssignmentsQuery,
   useUpdateAssignmentMutation,
 } from "../../redux/assignments/assignmentsApiSlice";
@@ -24,6 +25,7 @@ import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
 import AssignmentCreate from "./AssignmentCreate";
 import { toastify } from "../shared/Toast/Toast";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
+import { useGetStudentQuery } from "../../redux/students/studentsApiSlice";
 
 const AssignmentsCourse = () => {
   const { data: user } = useGetAuthUserQuery();
@@ -36,11 +38,21 @@ const AssignmentsCourse = () => {
   const [selectedYear, setSelectedYear] = React.useState("");
   const [years, setYears] = React.useState();
 
+  const { data: studentData } = useGetStudentQuery(user?.id);
   const {
     data: dataAssignments,
     isLoading: isLoadingAssignments,
     refetch,
   } = useGetTeacherAssignmentsQuery({ teacher_id: user?.id, search: search });
+
+  const {
+    data: dataAssignmentsStudent,
+    isLoading: isLoadingAssignmentsStudent,
+    refetch: refetchStudentAss,
+  } = useGetStudentAssignmentsQuery({
+    student_id: studentData?.id,
+    search: search,
+  });
 
   const [
     getTeacherCourses,
@@ -72,14 +84,15 @@ const AssignmentsCourse = () => {
       getTeacherCourses({
         teacher_id: user?.id,
         year_id: selectedYear,
+        grade: "",
       });
     }
   }, [user, selectedYear]);
 
   React.useEffect(() => {
     if (user?.role === "student") {
-      // if (data && !isLoading) {
-      //   setCourses(data);
+      // if (dataAssignmentsStudent && !isLoadingAssignmentsStudent) {
+      //   setCourses(dataAssignmentsStudent);
       // }
     } else if (user?.role === "teacher") {
       if (teacherData && !teacherIsLoading) {
@@ -100,20 +113,41 @@ const AssignmentsCourse = () => {
 
   React.useEffect(() => {
     let sortedAssignmentss = {};
-    if (dataAssignments && !isLoadingAssignments) {
-      dataAssignments?.forEach((item) => {
-        const time = moment(item?.datetime).format("MMM DD, YYYY");
-        if (!sortedAssignmentss[time]) {
-          sortedAssignmentss[time] = [];
-          sortedAssignmentss[time].push(item);
-        } else {
-          sortedAssignmentss[time].push(item);
-        }
-      });
-      setAssignments(sortedAssignmentss);
-      setLoading(false);
+    if (user?.role === "student") {
+      if (dataAssignmentsStudent && !isLoadingAssignmentsStudent) {
+        dataAssignmentsStudent?.results?.forEach((item) => {
+          const time = moment(item?.datetime).format("MMM DD, YYYY");
+          if (!sortedAssignmentss[time]) {
+            sortedAssignmentss[time] = [];
+            sortedAssignmentss[time].push(item);
+          } else {
+            sortedAssignmentss[time].push(item);
+          }
+        });
+        setAssignments(sortedAssignmentss);
+        setLoading(false);
+      }
+    } else if (user?.role === "teacher") {
+      if (dataAssignments && !isLoadingAssignments) {
+        dataAssignments?.forEach((item) => {
+          const time = moment(item?.datetime).format("MMM DD, YYYY");
+          if (!sortedAssignmentss[time]) {
+            sortedAssignmentss[time] = [];
+            sortedAssignmentss[time].push(item);
+          } else {
+            sortedAssignmentss[time].push(item);
+          }
+        });
+        setAssignments(sortedAssignmentss);
+        setLoading(false);
+      }
     }
-  }, [dataAssignments, isLoadingAssignments]);
+  }, [
+    dataAssignments,
+    isLoadingAssignments,
+    dataAssignmentsStudent,
+    isLoadingAssignmentsStudent,
+  ]);
 
   const returnDate = (date) => {
     let today = moment().format("DD MMM YYYY");

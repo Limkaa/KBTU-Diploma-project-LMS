@@ -48,6 +48,7 @@ const AcademicYearsContainer = () => {
           school: user?.school_id,
           name: values.name,
           is_active: true,
+          is_opened_to_marks: false,
         })
           .unwrap()
           .then((payload) => {
@@ -70,6 +71,7 @@ const AcademicYearsContainer = () => {
         school: user?.school_id,
         name: values.name,
         is_active: values.is_active,
+        is_opened_to_marks: values.is_opened_to_marks,
       })
         .unwrap()
         .then((payload) => {
@@ -87,7 +89,7 @@ const AcademicYearsContainer = () => {
       title: () => {
         return <>Name</>;
       },
-      width: "70%",
+      width: "50%",
       render: (item) => <div>{item.name}</div>,
     },
     {
@@ -99,6 +101,18 @@ const AcademicYearsContainer = () => {
           color={item.is_active ? "green" : "volcano"}
         >
           {item.is_active ? "Active" : "Inactive"}
+        </Tag>
+      ),
+    },
+    {
+      title: "Opened to marks",
+      width: "20%",
+      render: (item) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={item.is_opened_to_marks ? "blue" : "pink"}
+        >
+          {item.is_opened_to_marks ? "Opened" : "Closed"}
         </Tag>
       ),
     },

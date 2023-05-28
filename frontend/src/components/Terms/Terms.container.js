@@ -54,15 +54,14 @@ const TermsContainer = () => {
         setTotal(data?.count);
       }
       setTerms(data.results);
+      console.log(data);
     }
   }, [data, isLoading, selectedYear]);
 
   React.useEffect(() => {
     if (dataYears && !isLoadingYears) {
       setYears(dataYears);
-      setSelectedYear(
-        dataYears[dataYears?.length - 1]?.id
-      );
+      setSelectedYear(dataYears[dataYears?.length - 1]?.id);
     }
   }, [dataYears, isLoadingYears]);
 
@@ -75,6 +74,8 @@ const TermsContainer = () => {
           from_date: dayjs(start).format("YYYY-MM-DD"),
           to_date: dayjs(end).format("YYYY-MM-DD"),
           is_closed: values.is_closed,
+          // is_finished: false,
+          // is_opened_to_final_marks: false,
         })
           .unwrap()
           .then((payload) => {
@@ -99,6 +100,8 @@ const TermsContainer = () => {
           from_date: values.from_date,
           to_date: values.to_date,
           is_closed: values.is_closed,
+          // is_finished: values.is_finished,
+          // is_opened_to_final_marks: values.is_opened_to_final_marks,
         })
           .unwrap()
           .then((payload) => {
@@ -125,19 +128,17 @@ const TermsContainer = () => {
       title: () => {
         return <>From date</>;
       },
-      width: "20%",
+      width: "15%",
       render: (item) => (
-        <div>{moment(item.from_date).format("DD MMMM YYYY")}</div>
+        <div>{moment(item.from_date).format("DD MMM YYYY")}</div>
       ),
     },
     {
       title: () => {
         return <>To date</>;
       },
-      width: "20%",
-      render: (item) => (
-        <div>{moment(item.to_date).format("DD MMMM YYYY")}</div>
-      ),
+      width: "15%",
+      render: (item) => <div>{moment(item.to_date).format("DD MMM YYYY")}</div>,
     },
     {
       title: "Status",
@@ -148,6 +149,30 @@ const TermsContainer = () => {
           color={item?.is_closed ? "volcano" : "green"}
         >
           {item?.is_closed ? "Closed" : "Active"}
+        </Tag>
+      ),
+    },
+    {
+      title: "Finished",
+      width: "15%",
+      render: (item) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={item?.is_finished ? "purple" : "gold"}
+        >
+          {item?.is_finished ? "Finished" : "Unfinished"}
+        </Tag>
+      ),
+    },
+    {
+      title: "Opened to Final marks",
+      width: "15%",
+      render: (item) => (
+        <Tag
+          style={{ minWidth: 70, textAlign: "center" }}
+          color={item?.is_opened_to_final_marks ? "blue" : "pink"}
+        >
+          {item?.is_opened_to_final_marks ? "Opened" : "Closed"}
         </Tag>
       ),
     },

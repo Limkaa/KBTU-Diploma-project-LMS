@@ -6,6 +6,7 @@ import { Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {logout, selectCurrentUser} from "../../redux/auth/authSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import "../../assets/icons/boy.png";
 import {navigate} from "react-big-calendar/lib/utils/constants";
 import {useNavigate} from "react-router-dom";
 
@@ -14,6 +15,7 @@ const ProfileContainer = () => {
   const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
   const routeNavigate = useNavigate();
+
   return (
     <div style={styles.container}>
       <div style={{ display: "flex" }}>
@@ -87,7 +89,16 @@ const ProfileContainer = () => {
             </div>
           </div>
           <div style={styles.imgCont}>
-            <img style={styles.img} />
+            <img
+              style={styles.img}
+              src={
+                user?.avatar
+                  ? user?.avatar
+                  : user?.gender === "male"
+                  ? require("../../assets/icons/boy.png")
+                  : require("../../assets/icons/girl.png")
+              }
+            />
             {/* <Button style={{ width: 130, marginTop: 12 }}>Change Image</Button> */}
           </div>
         </div>
@@ -169,7 +180,7 @@ const styles = {
   },
   img: {
     width: 170,
-    height: 170,
+    height: 175,
     borderRadius: 120,
     backgroundColor: "#B6C3D8",
   },

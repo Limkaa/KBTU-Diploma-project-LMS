@@ -59,7 +59,7 @@ const CoursesContainer = () => {
   const [years, setYears] = React.useState();
   const [search, setSearch] = React.useState("");
 
-  const { data: studentCard } = useGetStudentCardQuery({
+  const { data: student } = useGetStudentCardQuery({
     student_id: user?.id,
   });
 
@@ -85,10 +85,10 @@ const CoursesContainer = () => {
 
   React.useEffect(() => {
     if (user?.role === "student") {
-      if (studentCard && selectedYear) {
+      if (student) {
         getGroupCourse({
-          group_id: studentCard?.group?.id,
-          year_id: selectedYear,
+          group_id: student?.group?.id,
+          subject__grade: student?.group?.grade?.id,
           search: search,
         });
       }
@@ -101,7 +101,7 @@ const CoursesContainer = () => {
         });
       }
     }
-  }, [user, studentCard, selectedYear, search]);
+  }, [user, student, selectedYear, search]);
 
   React.useEffect(() => {
     if (user?.role === "student") {
@@ -122,40 +122,42 @@ const CoursesContainer = () => {
         <Profile />
       </div>
       <Box sx={{ flexGrow: 1, marginTop: 3 }}>
-        <div>
+        <div style={{ marginBottom: 18 }}>
           <InputStyled
             size="default size"
             placeholder="Search..."
             prefix={<img src={Search} style={{ height: 20, width: 20 }} />}
             onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
-          <FormControl
-            sx={{
-              width: 220,
-              marginBottom: 3,
-              fieldset: { borderRadius: "10px" },
-            }}
-            size="small"
-          >
-            <InputLabel id="grade">Year</InputLabel>
-            <Select
-              labelId="grade"
-              id="grade"
-              label="Grade"
-              defaultValue={""}
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
+          {user?.role === "teacher" && (
+            <FormControl
+              sx={{
+                width: 220,
+                marginBottom: 3,
+                fieldset: { borderRadius: "10px" },
+              }}
+              size="small"
             >
-              <MenuItem value="" disabled>
-                <em>Choose year</em>
-              </MenuItem>
-              {years?.map((item) => (
-                <MenuItem value={item.id} key={item.id}>
-                  {item.name}
+              <InputLabel id="grade">Year</InputLabel>
+              <Select
+                labelId="grade"
+                id="grade"
+                label="Grade"
+                defaultValue={""}
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                <MenuItem value="" disabled>
+                  <em>Choose year</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                {years?.map((item) => (
+                  <MenuItem value={item.id} key={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
         </div>
         <Spin
           spinning={user?.role === "student" ? isLoading : teacherIsLoading}
@@ -176,11 +178,16 @@ const CoursesContainer = () => {
                     <Item>
                       <CourseLogo
                         title={item?.subject?.name}
-                        width={"50%"}
-                        height={"55%"}
+                        width={"43%"}
+                        height={"60%"}
                         fontSize={30}
                       />
                       <div style={styles.title}>{item?.subject?.name}</div>
+                      <div style={styles.code}>{item?.subject?.code}</div>
+                      <div style={styles.podtext}>
+                        {item?.subject?.grade?.name}
+                        {" (" + item?.group?.code + ")"}
+                      </div>
                       <div style={styles.teacher}>
                         <div style={styles.teachTitle}>Teacher:</div>
                         {item?.teacher ? (
@@ -231,22 +238,35 @@ const styles = {
   teacher_name: {
     fontSize: 14,
     fontWeight: 500,
+    color: "rgba(74, 77, 88, 1)",
   },
   teacher: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
+    gap: 8,
     marginTop: 6,
   },
   teachTitle: {
     fontSize: 14,
     fontWeight: 600,
+    color: "rgba(74, 77, 88, 1)",
   },
   title: {
     marginTop: 20,
     fontSize: 16,
     fontWeight: 600,
+    color: "rgba(74, 77, 88, 1)",
+  },
+  code: {
+    fontSize: 13,
+    fontWeight: 600,
+    color: "rgba(0, 136, 157, 1)",
+  },
+  podtext: {
+    fontSize: 14,
+    fontWeight: 500,
+    color: "#4A4D5896",
   },
 };
 

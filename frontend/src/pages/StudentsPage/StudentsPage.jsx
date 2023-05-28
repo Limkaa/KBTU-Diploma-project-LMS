@@ -244,9 +244,9 @@ const StudentsPage = () => {
   const rowSelection = {
     selectedRows,
     onChange: handleRowSelectionChange,
-    getCheckboxProps: (record) => ({
-      disabled: record.group === null,
-    }),
+    // getCheckboxProps: (record) => ({
+    //   disabled: record.group === null,
+    // }),
   };
 
   return (

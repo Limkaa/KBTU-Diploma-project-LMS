@@ -6,8 +6,10 @@ import DashboardContainer from "./components/Dashboard/Dashboard.container";
 import CoursesContainer from "./components/Courses/Courses.container";
 import AssignmentsContainer from "./components/Assignments/Assignments.container";
 import ScheduleContainer from "./components/Schedule/Schedule.container";
+import MaterialsContainer from "./components/Materials/Materials.container";
+import ClassroomContainer from "./components/Classroom/Classroom.container";
 import TimelineContainer from "./components/Timeline/Timeline.container";
-import GradesContainer from "./components/Grades/Grades.container";
+import MarksContainer from "./components/Marks/Marks.container";
 import ProfileContainer from "./components/Profile/Profile.container";
 import UsersContainer from "./components/Users/Users.container";
 import SchoolGradesContainer from "./components/SchoolGrades/SchoolGrades.container";
@@ -39,6 +41,9 @@ import CourseAward from "./components/Courses/CourseAward";
 import CommunitiesPage from "./pages/CommunitiesPage/CommunitiesPage";
 import CommunityPage from "./pages/CommunitiesPage/CommunityPage";
 import TodoPage from "./pages/TodoPage/TodoPage";
+import MarksByCourses from "./components/Marks/MarksByCourses";
+import FinalMarks from "./components/FinalMarks.js/FinalMarks";
+import FinalMarksForStudent from "./components/FinalMarks.js/FinalMarksForStudent";
 import PublicProfilePage from "./pages/PublicProfilePage/PublicProfilePage";
 function App() {
   React.useEffect(() => {
@@ -60,6 +65,10 @@ function App() {
           <Route exact path="/courses/:id" element={<CourseContainer />} />
           <Route exact path="/assignments" element={<AssignmentsContainer />} />
           <Route exact path="/grades" element={<GradesContainer />} />
+          <Route exact path="/schedule" element={<ScheduleContainer />} />
+          <Route exact path="/materials" element={<MaterialsContainer />} />
+          <Route exact path="/classroom" element={<ClassroomContainer />} />
+          <Route exact path="/marks" element={<MarksContainer />} />
           <Route exact path="/profile" element={<ProfileContainer />} />
           <Route exact path="/school" element={<SchoolPage />} />
           <Route
@@ -67,25 +76,21 @@ function App() {
             path="/courses/:id/syllabus"
             element={<SyllabusContainer />}
           />
+          <Route exact path="/todo" element={<TodoPage />} />
+          <Route exact path="/communities" element={<CommunitiesPage />} />
           <Route
-              exact
-              path="/todo"
-              element={<TodoPage />}
-          />
-          <Route
-              exact
-              path="/communities"
-              element={<CommunitiesPage />}
-          />
-          <Route
-              exact
-              path="/communities/:commId"
-              element={<CommunityPage />}
+            exact
+            path="/communities/:commId"
+            element={<CommunityPage />}
           />
           <Route exact path="/awards" element={<AwardsContainer />} />
           <Route exact path="/awards/:id/winners" element={<Award />} />
           <Route exact path="/courses/:id/winners" element={<CourseAward />} />
           <Route exact path="/profile/:id" element={<PublicProfilePage />} />
+        </Route>
+        <Route element={<PrivateRoute allowedRoles={["teacher", "manager"]} />}>
+          <Route exact path="/studentmarks" element={<MarksByCourses />} />
+          <Route exact path="/finalmarks" element={<FinalMarks />} />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher", "student"]} />}>
           <Route
@@ -118,6 +123,11 @@ function App() {
             exact
             path="/schedule"
             element={<TimeCalendar type="student" />}
+          />
+          <Route
+            exact
+            path="/finalmarks/student"
+            element={<FinalMarksForStudent type="student" />}
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>

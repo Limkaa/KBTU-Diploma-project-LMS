@@ -10,21 +10,24 @@ export const coursesApiSlice = authApi.injectEndpoints({
       query: ({ school_id, page, search }) =>
         `/api/schools/${school_id}/courses?page=${page}&search=${search}`,
     }),
+    getSchoolCoursesWithout: builder.query({
+      query: ({ school_id, grade, year_id }) =>
+        `/api/schools/${school_id}/courses?subject__grade=${grade}&year=${year_id}`,
+    }),
     getTeacherCourses: builder.query({
-      query: ({ teacher_id, year_id, search }) =>
-        `/api/teachers/${teacher_id}/courses?year=${year_id}&search=${search}`,
+      query: ({ teacher_id, search, year_id }) =>
+        `/api/teachers/${teacher_id}/courses?search=${search}&year=${year_id}`,
     }),
     getTeacherCoursesWithout: builder.query({
-      query: ({ teacher_id, year_id }) =>
-        `/api/teachers/${teacher_id}/courses?year=${year_id}`,
+      query: ({ teacher_id, year_id, grade }) =>
+        `/api/teachers/${teacher_id}/courses?year=${year_id}&subject__grade=${grade}`,
     }),
     getGroupCourses: builder.query({
-      query: ({ group_id, year_id, search }) =>
-        `/api/groups/${group_id}/courses?year=${year_id}&search=${search}`,
+      query: ({ group_id, subject__grade, search }) =>
+        `/api/groups/${group_id}/courses?subject__grade=${subject__grade}&search=${search}`,
     }),
     getCourseStudents: builder.query({
-      query: ({ course_id, search }) =>
-        `/api/courses/${course_id}/students`,
+      query: ({ course_id, search }) => `/api/courses/${course_id}/students`,
     }),
     getCourse: builder.query({
       query: ({ id }) => `/api/courses/${id}`,
@@ -49,6 +52,7 @@ export const coursesApiSlice = authApi.injectEndpoints({
 export const {
   useGetAllSchoolCoursesQuery,
   useGetSchoolCoursesQuery,
+  useLazyGetSchoolCoursesWithoutQuery,
   useGetCourseQuery,
   useLazyGetGroupCoursesQuery,
   useLazyGetTeacherCoursesQuery,

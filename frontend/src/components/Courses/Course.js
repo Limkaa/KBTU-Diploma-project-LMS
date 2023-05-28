@@ -94,14 +94,21 @@ const Course = () => {
   const [updatePost] = useUpdateCoursePostMutation();
   const [deletePost] = useDeleteCoursePostMutation();
 
-  const { data: dataAssignments, isLoading: isLoadingAssignments } =
-    useGetCourseAssignmentsQuery({ course_id: courseId, search: "" });
+  const {
+    data: dataAssignments,
+    isLoading: isLoadingAssignments,
+    refetch: refetchAssignments,
+  } = useGetCourseAssignmentsQuery({ course_id: courseId, search: "" });
 
   React.useEffect(() => {
     if (data && !isLoading) {
       setCourse(data);
     }
   }, [data, isLoading]);
+
+  React.useEffect(() => {
+    refetchAssignments();
+  }, [dataAssignments]);
 
   React.useEffect(() => {
     if (dataSyllabus && !isLoadingSyllabus) {
@@ -227,17 +234,29 @@ const Course = () => {
                         fontSize={20}
                       />
                       <div style={{ marginLeft: 8 }}>
-                        <div style={styles.title}>{course?.subject?.name}</div>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <div style={styles.title}>
+                            {course?.subject?.name}{" "}
+                          </div>
+                          <div style={styles.code}>{course?.subject?.code}</div>
+                        </div>
+
                         <div style={styles.podtext}>
                           {course?.subject?.grade?.name}
+                          {" (" + course?.group?.code + ")"}
                         </div>
                       </div>
                     </div>
                     {course?.teacher && (
                       <div style={styles.teachCont}>
                         <img
-                          // src={course?.teacher?.avatar}
-                          // alt="teacher"
+                          src={
+                            course?.teacher?.avatar
+                              ? course?.teacher?.avatar
+                              : course?.teacher?.gender === "male"
+                              ? require("../../assets/icons/boy.png")
+                              : require("../../assets/icons/girl.png")
+                          }
                           style={styles.img}
                         />
                         <div>
@@ -450,7 +469,6 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
   },
-  mainCont: {},
   teachCont: {
     display: "flex",
     alignItems: "center",
@@ -462,6 +480,15 @@ const styles = {
     fontWeight: 600,
     color: "rgba(74, 77, 88, 1)",
   },
+  code: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: "rgba(0, 136, 157, 1)",
+    backgroundColor: "rgba(240, 247, 255, 1)",
+    padding: "3px 7px",
+    borderRadius: 8,
+    marginLeft: 10,
+  },
   titleCont: {
     display: "flex",
     justifyContent: "space-between",
@@ -469,7 +496,7 @@ const styles = {
   },
   teacher: {
     fontSize: 14,
-    fontWeight: 400,
+    fontWeight: 500,
   },
   podtext: {
     fontSize: 14,

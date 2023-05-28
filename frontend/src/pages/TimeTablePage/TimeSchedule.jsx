@@ -173,7 +173,6 @@ const TimeSchedule = (props) => {
                             <AntSelect
                                 style={{width: '150px'}}
                                 showSearch
-                                style={{ width: 200 }}
                                 placeholder="Search to Select"
                                 optionFilterProp="children"
                                 filterOption={(input, option) =>

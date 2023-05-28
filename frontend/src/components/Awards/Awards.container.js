@@ -265,7 +265,17 @@ const AwardsContainer = () => {
                                   }}
                                   onClick={() => navigate(`../profile/${winner.student.user.id}`)}
                                 >
-                                  <img style={styles.img} />
+                                  <img
+                                    style={styles.img}
+                                    src={
+                                      winner.student?.user?.avatar
+                                        ? winner.student?.user?.avatar
+                                        : winner.student?.user?.gender ===
+                                          "male"
+                                        ? require("../../assets/icons/boy.png")
+                                        : require("../../assets/icons/girl.png")
+                                    }
+                                  />
                                   <div style={styles.name}>
                                     {winner.student?.user?.first_name}{" "}
                                     {winner.student?.user?.last_name}

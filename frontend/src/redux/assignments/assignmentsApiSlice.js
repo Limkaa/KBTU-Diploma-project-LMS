@@ -13,6 +13,10 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
       query: ({ teacher_id, search }) =>
         `api/teachers/${teacher_id}/assignments?ordering=-datetime&search=${search}`,
     }),
+    getStudentAssignments: builder.query({
+      query: ({ student_id, search }) =>
+        `api/students/${student_id}/assignments`,
+    }),
     getAssignmentMarks: builder.query({
       query: ({ assignment_id }) => `api/assignments/${assignment_id}/marks`,
     }),
@@ -55,4 +59,5 @@ export const {
   useUpdateAssignmentMutation,
   useDeleteAssignmentMutation,
   useLazyGetAssignmentMarksByEnrollmentsQuery,
+  useGetStudentAssignmentsQuery,
 } = assignmentsApiSlice;

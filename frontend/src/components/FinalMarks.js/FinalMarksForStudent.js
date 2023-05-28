@@ -20,6 +20,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import {
   useGetTermsWithoutPageQuery,
+  useLazyGetTermQuery,
   useLazyGetTermsWithoutPageQuery,
 } from "../../redux/terms/termsApiSlice";
 import { useGetCourseQuery } from "../../redux/courses/coursesApiSlice";
@@ -27,6 +28,8 @@ import { useGetMarksOfStudentQuery } from "../../redux/marks/marksOfStudent/mark
 import { useGetStudentQuery } from "../../redux/students/studentsApiSlice";
 import Header from "../shared/Header/Header";
 import Profile from "../Dashboard/Profile";
+import { useGetFinalMarksOfStudentQuery } from "../../redux/finalmarks/finalMarksApiSlice";
+import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 
 const SelectStyled = styled(Select)`
   &.ant-select-single .ant-select-selector {
@@ -39,7 +42,7 @@ const SelectStyled = styled(Select)`
   }
 `;
 
-const MarksContainer = () => {
+const FinalMarksForStudent = () => {
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState();
   const [search, setSearch] = React.useState("");
@@ -49,52 +52,61 @@ const MarksContainer = () => {
   const { data: user } = useGetAuthUserQuery();
   const [select, setSelect] = React.useState("");
   const [termOptions, setTermOptions] = React.useState([]);
+  const [yearOptions, setYearOptions] = React.useState([]);
+  const [selectYear, setSelectYear] = React.useState();
+  const [term, setTerm] = React.useState();
 
   const { data: studentData } = useGetStudentQuery(user?.id);
 
-  const { data, isLoading } = useGetMarksOfStudentQuery({
+  const [getTerm, { data: dataTerm, isLoadingTerm }] = useLazyGetTermQuery();
+
+  const { data: dataYears, isLoading: isLoadingYears } =
+    useGetYearsWithoutPageQuery({
+      school_id: user?.school_id,
+    });
+
+  const { data, isLoading } = useGetFinalMarksOfStudentQuery({
     student_id: studentData?.id,
-    grade: studentData?.group?.grade?.id,
     search: search,
-    term: select,
     page: page,
+    year: selectYear,
   });
 
-  const [getAssignment, { data: dataAssignment, isLoadingAssignment }] =
-    useLazyGetAssignmentQuery();
+  React.useEffect(() => {
+    if (mark) {
+      if (mark?.el?.term) {
+        getTerm({ term_id: mark?.el?.term });
+      }
+    }
+  }, [mark]);
 
-  const [getTerm, { data: dataTerm }] = useLazyGetTermsWithoutPageQuery();
+  React.useEffect(() => {
+    if (dataTerm && !isLoadingTerm) {
+      setTerm(dataTerm);
+    }
+  }, [dataTerm, isLoadingTerm]);
 
   React.useEffect(() => {
     if (data && !isLoading) {
       setMarks(data.results);
+      console.log(data);
       setTotal(data.count);
-      getTerm({ year_id: data?.results[0]?.year?.id });
     }
   }, [data, isLoading]);
 
   React.useEffect(() => {
-    let arr = [{ value: "", label: "All terms" }];
-    if (dataTerm) {
-      dataTerm.forEach((term) => {
+    let arr = [];
+    if (dataYears && !isLoadingYears) {
+      dataYears.forEach((item) => {
         arr.push({
-          value: term.id,
-          label: term.name,
+          value: item.id,
+          label: item.name,
         });
       });
-      setTermOptions(arr);
+      setYearOptions(arr);
+      setSelectYear(arr[arr.length - 1].value);
     }
-  }, [dataTerm]);
-
-  console.log(marks);
-
-  React.useEffect(() => {
-    if (mark) {
-      getAssignment({
-        assignment_id: mark?.assignment,
-      });
-    }
-  }, [mark]);
+  }, [dataYears]);
 
   const renderColor = (item) => {
     if (item === 5) {
@@ -120,15 +132,68 @@ const MarksContainer = () => {
       ),
     },
     {
-      title: "Marks",
-      width: "80%",
+      title: "Term",
+      children: [
+        {
+          title: "Marks",
+          width: "30%",
+          render: (item) => (
+            <div style={{ display: "flex" }}>
+              {item?.terms_marks?.map((el) => (
+                <div
+                  key={el.id}
+                  onClick={() => {
+                    setMark({ el, year: item?.year });
+                    setShow(true);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  <Tooltip
+                    color="white"
+                    title={() => {
+                      return (
+                        <div style={{ padding: 5 }}>
+                          <div style={styles.date}>
+                            Updated date:{" "}
+                            {moment(item?.updated_at).format("DD MMM YYYY")}
+                          </div>
+                        </div>
+                      );
+                    }}
+                  >
+                    <div
+                      style={{
+                        ...styles.number,
+                        backgroundColor: renderColor(el?.number),
+                      }}
+                    >
+                      {el?.number}
+                    </div>
+                  </Tooltip>
+                </div>
+              ))}
+            </div>
+          ),
+        },
+
+        {
+          title: () => {
+            return <>Average</>;
+          },
+          width: "10%",
+          render: (item) => <div style={styles.avr}>{item.terms_average}</div>,
+        },
+      ],
+    },
+    {
+      title: "Year mark",
+      width: "15%",
       render: (item) => (
         <div style={{ display: "flex" }}>
-          {item?.marks?.map((el) => (
+          {item?.year_mark?.number && (
             <div
-              key={el.id}
               onClick={() => {
-                setMark(el);
+                setMark({ el: item?.year_mark, year: item?.year });
                 setShow(true);
               }}
               style={{ cursor: "pointer" }}
@@ -138,22 +203,11 @@ const MarksContainer = () => {
                 title={() => {
                   return (
                     <div style={{ padding: 5 }}>
-                      {el?.comment && (
-                        <div>
-                          <div
-                            style={{
-                              ...styles.commentTitle,
-                              color: renderColor(el?.number),
-                            }}
-                          >
-                            Comment
-                          </div>
-                          <div style={styles.comment}>{el?.comment}</div>
-                        </div>
-                      )}
                       <div style={styles.date}>
                         Updated date:{" "}
-                        {moment(item?.updated_at).format("DD MMM YYYY")}
+                        {moment(item?.year_mark?.updated_at).format(
+                          "DD MMM YYYY"
+                        )}
                       </div>
                     </div>
                   );
@@ -162,25 +216,20 @@ const MarksContainer = () => {
                 <div
                   style={{
                     ...styles.number,
-                    backgroundColor: renderColor(el?.number),
+                    backgroundColor: renderColor(item?.year_mark?.number),
                   }}
                 >
-                  {el?.number}
+                  {item?.year_mark?.number}
                 </div>
               </Tooltip>
             </div>
-          ))}
+          )}
         </div>
       ),
     },
-    {
-      title: () => {
-        return <>Average Mark</>;
-      },
-      width: "10%",
-      render: (item) => <div style={styles.avr}>{item.average_mark}</div>,
-    },
   ];
+
+  console.log(mark);
 
   return (
     <div style={styles.container}>
@@ -191,22 +240,23 @@ const MarksContainer = () => {
       <div style={styles.tableCont}>
         <div style={styles.filter}>
           <div style={{ display: "flex", gap: 6 }}>
-            <div style={styles.selectHeader}>Year {marks[0]?.year?.name}</div>
-            <div style={styles.selectHeader}>
-              Grade: {marks[0]?.subject?.grade?.name}
-            </div>
             <SelectStyled
               size={"middle"}
-              style={{ width: 180 }}
+              style={{ width: 140 }}
               optionFilterProp="children"
               filterOption={(input, option) =>
                 (option?.label ?? "").includes(input)
               }
-              options={termOptions}
-              defaultValue={termOptions[0]}
-              onChange={(val) => setSelect(val)}
-              value={select}
+              options={yearOptions}
+              defaultValue={yearOptions[yearOptions?.length - 1]}
+              onChange={(val) => {
+                setSelectYear(val);
+              }}
+              value={selectYear}
             />
+            <div style={styles.selectHeader}>
+              Grade: {marks[0]?.subject?.grade?.name}
+            </div>
           </div>
           <Input
             size="default size"
@@ -236,29 +286,46 @@ const MarksContainer = () => {
         title="Mark"
         style={{ fontSize: 25 }}
         open={show}
-        onCancel={() => setShow(false)}
         maskClosable={false}
+        onCancel={() => setShow(false)}
         okText={"Update"}
         footer={null}
       >
-        <div style={styles.assCont}>
-          <div style={styles.assTitle}>Assignment</div>
-          <div>{dataAssignment?.name}</div>
-        </div>
+        {mark?.el?.term ? (
+          <div
+            style={{
+              ...styles.assCont,
+              backgroundColor: "#E4F4E6",
+            }}
+          >
+            <div style={styles.assTitle}>{term?.name}</div>
+            <div style={styles.assDate}>
+              {moment(term?.from_date).format("DD.MM.YYYY")}
+              {"-"}
+              {moment(term?.to_date).format("DD.MM.YYYY")}
+            </div>
+          </div>
+        ) : (
+          <div
+            style={{
+              ...styles.assCont,
+              backgroundColor: "#E4F4E6",
+            }}
+          >
+            <div style={styles.assTitle}>{mark?.year?.name}</div>
+          </div>
+        )}
 
         <div style={styles.select}>
           <div style={styles.title}>Number:</div>
-          <div style={styles.input}>{mark?.number}</div>
+          <div style={styles.input}>{mark?.el?.number}</div>
         </div>
-        <div style={styles.select}>
-          <div style={styles.title}>Comment:</div>
-          <div style={styles.input}>{mark?.comment || "-"}</div>
+
+        <div style={styles.date}>
+          Created date: {moment(mark?.el?.created_at).format("DD MMM YYYY")}
         </div>
         <div style={styles.date}>
-          Created date: {moment(mark?.created_at).format("DD MMM YYYY")}
-        </div>
-        <div style={styles.date}>
-          Updated date: {moment(mark?.updated_at).format("DD MMM YYYY")}
+          Updated date: {moment(mark?.el?.updated_at).format("DD MMM YYYY")}
         </div>
       </Modal>
     </div>
@@ -413,4 +480,4 @@ const styles = {
   },
 };
 
-export default MarksContainer;
+export default FinalMarksForStudent;

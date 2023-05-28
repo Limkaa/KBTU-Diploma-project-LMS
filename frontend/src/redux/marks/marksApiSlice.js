@@ -1,6 +1,6 @@
 import { authApi } from "../api/apiService";
 
-export const assignmentsApiSlice = authApi.injectEndpoints({
+export const marksApiSlice = authApi.injectEndpoints({
   endpoints: (builder) => ({
     createMark: builder.mutation({
       query: ({ assignment_id, ...data }) => ({
@@ -29,4 +29,4 @@ export const {
   useCreateMarkMutation,
   useUpdateMarkMutation,
   useDeleteMarkMutation,
-} = assignmentsApiSlice;
+} = marksApiSlice;

@@ -219,7 +219,6 @@ const MarksByCourses = () => {
       }
     } else if (user?.role === "manager") {
       if (dataGrades && !isLoadingGrades) {
-        // console.log(dataGrades);
         dataGrades?.forEach((item) => {
           gradearr.push({
             value: item?.id,
@@ -235,19 +234,6 @@ const MarksByCourses = () => {
     dataGrades,
     isLoadingGrades,
   ]);
-
-  // React.useEffect(() => {
-  //   let gradearr = [{ value: "", label: "All grades" }];
-
-  //   if (dataGrades && !isLoadingGrades) {
-  //     dataGrades?.forEach((item) => {
-  //       gradearr.push({
-  //         value: item?.group?.grade?.id,
-  //         label: item?.group?.grade?.name,
-  //       });
-  //     });
-  //   }
-  // }, [dataGrades, isLoadingGrades]);
 
   React.useEffect(() => {
     if (mark) {

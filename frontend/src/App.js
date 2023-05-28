@@ -42,6 +42,8 @@ import CommunitiesPage from "./pages/CommunitiesPage/CommunitiesPage";
 import CommunityPage from "./pages/CommunitiesPage/CommunityPage";
 import TodoPage from "./pages/TodoPage/TodoPage";
 import MarksByCourses from "./components/Marks/MarksByCourses";
+import FinalMarks from "./components/FinalMarks.js/FinalMarks";
+import FinalMarksForStudent from "./components/FinalMarks.js/FinalMarksForStudent";
 function App() {
   React.useEffect(() => {
     toast.configure({ autoClose: 3000 });
@@ -85,6 +87,7 @@ function App() {
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher", "manager"]} />}>
           <Route exact path="/studentmarks" element={<MarksByCourses />} />
+          <Route exact path="/finalmarks" element={<FinalMarks />} />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["teacher", "student"]} />}>
           <Route
@@ -117,6 +120,11 @@ function App() {
             exact
             path="/timeline"
             element={<TimeCalendar type="student" />}
+          />
+          <Route
+            exact
+            path="/finalmarks/student"
+            element={<FinalMarksForStudent type="student" />}
           />
         </Route>
         <Route element={<PrivateRoute allowedRoles={["manager"]} />}>

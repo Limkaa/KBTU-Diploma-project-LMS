@@ -6,7 +6,7 @@ import { Input } from "antd";
 const Header = ({ text, visible }) => {
   return (
     <div className="header">
-      <p className="header-text">{text}</p>
+      <div className="header-text">{text}</div>
       {visible && (
         <Input
           size="default size"

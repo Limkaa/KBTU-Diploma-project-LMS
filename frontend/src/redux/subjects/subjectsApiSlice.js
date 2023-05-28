@@ -8,7 +8,7 @@ export const subjectsApiSlice = authApi.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     getSubjectsWithoutPage: builder.query({
-      query: ({ school_id, page }) => `/api/schools/${school_id}/subjects`,
+      query: ({ school_id }) => `/api/schools/${school_id}/subjects`,
       keepUnusedDataFor: 5,
     }),
     addSubject: builder.mutation({

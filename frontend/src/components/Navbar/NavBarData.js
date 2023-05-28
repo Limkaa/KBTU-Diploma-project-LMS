@@ -14,8 +14,12 @@ import TermSvg from "../../assets/icons/TermIcon";
 import SchoolSvg from "../../assets/icons/SchoolIcon";
 import GroupSvg from "../../assets/icons/GroupIcon";
 import StudentSvg from "../../assets/icons/StudentIcon";
+import AwardsSvg from "../../assets/icons/AwardsIcon";
 import TimelineSvg from "../../assets/icons/TimelineIcon";
 import RoomSvg from "../../assets/icons/RoomIcon";
+import CommunitySvg from "../../assets/icons/CommunityIcon";
+import TodoSvg from "../../assets/icons/TodoIcon";
+import FinalSvg from "../../assets/icons/FinalIcon";
 
 export const managerMenu = [
   {
@@ -34,9 +38,14 @@ export const managerMenu = [
     icon: SchoolSvg,
   },
   {
-    title: "Grades",
-    path: `/school/grades`,
-    icon: SchoolGradesSvg,
+    title: "Marks",
+    path: "/studentmarks",
+    icon: GradesSvg,
+  },
+  {
+    title: "Final marks",
+    path: "/finalmarks",
+    icon: FinalSvg,
   },
   {
     title: "Groups",
@@ -76,6 +85,11 @@ export const managerMenu = [
     icon: CoursesSvg,
   },
   {
+    title: "Awards",
+    path: `/awards`,
+    icon: AwardsSvg,
+  },
+  {
     title: "Timeline",
     path: `/timeline`,
     icon: TimelineSvg,
@@ -96,6 +110,16 @@ export const managerMenu = [
         icon: YearSvg,
       },
     ],
+  },
+  {
+    title: "Communities",
+    path: `/communities`,
+    icon: CommunitySvg,
+  },
+  {
+    title: "ToDo",
+    path: `/todo`,
+    icon: TodoSvg,
   },
 ];
 
@@ -121,35 +145,35 @@ export const studentMenu = [
     icon: ScheduleSvg,
   },
   {
-    title: "Materials",
-    path: "/materials",
-    icon: MaterialsSvg,
-  },
-  {
-    title: "Timeline",
-    path: "/timeline",
-    icon: TimelineSvg,
-  },
-  {
-    title: "Classroom",
-    path: "/classroom",
-    icon: ClassroomSvg,
-  },
-  {
-    title: "Grades",
-    path: "/grades",
+    title: "Marks",
+    path: "/marks",
     icon: GradesSvg,
+  },
+  {
+    title: "Final marks",
+    path: "/finalmarks/student",
+    icon: FinalSvg,
   },
   {
     title: "School",
     path: `/school`,
     icon: SubjectsSvg,
   },
-  // {
-  //   title: "Timetable",
-  //   path: `/schedule`,
-  //   icon: ScheduleSvg,
-  // },
+  {
+    title: "Awards",
+    path: `/awards`,
+    icon: AwardsSvg,
+  },
+  {
+    title: "Communities",
+    path: `/communities`,
+    icon: CommunitySvg,
+  },
+  {
+    title: "ToDo",
+    path: `/todo`,
+    icon: TodoSvg,
+  },
 ];
 
 export const teacherMenu = [
@@ -170,28 +194,18 @@ export const teacherMenu = [
   },
   {
     title: "Schedule",
-    path: "/schedule",
+    path: "/timeline",
     icon: ScheduleSvg,
   },
   {
-    title: "Materials",
-    path: "/materials",
-    icon: MaterialsSvg,
-  },
-  {
-    title: "Timeline",
-    path: "/timeline",
-    icon: TimelineSvg,
-  },
-  {
-    title: "Classroom",
-    path: "/classroom",
-    icon: ClassroomSvg,
-  },
-  {
-    title: "Grades",
-    path: "/grades",
+    title: "Marks",
+    path: "/studentmarks",
     icon: GradesSvg,
+  },
+  {
+    title: "Final marks",
+    path: "/finalmarks",
+    icon: FinalSvg,
   },
   {
     title: "School",
@@ -204,8 +218,18 @@ export const teacherMenu = [
     icon: GroupSvg,
   },
   {
-    title: "Timetable",
-    path: `/timetable`,
-    icon: ScheduleSvg,
+    title: "Communities",
+    path: `/communities`,
+    icon: CommunitySvg,
+  },
+  {
+    title: "ToDo",
+    path: `/todo`,
+    icon: TodoSvg,
+  },
+  {
+    title: "Awards",
+    path: `/awards`,
+    icon: AwardsSvg,
   },
 ];

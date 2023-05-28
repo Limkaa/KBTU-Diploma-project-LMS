@@ -15,7 +15,7 @@ import Select from "@mui/material/Select";
 import { useGetSchoolGradesWithoutPageQuery } from "../../redux/schoolGrades/schoolGradesApiSlice";
 import { toastify } from "../../components/shared/Toast/Toast";
 
-const InputStyled = styled(TextField)(() => ({
+export const InputStyled = styled(TextField)(() => ({
   "& fieldset": {
     borderRadius: "10px",
   },
@@ -28,7 +28,6 @@ const InputStyled = styled(TextField)(() => ({
 
 const CreateGroupModal = ({ show, setShow, refetch }) => {
   const user = useSelector(selectCurrentUser);
-  // const [isActive, setIsActive] = useState(false);
   const { data: teachers } = useGetTeachersQuery(user.school_id);
   const { data: grades } = useGetSchoolGradesWithoutPageQuery({
     school_id: user.school_id,

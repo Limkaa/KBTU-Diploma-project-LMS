@@ -40,7 +40,7 @@ export const syllabusApiSlice = authApi.injectEndpoints({
 
 export const {
   useGetCourseSyllabusWithoutQuery,
-  useLazyGetCourseSyllabusQuery,
+  useGetCourseSyllabusQuery,
   useGetSyllabusPointQuery,
   useAddSyllabusPointMutation,
   useUpdateSyllabusPointMutation,

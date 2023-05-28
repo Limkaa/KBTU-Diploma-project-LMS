@@ -74,12 +74,11 @@
 #students .add {
     margin-top: 0;
     padding: 20px 30px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-radius: 0 0 8px 8px;
 }
 
 #students .search {
-    padding: 14px;
+    padding: 10px;
     display: flex;
     background-color: #FAFAFA;
     height: 56px;

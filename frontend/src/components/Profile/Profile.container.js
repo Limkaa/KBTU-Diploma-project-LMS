@@ -4,20 +4,46 @@ import Header from "../shared/Header/Header";
 import { Button } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/auth/authSlice";
+import {logout, selectCurrentUser} from "../../redux/auth/authSlice";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import "../../assets/icons/boy.png";
+import {navigate} from "react-big-calendar/lib/utils/constants";
+import {useNavigate} from "react-router-dom";
 
 const ProfileContainer = () => {
   const { data: user } = useGetAuthUserQuery();
+  const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
+  const routeNavigate = useNavigate();
+
   return (
     <div style={styles.container}>
       <div style={{ display: "flex" }}>
         <Header text={"My profile"} visible={false} />
         <Profile />
       </div>
-      <div style={{ backgroundColor: "white", padding: 16, borderRadius: 12 }}>
-        <p style={styles.userInfo}>USER INFORMATION</p>
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: 16,
+          borderRadius: 12,
+          marginTop: 20,
+        }}
+      >
+        <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center"}}>
+          <p style={styles.userInfo}>USER INFORMATION</p>
+          <div>
+            {
+                currentUser.role === "student" &&
+                <Button style={{marginRight: 5}} onClick={() => routeNavigate(`/profile/${currentUser.user_id}`)}>
+                  Student Profile
+                </Button>
+            }
+            <Button type={"primary"} onClick={() => dispatch(logout())}>
+              Logout
+            </Button>
+          </div>
+        </div>
         <div style={{ flex: 1, display: "flex", gap: 16 }}>
           <div style={{ flex: 2 }}>
             <div>
@@ -63,7 +89,16 @@ const ProfileContainer = () => {
             </div>
           </div>
           <div style={styles.imgCont}>
-            <img style={styles.img} />
+            <img
+              style={styles.img}
+              src={
+                user?.avatar
+                  ? user?.avatar
+                  : user?.gender === "male"
+                  ? require("../../assets/icons/boy.png")
+                  : require("../../assets/icons/girl.png")
+              }
+            />
             {/* <Button style={{ width: 130, marginTop: 12 }}>Change Image</Button> */}
           </div>
         </div>
@@ -97,9 +132,6 @@ const ProfileContainer = () => {
           />
         </div>
       </div>
-      <button onClick={() => dispatch(logout())} style={styles.logout}>
-        Logout
-      </button>
     </div>
   );
 };
@@ -148,7 +180,7 @@ const styles = {
   },
   img: {
     width: 170,
-    height: 170,
+    height: 175,
     borderRadius: 120,
     backgroundColor: "#B6C3D8",
   },

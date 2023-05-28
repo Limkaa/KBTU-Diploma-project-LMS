@@ -9,8 +9,8 @@ import {Alert, Spin, Button} from "antd";
 import {Calendar, momentLocalizer} from "react-big-calendar";
 import Header from "../../components/shared/Header/Header";
 import Profile from "../../components/Dashboard/Profile";
-import {useGetStudentCardQuery} from "../../redux/studentsCards/studentsCardsApiSlice";
 import {ArrowLeftOutlined} from "@ant-design/icons";
+import {useGetStudentQuery} from "../../redux/students/studentsApiSlice";
 
 const TimeCalendar = (props) => {
     const user = useSelector(selectCurrentUser);
@@ -18,7 +18,7 @@ const TimeCalendar = (props) => {
     const navigate = useNavigate();
     const localizer = momentLocalizer(moment);
     const [events, setEvents] = useState([]);
-    const {data: studentData, isSuccess: isStudentSuccess, error} = useGetStudentCardQuery({student_id: user.user_id});
+    const {data: studentData, isSuccess: isStudentSuccess, error} = useGetStudentQuery(user.user_id);
     const [student, setStudent] = useState();
     const {data: timetableData, isSuccess, isLoading} = useGetTimeTableQuery(
         {type: props.type, schoolId: user.school_id,
@@ -31,23 +31,13 @@ const TimeCalendar = (props) => {
     const [isGroup, setIsGroup] = useState(true);
 
     useEffect(() => {
-        console.log(studentData);
         if (isStudentSuccess) {
             setStudent(studentData);
         }
-        // if (studentData?.group === null) {
-        //     setIsGroup(false);
-        //     console.log(null);
-        // }
-        // else {
-        //     setIsGroup(true);
-        // }
-        // console.log(isGroup);
-    }, [studentData, isSuccess])
+    }, [studentData, isStudentSuccess])
 
     useEffect(() => {
         if (error && props.type === "student") {
-            console.log(error);
             setIsGroup(false);
         }
         else {
@@ -59,7 +49,6 @@ const TimeCalendar = (props) => {
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(timetableData);
             const arr = timetableData?.map(event => ({
                 id: event.id,
                 title: event.course ? `${event.course?.subject?.name} ${event.course?.subject?.grade?.name}` : 'No course',
@@ -105,7 +94,6 @@ const TimeCalendar = (props) => {
                     <div className="calendar">
                         <Spin spinning={isLoading}>
                             <Calendar
-                                // className="calendar"
                                 localizer={localizer}
                                 events={events}
                                 formats={formats}

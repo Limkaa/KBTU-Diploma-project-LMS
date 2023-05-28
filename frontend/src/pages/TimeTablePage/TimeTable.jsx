@@ -217,7 +217,7 @@ const TimeTable = () => {
                             {
                                 coursesOptions?.map(course =>
                                     <MenuItem key={course?.value} value={course?.value}>
-                                        {course?.label})
+                                        {course?.label}
                                     </MenuItem>
                                 )
                             }

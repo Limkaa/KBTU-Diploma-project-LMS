@@ -18,13 +18,21 @@ export const studentsApiSlice = authApi.injectEndpoints({
                 '&group__grade=' + gradeId +
                 '&no_group=' + noGroup,
         }),
+        getLeaderBoard: builder.query({
+            query: (schoolId) =>
+                'api/schools/' + schoolId +
+                '/students?ordering=-user__rating'
+        }),
         updateStudentGroup: builder.mutation({
             query: ({ studentId, ...data }) => ({
                 url: `/api/students/${studentId}`,
                 method: "PUT",
                 body: data,
             }),
-        })
+        }),
+        getStudent: builder.query({
+            query: (studentId) => `/api/students/${studentId}`
+        }),
     }),
 });
 
@@ -32,4 +40,6 @@ export const {
     useGetGroupStudentsQuery,
     useGetSchoolStudentsQuery,
     useUpdateStudentGroupMutation,
+    useGetStudentQuery,
+    useGetLeaderBoardQuery,
 } = studentsApiSlice;

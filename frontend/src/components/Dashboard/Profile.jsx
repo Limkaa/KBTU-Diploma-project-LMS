@@ -15,12 +15,21 @@ const Profile = () => {
   return (
     <div onClick={() => navigate("/profile")} style={styles.container}>
       <div style={styles.left}>
-        <p style={styles.title}>
+        <div style={styles.title}>
           {user?.first_name} {user?.last_name}
-        </p>
-        <p style={styles.subtitle}>{returnRole()}</p>
+        </div>
+        <div style={styles.subtitle}>{returnRole()}</div>
       </div>
-      <img style={styles.img} />
+      <img
+        style={styles.img}
+        src={
+          user?.avatar
+            ? user?.avatar
+            : user?.gender === "male"
+            ? require("../../assets/icons/boy.png")
+            : require("../../assets/icons/girl.png")
+        }
+      />
     </div>
   );
 };
@@ -34,8 +43,8 @@ const styles = {
     marginLeft: 20,
   },
   img: {
-    width: 42,
-    height: 42,
+    width: 40,
+    height: 40,
     borderRadius: 120,
     backgroundColor: "#DBDBDB",
   },
@@ -46,14 +55,12 @@ const styles = {
   title: {
     fontWeight: 600,
     color: "#4A4D58",
-    lineHeight: 0.5,
     fontSize: 14,
   },
   subtitle: {
     fontWeight: 600,
     color: "#00000091",
     fontSize: 14,
-    lineHeight: 0.5,
     textAlign: "end",
   },
 };

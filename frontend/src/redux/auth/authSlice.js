@@ -34,7 +34,6 @@ const authSlice = createSlice({
     },
     setCredentials: (state, action) => {
       const { userAccessToken, userRefreshToken } = action.payload;
-      // state.user = user;
       state.userAccessToken = userAccessToken;
       state.userRefreshToken = userRefreshToken;
       state.user = jwtDecode(userRefreshToken);

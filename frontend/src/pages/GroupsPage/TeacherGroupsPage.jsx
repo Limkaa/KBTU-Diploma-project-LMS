@@ -74,13 +74,13 @@ const TeacherGroupsPage = () => {
     return (
         <main className="groups">
             <header className="header">
-                <Header text={"GroupsPage"} />
+                <Header text={"My groups"} />
                 <Profile />
             </header>
             <div style={styles.tableCont}>
                 <div style={styles.filter}>
                     <div style={{marginRight: "auto"}}>
-                        <Radio.Group style={{marginRight: 10}} value={isActive}
+                        <Radio.Group size={"large"} style={{marginRight: 10}} value={isActive}
                                      onChange={(e) => setIsActive(e.target.value)}>
                             <Radio.Button value="">All</Radio.Button>
                             <Radio.Button value="true">Active</Radio.Button>
@@ -89,6 +89,7 @@ const TeacherGroupsPage = () => {
                     </div>
                     <div style={{ alignItems: "center", display: "flex" }}>
                         <Input
+                            size={"large"}
                             placeholder="Search..."
                             prefix={
                                 <img alt="" src={Search} style={{ height: 15, width: 15 }} />

@@ -1,7 +1,7 @@
 import React from "react";
 import Profile from "../Dashboard/Profile";
 import Header from "../shared/Header/Header";
-import { Table, Input, Button, Space, Tag } from "antd";
+import { Table, Input, Button, Space, Tag, Spin } from "antd";
 import Search from "../../assets/icons/search.svg";
 import Plus from "../../assets/icons/plus.svg";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
@@ -14,7 +14,7 @@ import CoursesSchoolAdd from "./CoursesSchoolAdd";
 import { useGetYearsWithoutPageQuery } from "../../redux/academicYears/academicYearsApiSlice";
 import { useGetSubjectsWithoutPageQuery } from "../../redux/subjects/subjectsApiSlice";
 import { useGetTeachersQuery } from "../../redux/users/usersApiSlice";
-import { useGetGroupsQuery } from "../../redux/groups/groupsApiSlice";
+import { useGetSchoolGroupsQuery } from "../../redux/groups/groupsApiSlice";
 import CoursesSchoolUpdate from "./CoursesSchoolUpdate";
 import { Link, useNavigate } from "react-router-dom";
 import { toastify } from "../shared/Toast/Toast";
@@ -38,14 +38,16 @@ const CoursesSchoolContainer = () => {
   const { data, isLoading, refetch } = useGetSchoolCoursesQuery({
     school_id: user?.school_id,
     page,
+    search,
   });
 
   const [createCourse] = useAddCourseMutation();
   const [updateCourse] = useUpdateCourseMutation();
 
-  const { data: dataGroups, isLoading: isLoadingGroups } = useGetGroupsQuery({
-    school_id: user?.school_id,
-  });
+  const { data: dataGroups, isLoading: isLoadingGroups } =
+    useGetSchoolGroupsQuery({
+      school_id: user?.school_id,
+    });
 
   const { data: dataYears, isLoading: isLoadingYears } =
     useGetYearsWithoutPageQuery({
@@ -58,9 +60,7 @@ const CoursesSchoolContainer = () => {
     });
 
   const { data: dataTeachers, isLoading: isLoadingTeachers } =
-    useGetTeachersQuery({
-      school_id: user?.school_id,
-    });
+    useGetTeachersQuery(user?.school_id);
 
   React.useEffect(() => {
     if (dataGroups && !isLoadingGroups) {
@@ -142,27 +142,6 @@ const CoursesSchoolContainer = () => {
   };
 
   const columns = [
-    // {
-    //   width: "1%",
-    //   render: (item) => (
-    //     <div
-    //       style={{
-    //         display: "flex",
-    //         alignItems: "center",
-    //         justifyContent: "center",
-    //       }}
-    //     >
-    //       <img
-    //         src={
-    //           item?.is_active
-    //             ? require("../../assets/icons/active.png")
-    //             : require("../../assets/icons/inactive.png")
-    //         }
-    //         style={{ width: 16, height: 16 }}
-    //       />
-    //     </div>
-    //   ),
-    // },
     {
       title: () => {
         return <>Subject</>;
@@ -173,7 +152,8 @@ const CoursesSchoolContainer = () => {
           to={`/courses/${item.id}`}
           style={{ textDecoration: "none", fontWeight: 600, color: "#00889D" }}
         >
-          {item?.subject?.name} ({item?.subject?.code})
+          {item?.subject?.name}{" "}
+          {item?.subject?.code && "(" + item?.subject?.code + ")"}
         </Link>
       ),
     },
@@ -202,13 +182,14 @@ const CoursesSchoolContainer = () => {
       width: "15%",
       render: (item) => (
         <div>
-          {item?.group?.grade?.name} ({item?.group?.code})
+          {item?.group?.grade?.name}
+          {item?.group?.code && "(" + item?.group?.code + ")"}
         </div>
       ),
     },
     {
       title: "Status",
-      width: "15%",
+      width: "10%",
       render: (item) => (
         <Tag
           style={{ minWidth: 70, textAlign: "center" }}
@@ -234,23 +215,14 @@ const CoursesSchoolContainer = () => {
           >
             Change
           </Button>
+          <Link
+            className="action"
+            style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
+            to={`${record.id}/timetable`}
+          >
+            Schedule
+          </Link>
         </Space>
-      ),
-    },
-    {
-      title: "Action",
-      key: "action",
-      width: "15%",
-      render: (_, record) => (
-          <Space size="middle">
-            <Link
-                className="action"
-                style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
-                to={`${record.id}/timetable`}
-            >
-              Schedule
-            </Link>
-          </Space>
       ),
     },
   ];
@@ -281,19 +253,21 @@ const CoursesSchoolContainer = () => {
             </Button>
           </div>
         </div>
-        <Table
-          dataSource={courses}
-          columns={columns}
-          rowKey={(item) => item?.id}
-          pagination={{
-            total: total,
-            current: page,
-            onChange: (page) => {
-              setPage(page);
-            },
-            showSizeChanger: false,
-          }}
-        />
+        <Spin spinning={isLoading} size="large">
+          <Table
+            dataSource={courses}
+            columns={columns}
+            rowKey={(item) => item?.id}
+            pagination={{
+              total: total,
+              current: page,
+              onChange: (page) => {
+                setPage(page);
+              },
+              showSizeChanger: false,
+            }}
+          />
+        </Spin>
       </div>
       <CoursesSchoolUpdate
         course={selectedCourse}
@@ -318,7 +292,6 @@ const CoursesSchoolContainer = () => {
 const styles = {
   container: {
     flex: 1,
-    height: "100%",
     backgroundColor: "#FAFAFA",
     padding: 16,
   },

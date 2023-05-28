@@ -9,40 +9,34 @@ import Schedule from "./Schedule";
 import SchoolCommunities from "./SchoolCommunities";
 import TodoList from "./TodoList";
 import { useGetAuthUserQuery } from "../../redux/api/authApiSlice";
+import {useSelector} from "react-redux";
+import {selectCurrentUser} from "../../redux/auth/authSlice";
+import Posts from "./Posts";
 
 const DashboardContainer = () => {
-  const { data: user } = useGetAuthUserQuery();
+  const currentUser = useSelector(selectCurrentUser);
+  const { data: user, refetch } = useGetAuthUserQuery();
   return (
     <div className="dashboard container">
       <div className="left-container">
-        <Header text={`Hello, ${user?.first_name}!`} visible={true} />
-        <div className="announcements">
-          <p className="ann-title">Announcements</p>
-          <div className="ann-item">
-            <img className="ann-img" />
-            <div style={{ flex: 1, marginLeft: 16 }}>
-              <p className="ann-text">Amina Farabi</p>
-              <p className="ann-text" style={{ color: "#5C5C5C" }}>
-                Today there will be a meeting in the hall
-              </p>
-            </div>
-            <p className="ann-text" style={{ color: "#5C5C5C" }}>
-              12:40 PM
-            </p>
-          </div>
-        </div>
+        <Header text={`Hello, ${user?.first_name}!`}/>
+        <Posts/>
         <div style={{ display: "flex", marginTop: 20, gap: 16 }}>
           <Leaderboard />
           <SchoolCommunities />
         </div>
         <div style={{ display: "flex", marginTop: 20 }}>
-          <Assignments />
+          {currentUser.role !== "manager" &&
+              <Assignments type={currentUser?.role} />
+          }
         </div>
       </div>
       <div className="right-container">
         <Profile />
         <Calendar />
-        <Schedule />
+        {currentUser.role !== "manager" &&
+            <Schedule type={currentUser?.role} />
+        }
         <TodoList />
       </div>
     </div>

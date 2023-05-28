@@ -21,23 +21,6 @@ const GroupsPage = () => {
   const [teacher, setTeacher] = useState();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const {
-    data: groupsData,
-    isLoading,
-    refetch,
-  } = useGetGroupsQuery({
-    groupType,
-    school_id: user.school_id,
-    grade_id: grade,
-    teacher_id: teacher,
-    page,
-    search
-  });
-  const { data: grades, isSuccess: isGradesLoaded } =
-    useGetSchoolGradesWithoutPageQuery({ school_id: user.school_id });
-  const { data: teachers, isSuccess: isTeachersLoaded } = useGetTeachersQuery(
-    user.school_id
-  );
   const [groups, setGroups] = useState();
   const [gradesOptions, setGradesOptions] = useState([]);
   const [teacherOptions, setTeacherOptions] = useState([]);
@@ -45,6 +28,26 @@ const GroupsPage = () => {
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
   const [showUpdateGroupModal, setShowUpdateGroupModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState();
+
+  const [isActive, setIsActive] = useState("");
+  const {
+    data: groupsData,
+    isLoading,
+    refetch,
+  } = useGetGroupsQuery({
+    groupType,
+    school_id: user?.school_id,
+    grade_id: grade,
+    teacher_id: teacher,
+    page,
+    search,
+    isActive,
+  });
+  const { data: grades, isSuccess: isGradesLoaded } =
+    useGetSchoolGradesWithoutPageQuery({ school_id: user?.school_id });
+  const { data: teachers, isSuccess: isTeachersLoaded } = useGetTeachersQuery(
+    user?.school_id
+  );
 
   useEffect(() => {
     if (groupsData && !isLoading) {
@@ -56,7 +59,7 @@ const GroupsPage = () => {
   useEffect(() => {
     let arr = [];
     if (isGradesLoaded) {
-      grades.forEach((grade) => {
+      grades?.forEach((grade) => {
         arr.push({ value: grade.id, label: grade.name });
       });
       setGradesOptions(arr);
@@ -108,14 +111,14 @@ const GroupsPage = () => {
     {
       title: "Grade",
       width: "15%",
-      render: (group) => <span>{group.grade.name}</span>,
+      render: (group) => <span>{group?.grade?.name}</span>,
     },
     {
       title: "Teacher",
       width: "15%",
       render: (group) => (
         <span>
-          {group.teacher.first_name} {group.teacher.last_name}
+          {group?.teacher?.first_name} {group?.teacher?.last_name}
         </span>
       ),
     },
@@ -125,9 +128,9 @@ const GroupsPage = () => {
       render: (group) => (
         <Tag
           style={{ minWidth: 70, textAlign: "center" }}
-          color={group.is_active ? "green" : "volcano"}
+          color={group?.is_active ? "green" : "volcano"}
         >
-          {group.is_active ? "active" : "inactive"}
+          {group?.is_active ? "active" : "inactive"}
         </Tag>
       ),
     },
@@ -172,15 +175,15 @@ const GroupsPage = () => {
       key: "action",
       width: "15%",
       render: (_, record) => (
-          <Space size="middle">
-            <Link
-                className="action"
-                style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
-                to={`${record.id}/timetable`}
-            >
-              Schedule
-            </Link>
-          </Space>
+        <Space size="middle">
+          <Link
+            className="action"
+            style={{ color: "#F18D58", fontWeight: 500, padding: 0 }}
+            to={`${record.id}/timetable`}
+          >
+            Schedule
+          </Link>
+        </Space>
       ),
     },
   ];
@@ -193,8 +196,15 @@ const GroupsPage = () => {
       </header>
       <div style={styles.tableCont}>
         <div style={styles.filter}>
-          <div style={{ marginRight: "auto", display: "flex", alignItems: "center" }}>
+          <div
+            style={{
+              marginRight: "auto",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <Radio.Group
+              size={"large"}
               style={{ marginRight: 10 }}
               value={groupType}
               onChange={handleGroupTypeChange}
@@ -205,6 +215,7 @@ const GroupsPage = () => {
             </Radio.Group>
             {groupType === "school" && (
               <Select
+                size={"large"}
                 style={{ width: 200 }}
                 placeholder="Not required"
                 disabled={true}
@@ -212,6 +223,7 @@ const GroupsPage = () => {
             )}
             {groupType === "teacher" && (
               <Select
+                size={"large"}
                 showSearch
                 style={{ width: 200 }}
                 placeholder="Search to Select"
@@ -227,6 +239,7 @@ const GroupsPage = () => {
             )}
             {groupType === "grade" && (
               <Select
+                size={"large"}
                 showSearch
                 style={{ width: 200 }}
                 placeholder="Search to Select"
@@ -243,6 +256,7 @@ const GroupsPage = () => {
           </div>
           <div style={{ alignItems: "center", display: "flex" }}>
             <Input
+              size={"large"}
               placeholder="Search code"
               prefix={
                 <img alt="" src={Search} style={{ height: 15, width: 15 }} />
@@ -251,11 +265,12 @@ const GroupsPage = () => {
               onChange={(e) => setSearch(e.target.value.toLowerCase())}
             />
             <Button
+              size={"large"}
               type="primary"
               style={{
                 alignItems: "center",
                 display: "flex",
-                fontWeight: 500,
+                fontWeight: 400,
                 marginLeft: 16,
               }}
               icon={<img alt="" src={Plus} style={{ paddingRight: 5 }} />}

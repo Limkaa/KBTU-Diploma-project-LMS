@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user11@gmail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"user2@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -700,13 +700,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/users/3",
+							"raw": "{{BASE_URL}}/users/8",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"3"
+								"8"
 							]
 						}
 					},
@@ -722,7 +722,7 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "test15@gmail.com",
+									"value": "user8@gmail.com",
 									"type": "text"
 								},
 								{
@@ -768,13 +768,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/users/7",
+							"raw": "{{BASE_URL}}/users/8",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"7"
+								"8"
 							]
 						}
 					},
@@ -2458,13 +2458,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/assignments/98",
+							"raw": "{{BASE_URL}}/assignments/96",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"assignments",
-								"98"
+								"96"
 							]
 						}
 					},
@@ -2585,6 +2585,61 @@
 								},
 								{
 									"key": "course__group",
+									"value": null
+								},
+								{
+									"key": "ordering",
+									"value": null,
+									"description": "assignment datetime"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "assignment name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all assignments of student",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/students/1/assignments?page=1&course&term&is_active&course__subject&course__year&ordering&search",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"students",
+								"1",
+								"assignments"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "course",
+									"value": null
+								},
+								{
+									"key": "term",
+									"value": null
+								},
+								{
+									"key": "is_active",
+									"value": null
+								},
+								{
+									"key": "course__subject",
+									"value": null
+								},
+								{
+									"key": "course__year",
 									"value": null
 								},
 								{
@@ -4546,13 +4601,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/communities/4",
+							"raw": "{{BASE_URL}}/communities/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"communities",
-								"4"
+								"3"
 							]
 						}
 					},

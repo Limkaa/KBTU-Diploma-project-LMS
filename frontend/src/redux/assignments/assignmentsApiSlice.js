@@ -15,7 +15,7 @@ export const assignmentsApiSlice = authApi.injectEndpoints({
     }),
     getStudentAssignments: builder.query({
       query: ({ student_id, search }) =>
-        `api/students/${student_id}/assignments`,
+        `api/students/${student_id}/assignments?ordering=-datetime&search=${search}`,
     }),
     getAssignmentMarks: builder.query({
       query: ({ assignment_id }) => `api/assignments/${assignment_id}/marks`,

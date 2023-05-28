@@ -115,7 +115,7 @@ const AssignmentsCourse = () => {
     let sortedAssignmentss = {};
     if (user?.role === "student") {
       if (dataAssignmentsStudent && !isLoadingAssignmentsStudent) {
-        dataAssignmentsStudent?.forEach((item) => {
+        dataAssignmentsStudent?.results?.forEach((item) => {
           const time = moment(item?.datetime).format("MMM DD, YYYY");
           if (!sortedAssignmentss[time]) {
             sortedAssignmentss[time] = [];
@@ -142,7 +142,12 @@ const AssignmentsCourse = () => {
         setLoading(false);
       }
     }
-  }, [dataAssignments, isLoadingAssignments]);
+  }, [
+    dataAssignments,
+    isLoadingAssignments,
+    dataAssignmentsStudent,
+    isLoadingAssignmentsStudent,
+  ]);
 
   const returnDate = (date) => {
     let today = moment().format("DD MMM YYYY");
